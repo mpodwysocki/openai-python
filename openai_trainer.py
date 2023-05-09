@@ -29,7 +29,7 @@ Does the following code violate any of the rules and which one?  Keep the respon
     response = openai.Completion.create(
         engine="text-davinci-003",
         prompt=prompt,
-        temperature=1,
+        temperature=0.1,
         max_tokens=400,
         n=1,
         stop=None,
@@ -51,6 +51,25 @@ Please keep the response under 1,000 characters.
         engine="text-davinci-003",
         prompt=prompt,
         temperature=1,
+        max_tokens=400,
+        n=1,
+        stop=None,
+    )
+
+    return response
+
+def explain_code_deltas(code_snippet, previous_code_snippet):
+    prompt = f"""
+Given the following code:
+{code_snippet}
+
+Explain the differences between this code and the previous version of the code here:
+{previous_code_snippet}
+"""
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=prompt,
+        temperature=0.1,
         max_tokens=400,
         n=1,
         stop=None,
