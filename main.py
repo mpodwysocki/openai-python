@@ -24,10 +24,10 @@ class ExampleClient {
 }
 '''
 
-response = check_code_against_guidelines(code_snippet, design_url)
+response = check_code_against_guidelines('TypeScript', code_snippet, design_url)
 print(response)
 
-before_code_snippet = """
+before_code_snippet = '''
 class ExampleClient {
   constructor (connectionString: string, options: ExampleClientOptions);
   constructor (url: string, options: ExampleClientOptions);
@@ -36,9 +36,9 @@ class ExampleClient {
     // a url or a connection string. Not ideal.
   }
 }
-"""
+'''
 
-after_code_snippet = """
+after_code_snippet = '''
 class ExampleClient {
   constructor (url: string, options: ExampleClientOptions) {
 
@@ -48,7 +48,7 @@ class ExampleClient {
 
   }
 }
-"""
+'''
 
 response = check_for_breaking_changes(after_code_snippet, before_code_snippet)
 print(response)

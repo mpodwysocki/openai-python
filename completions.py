@@ -18,9 +18,9 @@ openai.organization = organization
 openai.api_key = api_key
 
 # Check for code snippets against the design guidelines at the following URL
-def check_code_against_guidelines(code_snippet, url):
+def check_code_against_guidelines(language, code_snippet, url):
     prompt = f"""
-Given the TypeScript design guidelines at this URL: {url}
+Given the {language} design guidelines at this URL: {url}
 
 Does the following code violate any of the rules and which one?  Keep the response under 1,000 characters.
 

@@ -6,6 +6,7 @@ This is an experimental project to use OpenAI to parse the existing Azure SDK Gu
 
 - Python 3.10+
 - [dotenv](https://pypi.org/project/python-dotenv/)
+- [gradio](https://pypi.org/project/gradio/)
 - [markdown-it-py](https://pypi.org/project/markdown-it-py/)
 - [openai](https://pypi.org/project/openai/)
 
