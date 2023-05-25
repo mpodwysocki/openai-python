@@ -6,7 +6,7 @@
 # license information.
 # --------------------------------------------------------------------------
 
-from openai_trainer import check_code_against_guidelines, check_for_breaking_changes, explain_code_deltas
+from completions import check_code_against_guidelines, check_for_breaking_changes, code_snippet_summary, explain_code_deltas
 
 # Paths of documents
 design_url = 'https://azure.github.io/azure-sdk/typescript_design.html'
@@ -54,4 +54,7 @@ response = check_for_breaking_changes(after_code_snippet, before_code_snippet)
 print(response)
 
 response = explain_code_deltas(after_code_snippet, before_code_snippet)
+print(response)
+
+response = code_snippet_summary('TypeScript', code_snippet)
 print(response)

@@ -17,6 +17,25 @@ api_key = os.environ['OPENAI_API_KEY']
 openai.organization = organization
 openai.api_key = api_key
 
+def code_snippet_summary(language, code_snippet):
+    prompt = f'''
+Summarize the following code snippet in {language}:
+
+```
+{code_snippet}
+```
+'''
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=prompt,
+        temperature=0.1,
+        max_tokens=400,
+        n=1,
+        stop=None,
+    )
+
+    return response
+
 # Check for code snippets against the design guidelines at the following URL
 def check_code_against_guidelines(language, code_snippet, url):
     prompt = f"""
