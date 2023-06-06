@@ -44,11 +44,14 @@ def parse_markdown(file) -> List[dict]:
         for sibling in header.find_next_siblings(['p', 'ul', 'ol']):
             if sibling.name == 'p':
                 text, id = split_tags(sibling.text)
-                entries.append({
-                    'id': id,
-                    'category': category,
-                    'text': text,
-                })
+                if id:
+                    entries.append({
+                        'id': id,
+                        'category': category,
+                        'text': text,
+                    })
+                else:
+                    entries[-1]['text'] += '\n\n' + text
             else:  # sibling is a list
                 items = [li.text for li in sibling.find_all('li')]
                 entries[-1]['text'] += '\n' + '\n'.join(items)
