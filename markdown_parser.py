@@ -4,8 +4,13 @@
 # license information.
 #--------------------------------------------------------------------------
 
+from bs4 import BeautifulSoup
+import json
+import markdown
 import markdown_it
 import re
+import sys
+from typing import List, Optional, Tuple
 
 # Create a new MarkdownIt instance
 md = markdown_it.MarkdownIt()
@@ -25,59 +30,64 @@ SHOULD_NOT_PATTERN = r'{% include requirement/SHOULDNOT id="[a-zA-Z0-9_-]+" %}'
 SHOULD_NOT_REPLACE = 'YOU SHOULD NOT'
 
 # Parse the markdown file
-def parse_markdown(file):
-    with open(file, 'r') as f:
+def parse_markdown(file) -> List[dict]:
+    with open(file, 'r', encoding='utf-8') as f:
         md_text = f.read()
-    ast = md.parse(md_text)
 
-    paragraphs = []
-    current_paragraph = ''
-    in_link = False
-    for node in ast:
-        if node.type == 'paragraph_open':
-            current_paragraph = ''
-        elif node.type == 'inline':
-            extracted_text = fix_tags(node, in_link)
-            current_paragraph += extracted_text
-        elif node.type == 'paragraph_close':
-            paragraphs.append(current_paragraph)
-        elif node.type == "link_open":
-            in_link = True
-        elif node.type == "link_close":
-            in_link = False
-    return paragraphs
+    entries = []
 
-# Remove the tags and replace them with the correct text
-def fix_tags(node, in_link):
-    extracted_text = extract_text_from_inline(node, in_link)
-    extracted_text = re.sub(MAY_PATTERN, MAY_REPLACE, extracted_text)
-    extracted_text = re.sub(MUST_DO_PATTERN, MUST_DO_REPLACE, extracted_text)
-    extracted_text = re.sub(MUST_NO_ID_PATTERN, MUST_DO_REPLACE, extracted_text)
-    extracted_text = re.sub(MUST_NOT_PATTERN, MUST_NOT_REPLACE, extracted_text)
-    extracted_text = re.sub(SHOULD_PATTERN, SHOULD_REPLACE, extracted_text)
-    extracted_text = re.sub(SHOULD_NO_ID_PATTERN, SHOULD_REPLACE, extracted_text)
-    extracted_text = re.sub(SHOULD_NOT_PATTERN, SHOULD_NOT_REPLACE, extracted_text)
-    return extracted_text
+    html = markdown.markdown(md_text)
+    soup = BeautifulSoup(html, features="html.parser")
+    for header in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
+        category = header.text
 
-# Extract inline text from a node
-def extract_text_from_inline(node, in_link):
-    text = ''
-    for child in node.children:
-        if child.type == 'text':
-            text += child.content
-        elif child.type == 'code_inline':
-            text += child.content
-        elif child.type == 'html_inline':
-            text += child.content
-        elif child.type == 'softbreak':
-            text += ' \n'
-        elif child.type == 'inline':
-            text += extract_text_from_inline(child, in_link)
-        elif child.type == 'link_open':
-            in_link = True
-        elif child.type == 'link_close':
-            in_link = False
-    if in_link:
-        return ""
+        for sibling in header.find_next_siblings(['p', 'ul', 'ol']):
+            if sibling.name == 'p':
+                text, id = split_tags(sibling.text)
+                if id:
+                    entries.append({
+                        'id': id,
+                        'category': category,
+                        'text': text,
+                    })
+                else:
+                    entries[-1]['text'] += '\n\n' + text
+            else:  # sibling is a list
+                items = [li.text for li in sibling.find_all('li')]
+                entries[-1]['text'] += '\n' + '\n'.join(items)
+    return entries
+
+ 
+# Split the tag from the ID
+def split_tags(text) -> Tuple[str, Optional[str]]:
+    id = extract_id_from_inline(text)
+    text = re.sub(MAY_PATTERN, MAY_REPLACE, text)
+    text = re.sub(MUST_DO_PATTERN, MUST_DO_REPLACE, text)
+    text = re.sub(MUST_NO_ID_PATTERN, MUST_DO_REPLACE, text)
+    text = re.sub(MUST_NOT_PATTERN, MUST_NOT_REPLACE, text)
+    text = re.sub(SHOULD_PATTERN, SHOULD_REPLACE, text)
+    text = re.sub(SHOULD_NO_ID_PATTERN, SHOULD_REPLACE, text)
+    text = re.sub(SHOULD_NOT_PATTERN, SHOULD_NOT_REPLACE, text)
+    return text, id
+
+# Extract the id from the inline text
+def extract_id_from_inline(text):
+    id = re.search(r'id="([a-zA-Z0-9_-]+)"', text)
+    if id:
+        return id.group(1)
     else:
-        return text
+        return None
+
+
+if __name__ == "__main__":
+    try:
+        file_path = sys.argv[1]
+    except IndexError:
+        print("Please provide a file path")
+        sys.exit(1)
+
+    results = parse_markdown(file_path)
+    json_str = json.dumps(results, indent=2)
+    outfile_path = file_path.replace('.md', '.json')
+    with open(outfile_path, 'w', encoding='utf-8') as f:
+        f.write(json_str)
