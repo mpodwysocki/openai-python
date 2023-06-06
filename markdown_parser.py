@@ -6,7 +6,6 @@
 
 from bs4 import BeautifulSoup
 import json
-import markdown
 import markdown_it
 import re
 import sys
@@ -35,13 +34,12 @@ def parse_markdown(file) -> List[dict]:
         md_text = f.read()
 
     entries = []
-
-    html = markdown.markdown(md_text)
+    html = md.render(md_text)
     soup = BeautifulSoup(html, features="html.parser")
-    for header in soup.find_all(['h1', 'h2', 'h3']):
+    for header in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
         category = header.text
 
-        for sibling in header.find_next_siblings(['p', 'ul', 'ol']):
+        for sibling in header.find_next_siblings():
             if sibling.name == 'p':
                 text, id = split_tags(sibling.text)
                 if id:
@@ -55,14 +53,36 @@ def parse_markdown(file) -> List[dict]:
                         entries[-1]['text'] += '\n\n' + text
                     except IndexError:
                         continue
-            else:  # sibling is a list
+            elif sibling.name in ['ol', 'ul']:
                 items = [li.text for li in sibling.find_all('li')]
                 try:
                     entries[-1]['text'] += '\n' + '\n'.join(items)
                 except IndexError:
                     continue
+            elif sibling.name == "pre":
+                raw_html = ''.join(str(tag) for tag in sibling.contents)
+                markdown_text = convert_code_tag_to_markdown(raw_html)
+                try:
+                    entries[-1]['text'] += '\n\n' + markdown_text
+                except IndexError:
+                    continue
+            else:
+                continue
     return entries
 
+
+def convert_code_tag_to_markdown(html):
+    # Define the regular expression to match the code tag
+    code_tag_pattern = r'<code class="language-(.+)">([\s\S]*?)</code>'
+
+    match = re.search(code_tag_pattern, html)
+    if match:
+        language = match[1]
+        code = match[2]
+        markdown = f'```{language}\n{code}\n```'
+        return markdown
+    else:
+        return html
  
 # Split the tag from the ID
 def split_tags(text) -> Tuple[str, Optional[str]]:
