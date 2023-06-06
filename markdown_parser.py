@@ -36,38 +36,38 @@ def parse_markdown(file) -> List[dict]:
     entries = []
     html = md.render(md_text)
     soup = BeautifulSoup(html, features="html.parser")
-    for header in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
-        category = header.text
 
-        for sibling in header.find_next_siblings():
-            if sibling.name == 'p':
-                text, id = split_tags(sibling.text)
-                if id:
-                    entries.append({
-                        'id': id,
-                        'category': category,
-                        'text': text,
-                    })
-                else:
-                    try:
-                        entries[-1]['text'] += '\n\n' + text
-                    except IndexError:
-                        continue
-            elif sibling.name in ['ol', 'ul']:
-                items = [li.text for li in sibling.find_all('li')]
-                try:
-                    entries[-1]['text'] += '\n' + '\n'.join(items)
-                except IndexError:
-                    continue
-            elif sibling.name == "pre":
-                raw_html = ''.join(str(tag) for tag in sibling.contents)
-                markdown_text = convert_code_tag_to_markdown(raw_html)
-                try:
-                    entries[-1]['text'] += '\n\n' + markdown_text
-                except IndexError:
-                    continue
+    for item in soup.find_all():
+        if item.name in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+            category = item.text
+        if item.name == 'p':
+            text, id = split_tags(item.text)
+            if id:
+                entries.append({
+                    'id': id,
+                    'category': category,
+                    'text': text,
+                })
             else:
+                try:
+                    entries[-1]['text'] += '\n\n' + text
+                except IndexError:
+                    continue
+        elif item.name in ['ol', 'ul']:
+            items = [li.text for li in item.find_all('li')]
+            try:
+                entries[-1]['text'] += '\n' + '\n'.join(items)
+            except IndexError:
                 continue
+        elif item.name == "pre":
+            raw_html = ''.join(str(tag) for tag in item.contents)
+            markdown_text = convert_code_tag_to_markdown(raw_html)
+            try:
+                entries[-1]['text'] += '\n\n' + markdown_text
+            except IndexError:
+                continue
+        else:
+            continue
     return entries
 
 
