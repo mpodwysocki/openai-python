@@ -38,7 +38,7 @@ def parse_markdown(file) -> List[dict]:
 
     html = markdown.markdown(md_text)
     soup = BeautifulSoup(html, features="html.parser")
-    for header in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
+    for header in soup.find_all(['h1', 'h2', 'h3']):
         category = header.text
 
         for sibling in header.find_next_siblings(['p', 'ul', 'ol']):
@@ -51,10 +51,16 @@ def parse_markdown(file) -> List[dict]:
                         'text': text,
                     })
                 else:
-                    entries[-1]['text'] += '\n\n' + text
+                    try:
+                        entries[-1]['text'] += '\n\n' + text
+                    except IndexError:
+                        continue
             else:  # sibling is a list
                 items = [li.text for li in sibling.find_all('li')]
-                entries[-1]['text'] += '\n' + '\n'.join(items)
+                try:
+                    entries[-1]['text'] += '\n' + '\n'.join(items)
+                except IndexError:
+                    continue
     return entries
 
  
