@@ -2,7 +2,7 @@
   {
     "id": "http",
     "category": "Building Blocks: HTTP, REST, & JSON",
-    "text": "\n\nAzure services must adhere to the HTTP specification, RFC7231. This section further refines and constrains how service implementors should apply the constructs defined in the HTTP specification. It is therefore, important that you have a firm understanding of the following concepts:\nUniform Resource Locators (URLs)\nHTTP Request / Response Pattern\nHTTP Query Parameters and Header Values\n\nA Uniform Resource Locator (URL) is how developers access the resources of your service. Ultimately, URLs are how developers form a cognitive model of your service's resources."
+    "text": "\n\nAzure services must adhere to the HTTP specification, RFC7231 (https://tools.ietf.org/html/rfc7231)  This section further refines and constrains how service implementors should apply the constructs defined in the HTTP specification. It is therefore, important that you have a firm understanding of the following concepts:\nUniform Resource Locators (URLs)\nHTTP Request / Response Pattern\nHTTP Query Parameters and Header Values\n\nA Uniform Resource Locator (URL) is how developers access the resources of your service. Ultimately, URLs are how developers form a cognitive model of your service's resources."
   },
   {
     "id": "http-url-pattern",
@@ -47,12 +47,12 @@
   {
     "id": "http-url-allowed-characters-3",
     "category": "Uniform Resource Locators (URLs)",
-    "text": "YOU MAY use these other characters in the URL path but they will likely require %-encoding [RFC 3986]: /  ?  #  [  ]  @  !  $  &  '  (  )  *  +  ,  ;  ="
+    "text": "YOU MAY use these other characters in the URL path but they will likely require %-encoding [RFC 3986 (https://datatracker.ietf.org/doc/html/rfc3986#section-2.1) : /  ?  #  [  ]  @  !  $  &  '  (  )  *  +  ,  ;  ="
   },
   {
     "id": "http-direct-endpoints",
     "category": "Uniform Resource Locators (URLs)",
-    "text": "YOU MAY support a direct endpoint URL for performance/routing:\n\n```text\nhttps://&lt;tenant&gt;-&lt;service-root&gt;.&lt;service&gt;.&lt;cloud&gt;/...\n\n```\n\nExamples:\nRequest URL: https://blobstore.azure.net/contoso.com/account1/container1/blob2\nResponse header (RFC2557): content-location : https://contoso-dot-com-account1.blobstore.azure.net/container1/blob2\nGUID format: https://00000000-0000-0000-C000-000000000046-account1.blobstore.azure.net/container1/blob2"
+    "text": "YOU MAY support a direct endpoint URL for performance/routing:\n\n```text\nhttps://&lt;tenant&gt;-&lt;service-root&gt;.&lt;service&gt;.&lt;cloud&gt;/...\n\n```\n\nExamples:\nRequest URL: https://blobstore.azure.net/contoso.com/account1/container1/blob2\nResponse header (RFC2557 (https://datatracker.ietf.org/doc/html/rfc2557#section-4) : content-location : https://contoso-dot-com-account1.blobstore.azure.net/container1/blob2\nGUID format: https://00000000-0000-0000-C000-000000000046-account1.blobstore.azure.net/container1/blob2"
   },
   {
     "id": "http-url-return-consistent-form",
@@ -127,7 +127,7 @@
   {
     "id": "http-parameter-serialization",
     "category": "HTTP Query Parameters and Header Values",
-    "text": "DO use the following table when translating strings:\n\nData type | Document that string must be\n--------- | -------\nBoolean   | true / false (all lowercase)\nInteger   | -253+1 to +253-1 (for consistency with JSON limits on integers RFC8259)\nFloat     | IEEE-754 binary64\nString    | (Un)quoted?, max length, legal characters, case-sensitive, multiple delimiter\nUUID      | 123e4567-e89b-12d3-a456-426614174000 (no {}s, hyphens, case-insensitive) RFC4122\nDate/Time (Header) | Sun, 06 Nov 1994 08:49:37 GMT RFC7231, Section 7.1.1.1\nDate/Time (Query parameter) | YYYY-MM-DDTHH:mm:ss.sssZ (with at most 3 digits of fractional seconds) RFC3339\nByte array | Base-64 encoded, max length\nArray      | One of a) a comma-separated list of values (preferred), or b) separate name=value parameter instances for each value of the array\n\nThe table below lists the headers most used by Azure services:\n\nHeader Key          | Applies to | Example\n------------------- | ---------- | -------------\nauthorization     | Request    | Bearer eyJ0...Xd6j (Support Azure Active Directory)\nx-ms-useragent    | Request    | (see Distributed Tracing & Telemetry)\ntraceparent         | Request    | (see Distributed Tracing & Telemetry)\ntracecontext        | Request    | (see Distributed Tracing & Telemetry)\naccept              | Request    | application/json\nIf-Match            | Request    | \"67ab43\" or * (no quotes) (see Conditional Requests)\nIf-None-Match       | Request    | \"67ab43\" or * (no quotes) (see Conditional Requests)\nIf-Modified-Since   | Request    | Sun, 06 Nov 1994 08:49:37 GMT (see Conditional Requests)\nIf-Unmodified-Since | Request    | Sun, 06 Nov 1994 08:49:37 GMT (see Conditional Requests)\ndate                | Both       | Sun, 06 Nov 1994 08:49:37 GMT (see RFC7231, Section 7.1.1.2)\ncontent-type      | Both       | application/merge-patch+json\ncontent-length    | Both       | 1024\nx-ms-request-id   | Response   | 4227cdc5-9f48-4e84-921a-10967cb785a0\nETag                | Response   | \"67ab43\" (see Conditional Requests)\nlast-modified       | Response   | Sun, 06 Nov 1994 08:49:37 GMT\nx-ms-error-code   | Response   | (see Handling Errors)\nazure-deprecating | Response   | (see Deprecating Behavior Notification)\nretry-after         | Response   | 180 (see RFC 7231, Section 7.1.3)"
+    "text": "DO use the following table when translating strings:\n\nData type | Document that string must be\n--------- | -------\nBoolean   | true / false (all lowercase)\nInteger   | -253+1 to +253-1 (for consistency with JSON limits on integers RFC8259 (https://datatracker.ietf.org/doc/html/rfc8259) \nFloat     | IEEE-754 binary64 (https://en.wikipedia.org/wiki/Double-precision_floating-point_format) String    | (Un)quoted?, max length, legal characters, case-sensitive, multiple delimiter\nUUID      | 123e4567-e89b-12d3-a456-426614174000 (no {}s, hyphens, case-insensitive) RFC4122 (https://datatracker.ietf.org/doc/html/rfc4122) Date/Time (Header) | Sun, 06 Nov 1994 08:49:37 GMT RFC7231, Section 7.1.1.1 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1) Date/Time (Query parameter) | YYYY-MM-DDTHH:mm:ss.sssZ (with at most 3 digits of fractional seconds) RFC3339 (https://datatracker.ietf.org/doc/html/rfc3339) Byte array | Base-64 encoded, max length\nArray      | One of a) a comma-separated list of values (preferred), or b) separate name=value parameter instances for each value of the array\n\nThe table below lists the headers most used by Azure services:\n\nHeader Key          | Applies to | Example\n------------------- | ---------- | -------------\nauthorization     | Request    | Bearer eyJ0...Xd6j (Support Azure Active Directory)\nx-ms-useragent    | Request    | (see Distributed Tracing & Telemetry)\ntraceparent         | Request    | (see Distributed Tracing & Telemetry)\ntracecontext        | Request    | (see Distributed Tracing & Telemetry)\naccept              | Request    | application/json\nIf-Match            | Request    | \"67ab43\" or * (no quotes) (see Conditional Requests)\nIf-None-Match       | Request    | \"67ab43\" or * (no quotes) (see Conditional Requests)\nIf-Modified-Since   | Request    | Sun, 06 Nov 1994 08:49:37 GMT (see Conditional Requests)\nIf-Unmodified-Since | Request    | Sun, 06 Nov 1994 08:49:37 GMT (see Conditional Requests)\ndate                | Both       | Sun, 06 Nov 1994 08:49:37 GMT (see RFC7231, Section 7.1.1.2 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.2) \ncontent-type      | Both       | application/merge-patch+json\ncontent-length    | Both       | 1024\nx-ms-request-id   | Response   | 4227cdc5-9f48-4e84-921a-10967cb785a0\nETag                | Response   | \"67ab43\" (see Conditional Requests)\nlast-modified       | Response   | Sun, 06 Nov 1994 08:49:37 GMT\nx-ms-error-code   | Response   | (see Handling Errors)\nazure-deprecating | Response   | (see Deprecating Behavior Notification)\nretry-after         | Response   | 180 (see RFC 7231, Section 7.1.3 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.3) "
   },
   {
     "id": "http-header-support-standard-headers",
@@ -152,7 +152,7 @@
   {
     "id": "http-header-date-values",
     "category": "HTTP Query Parameters and Header Values",
-    "text": "DO accept date values in headers in HTTP-Date format and return date values in headers in the IMF-fixdate format as defined in RFC7231, Section 7.1.1.1, e.g. \"Sun, 06 Nov 1994 08:49:37 GMT\".\n\nNote: The RFC 7321 IMF-fixdate format is a \"fixed-length and single-zone subset\" of the RFC 1123 / RFC 5822 format, which means: a) year must be four digits, b) the seconds component of time is required, and c) the timezone must be GMT."
+    "text": "DO accept date values in headers in HTTP-Date format and return date values in headers in the IMF-fixdate format as defined in RFC7231, Section 7.1.1.1 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1)  e.g. \"Sun, 06 Nov 1994 08:49:37 GMT\".\n\nNote: The RFC 7321 IMF-fixdate format is a \"fixed-length and single-zone subset\" of the RFC 1123 / RFC 5822 format, which means: a) year must be four digits, b) the seconds component of time is required, and c) the timezone must be GMT."
   },
   {
     "id": "http-header-request-id",
@@ -167,12 +167,12 @@
   {
     "id": "http-no-x-custom-headers",
     "category": "HTTP Query Parameters and Header Values",
-    "text": "DO NOT use \"x-\" prefix for custom headers, unless the header already exists in production [RFC 6648].\n\nAdditional References\nStackOverflow - Difference between http parameters and http headers\nStandard HTTP Headers\nWhy isn't HTTP PUT allowed to do partial updates in a REST API?"
+    "text": "DO NOT use \"x-\" prefix for custom headers, unless the header already exists in production [RFC 6648 (https://datatracker.ietf.org/doc/html/rfc6648) .\n\nAdditional References\nStackOverflow - Difference between http parameters and http headers (https://stackoverflow.com/questions/40492782) \nStandard HTTP Headers (https://httpwg.org/specs/rfc7231.html#header.field.registration) \nWhy isn't HTTP PUT allowed to do partial updates in a REST API? (https://stackoverflow.com/questions/19732423/why-isnt-http-put-allowed-to-do-partial-updates-in-a-rest-api) "
   },
   {
     "id": "rest",
     "category": "HTTP Query Parameters and Header Values",
-    "text": "\n\nREST is an architectural style with broad reach that emphasizes scalability, generality, independent deployment, reduced latency via caching, and security. When applying REST to your API, you define your service\u2019s resources as a collections of items.\nThese are typically the nouns you use in the vocabulary of your service. Your service's URLs determine the hierarchical path developers use to perform CRUD (create, read, update, and delete) operations on resources. Note, it's important to model resource state, not behavior.\nThere are patterns, later in these guidelines, that describe how to invoke behavior on your service. See this article in the Azure Architecture Center for a more detailed discussion of REST API design patterns.\n\nWhen designing your service, it is important to optimize for the developer using your API."
+    "text": "\n\nREST is an architectural style with broad reach that emphasizes scalability, generality, independent deployment, reduced latency via caching, and security. When applying REST to your API, you define your service\u2019s resources as a collections of items.\nThese are typically the nouns you use in the vocabulary of your service. Your service's URLs determine the hierarchical path developers use to perform CRUD (create, read, update, and delete) operations on resources. Note, it's important to model resource state, not behavior.\nThere are patterns, later in these guidelines, that describe how to invoke behavior on your service. See this article in the Azure Architecture Center (https://docs.microsoft.com/azure/architecture/best-practices/api-design) for a more detailed discussion of REST API design patterns.\n\nWhen designing your service, it is important to optimize for the developer using your API."
   },
   {
     "id": "rest-clear-naming",
@@ -222,7 +222,7 @@
   {
     "id": "rest-patch-use-merge-patch",
     "category": "Resource Schema & Field Mutability",
-    "text": "DO create and update resources using PATCH [RFC5789] with JSON Merge Patch (RFC7396) request body."
+    "text": "DO create and update resources using PATCH [RFC5789] with JSON Merge Patch (RFC7396) (https://datatracker.ietf.org/doc/html/rfc7396) request body."
   },
   {
     "id": "rest-put-for-create-or-replace",
@@ -357,7 +357,7 @@
   {
     "id": "json-date-time-is-rfc3339",
     "category": "JSON",
-    "text": "DO use RFC3339 for date/time."
+    "text": "DO use RFC3339 (https://datatracker.ietf.org/doc/html/rfc3339) for date/time."
   },
   {
     "id": "json-durations-use-fixed-time-intervals",
@@ -367,12 +367,12 @@
   {
     "id": "json-rfc3339-time-intervals-allowed",
     "category": "JSON",
-    "text": "YOU MAY use RFC3339 time intervals only when users must be able to specify a time interval that may change from month to month or year to year e.g., \"P3M\" represents 3 months no matter how many days between the start and end dates, or \"P1Y\" represents 366 days on a leap year. The value must be round-trippable."
+    "text": "YOU MAY use RFC3339 time intervals (https://wikipedia.org/wiki/ISO_8601#Durations) only when users must be able to specify a time interval that may change from month to month or year to year e.g., \"P3M\" represents 3 months no matter how many days between the start and end dates, or \"P1Y\" represents 366 days on a leap year. The value must be round-trippable."
   },
   {
     "id": "json-uuid-is-rfc4412",
     "category": "JSON",
-    "text": "DO use RFC4122 for UUIDs."
+    "text": "DO use RFC4122 (https://datatracker.ietf.org/doc/html/rfc4122) for UUIDs."
   },
   {
     "id": "json-may-nest-for-grouping",
@@ -572,7 +572,7 @@
   {
     "id": "collections-query-options-no-dollar-sign",
     "category": "Query options",
-    "text": "DO NOT prefix any of these query parameter names with \"$\" (the convention in the OData standard)."
+    "text": "DO NOT prefix any of these query parameter names with \"$\" (the convention in the OData standard (http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_QueryingCollections) ."
   },
   {
     "id": "collections-filter-param",
@@ -597,7 +597,7 @@
   {
     "id": "collections-filter-functions",
     "category": "filter operators",
-    "text": "YOU MAY support orderby and filter functions such as concat and contains. For more information, see odata Canonical Functions.\n\nThe following examples illustrate the use and semantics of each of the logical operators.\n\nExample: all products with a name equal to 'Milk'\n\n```text\nGET https://api.contoso.com/products?`filter`=name eq 'Milk'\n\n```\n\nExample: all products with a name not equal to 'Milk'\n\n```text\nGET https://api.contoso.com/products?`filter`=name ne 'Milk'\n\n```\n\nExample: all products with the name 'Milk' that also have a price less than 2.55:\n\n```text\nGET https://api.contoso.com/products?`filter`=name eq 'Milk' and price lt 2.55\n\n```\n\nExample: all products that either have the name 'Milk' or have a price less than 2.55:\n\n```text\nGET https://api.contoso.com/products?`filter`=name eq 'Milk' or price lt 2.55\n\n```\n\nExample: all products that have the name 'Milk' or 'Eggs' and have a price less than 2.55:\n\n```text\nGET https://api.contoso.com/products?`filter`=(name eq 'Milk' or name eq 'Eggs') and price lt 2.55\n\n```"
+    "text": "YOU MAY support orderby and filter functions such as concat and contains. For more information, see odata Canonical Functions (https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31360979) \n\nThe following examples illustrate the use and semantics of each of the logical operators.\n\nExample: all products with a name equal to 'Milk'\n\n```text\nGET https://api.contoso.com/products?`filter`=name eq 'Milk'\n\n```\n\nExample: all products with a name not equal to 'Milk'\n\n```text\nGET https://api.contoso.com/products?`filter`=name ne 'Milk'\n\n```\n\nExample: all products with the name 'Milk' that also have a price less than 2.55:\n\n```text\nGET https://api.contoso.com/products?`filter`=name eq 'Milk' and price lt 2.55\n\n```\n\nExample: all products that either have the name 'Milk' or have a price less than 2.55:\n\n```text\nGET https://api.contoso.com/products?`filter`=name eq 'Milk' or price lt 2.55\n\n```\n\nExample: all products that have the name 'Milk' or 'Eggs' and have a price less than 2.55:\n\n```text\nGET https://api.contoso.com/products?`filter`=(name eq 'Milk' or name eq 'Eggs') and price lt 2.55\n\n```"
   },
   {
     "id": "collections-orderby-param",
@@ -672,7 +672,7 @@
   {
     "id": "versioning",
     "category": "maxpagesize",
-    "text": "\n\nAzure services need to change over time. However, when changing a service, there are 2 requirements:\nAlready-running customer workloads must not break due to a service change\nCustomers can adopt a new service version without requiring any code changes (Of course, the customer must modify code to leverage any new service features.)\n\nNOTE: the Azure Breaking Change Policy has tables (section 5) describing what kinds of changes are considered breaking. Breaking changes are allowable (due to security/compliance/etc.) if approved by the Azure Breaking Change Reviewers but only following ample communication to customers and a lengthy deprecation period."
+    "text": "\n\nAzure services need to change over time. However, when changing a service, there are 2 requirements:\nAlready-running customer workloads must not break due to a service change\nCustomers can adopt a new service version without requiring any code changes (Of course, the customer must modify code to leverage any new service features.)\n\nNOTE: the Azure Breaking Change Policy (http://aka.ms/AzBreakingChangesPolicy/) has tables (section 5) describing what kinds of changes are considered breaking. Breaking changes are allowable (due to security/compliance/etc.) if approved by the Azure Breaking Change Reviewers but only following ample communication to customers and a lengthy deprecation period."
   },
   {
     "id": "versioning-review-required",
@@ -742,12 +742,12 @@
   {
     "id": "deprecation-header-value",
     "category": "Deprecating Behavior Notification",
-    "text": "DO make the header's value a semicolon-delimited string indicating a set of deprecations where each one indicates what is deprecating, when it is deprecating, and a URL to more information.\n\nDeprecations should use the following pattern:\n\n```text\n&lt;description&gt; will retire on &lt;date&gt; (&lt;url&gt;)\n\n```\n\nMultiple deprecations are allowed, semicolon delimited.\n\nWhere the following placeholders should be provided:\ndescription: a human-readable description of what is being deprecated\ndate: the target date that this will be deprecated. This should be expressed following the format in ISO 8601, e.g. \"2022-10-31\".\nurl: a fully qualified url that the user can follow to learn more about what is being deprecated, preferably to Azure Updates.\n\nFor example:\nazure-deprecating: API version 2009-27-07 will retire on 2022-12-01 (https://azure.microsoft.com/updates/video-analyzer-retirement);TLS 1.0 & 1.1 will retire on 2020-10-30 (https://azure.microsoft.com/updates/azure-active-directory-registration-service-is-ending-support-for-tls-10-and-11/)\nazure-deprecating: Model version 2021-01-15 used in Sentiment analysis will retire on 2022-12-01 (https://aka.ms/ta-modelversions?sentimentAnalysis)\nazure-deprecating: TLS 1.0 & 1.1 support will retire on 2022-10-01 (https://devblogs.microsoft.com/devops/deprecating-weak-cryptographic-standards-tls-1-0-and-1-1-in-azure-devops-services/)"
+    "text": "DO make the header's value a semicolon-delimited string indicating a set of deprecations where each one indicates what is deprecating, when it is deprecating, and a URL to more information.\n\nDeprecations should use the following pattern:\n\n```text\n&lt;description&gt; will retire on &lt;date&gt; (&lt;url&gt;)\n\n```\n\nMultiple deprecations are allowed, semicolon delimited.\n\nWhere the following placeholders should be provided:\ndescription: a human-readable description of what is being deprecated\ndate: the target date that this will be deprecated. This should be expressed following the format in ISO 8601 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1)  e.g. \"2022-10-31\".\nurl: a fully qualified url that the user can follow to learn more about what is being deprecated, preferably to Azure Updates.\n\nFor example:\nazure-deprecating: API version 2009-27-07 will retire on 2022-12-01 (https://azure.microsoft.com/updates/video-analyzer-retirement);TLS 1.0 & 1.1 will retire on 2020-10-30 (https://azure.microsoft.com/updates/azure-active-directory-registration-service-is-ending-support-for-tls-10-and-11/)\nazure-deprecating: Model version 2021-01-15 used in Sentiment analysis will retire on 2022-12-01 (https://aka.ms/ta-modelversions?sentimentAnalysis)\nazure-deprecating: TLS 1.0 & 1.1 support will retire on 2022-10-01 (https://devblogs.microsoft.com/devops/deprecating-weak-cryptographic-standards-tls-1-0-and-1-1-in-azure-devops-services/)"
   },
   {
     "id": "deprecation-header-review",
     "category": "Deprecating Behavior Notification",
-    "text": "DO NOT introduce this header without approval from Azure Breaking Change Reviewers and an official deprecation notice on Azure Updates."
+    "text": "DO NOT introduce this header without approval from Azure Breaking Change Reviewers and an official deprecation notice on Azure Updates (https://azure.microsoft.com/updates/) "
   },
   {
     "id": "repeatability",
@@ -757,7 +757,7 @@
   {
     "id": "repeatability-headers",
     "category": "Repeatability of requests",
-    "text": "YOU SHOULD support repeatable requests according as defined in OASIS Repeatable Requests Version 1.0.\nThe tracked time window (difference between the Repeatability-First-Sent value and the current time) MUST be at least 5 minutes.\nA service advertises support for repeatability requests by adding the Repeatability-First-Sent and Repeatability-Request-ID to the set of headers for a given operation.\nWhen understood, all endpoints co-located behind a DNS name MUST understand the header. This means that a service MUST NOT ignore the presence of a header for any endpoints behind the DNS name, but rather fail the request containing a Repeatability-Request-ID header if that particular endpoint lacks support for repeatable requests. Such partial support SHOULD be avoided due to the confusion it causes for clients."
+    "text": "YOU SHOULD support repeatable requests according as defined in OASIS Repeatable Requests Version 1.0 (https://docs.oasis-open.org/odata/repeatable-requests/v1.0/repeatable-requests-v1.0.html) \nThe tracked time window (difference between the Repeatability-First-Sent value and the current time) MUST be at least 5 minutes.\nA service advertises support for repeatability requests by adding the Repeatability-First-Sent and Repeatability-Request-ID to the set of headers for a given operation.\nWhen understood, all endpoints co-located behind a DNS name MUST understand the header. This means that a service MUST NOT ignore the presence of a header for any endpoints behind the DNS name, but rather fail the request containing a Repeatability-Request-ID header if that particular endpoint lacks support for repeatable requests. Such partial support SHOULD be avoided due to the confusion it causes for clients."
   },
   {
     "id": "lro",
@@ -772,7 +772,7 @@
   {
     "id": "lro-no-patch-lro",
     "category": "Long-Running Operations & Jobs",
-    "text": "DO NOT implement PATCH as an LRO.  If LRO update is required it must be implemented with POST.\n\nIn rare instances where an operation may take a very long time to complete, e.g. longer than 15 minutes,\nit may be better to expose this as a first class resource of the API rather than as an operation on another resource.\n\nThere are two basic patterns for long-running operations in Azure. The first pattern is used for a POST and DELETE\noperations that initiate the LRO. These return a 202 Accepted response with a JSON status monitor in the response body.\nThe second pattern applies only in the case of a PUT operation to create a resource that also involves additional long-running processing.\nFor guidance on when to use a specific pattern, please refer to Considerations for Service Design, Long Running Operations.\nThese are described in the following two sections.\n\nA POST or DELETE long-running operation accepts a request from the client to initiate the operation processing and returns\na status monitor that reports the operation's progress."
+    "text": "DO NOT implement PATCH as an LRO.  If LRO update is required it must be implemented with POST.\n\nIn rare instances where an operation may take a very long time to complete, e.g. longer than 15 minutes,\nit may be better to expose this as a first class resource of the API rather than as an operation on another resource.\n\nThere are two basic patterns for long-running operations in Azure. The first pattern is used for a POST and DELETE\noperations that initiate the LRO. These return a 202 Accepted response with a JSON status monitor in the response body.\nThe second pattern applies only in the case of a PUT operation to create a resource that also involves additional long-running processing.\nFor guidance on when to use a specific pattern, please refer to Considerations for Service Design, Long Running Operations.\nThese are described in the following two sections.\n\nA POST or DELETE long-running operation accepts a request from the client to initiate the operation processing and returns\na status monitor (https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.3) that reports the operation's progress."
   },
   {
     "id": "lro-no-post-create",
@@ -932,7 +932,7 @@
   {
     "id": "byos-authorization",
     "category": "Bring your own Storage (BYOS)",
-    "text": "DO use managed identity and Role Based Access Control (RBAC) as the mechanism allowing customers to grant permission to their Storage account to your service."
+    "text": "DO use managed identity and Role Based Access Control (RBAC (https://docs.microsoft.com/azure/role-based-access-control/overview)  as the mechanism allowing customers to grant permission to their Storage account to your service."
   },
   {
     "id": "byos-define-rbac-roles",
@@ -952,7 +952,7 @@
   {
     "id": "byos-sas-token",
     "category": "Single file access",
-    "text": "YOU MAY use a Shared Access Signature SAS to provide access to a single file. SAS is considered the minimum security for files and can be used in lieu of, or in addition to, RBAC."
+    "text": "YOU MAY use a Shared Access Signature SAS (https://docs.microsoft.com/azure/storage/common/storage-sas-overview) to provide access to a single file. SAS is considered the minimum security for files and can be used in lieu of, or in addition to, RBAC."
   },
   {
     "id": "byos-http-insecure",
@@ -977,12 +977,12 @@
   {
     "id": "byos-last-modified",
     "category": "Single file access",
-    "text": "YOU MAY allow the customer to provide a last-modified timestamp (in RFC1123 format) for read-only files. This allows the client to specify exactly which version of the files your service should use.\nWhen reading a file, your service passes this timestamp to Azure Storage using the if-unmodified-since request header. If the Storage operation fails with 412, the Storage object was modified and your service operation should return an appropriate 4xx status code and return the Storage error in your operation's 'inner-error' (see guideline above)."
+    "text": "YOU MAY allow the customer to provide a last-modified (https://datatracker.ietf.org/doc/html/rfc7232#section-2.2) timestamp (in RFC1123 format) for read-only files. This allows the client to specify exactly which version of the files your service should use.\nWhen reading a file, your service passes this timestamp to Azure Storage using the if-unmodified-since (https://datatracker.ietf.org/doc/html/rfc7232#section-3.4) request header. If the Storage operation fails with 412, the Storage object was modified and your service operation should return an appropriate 4xx status code and return the Storage error in your operation's 'inner-error' (see guideline above)."
   },
   {
     "id": "byos-folder-support",
     "category": "Single file access",
-    "text": "DO allow the customer to specify a URL path to a logical folder (via prefix and delimiter) if your service requires access to multiple files (within this folder). For more information, see List Blobs API"
+    "text": "DO allow the customer to specify a URL path to a logical folder (via prefix and delimiter) if your service requires access to multiple files (within this folder). For more information, see List Blobs API (https://docs.microsoft.com/rest/api/storageservices/list-blobs) "
   },
   {
     "id": "byos-extensions",
@@ -1022,7 +1022,7 @@
   {
     "id": "condreq-support-etags-consistently",
     "category": "Conditional Requests",
-    "text": "YOU SHOULD use ETags consistently across your API, i.e. if you use an ETag, accept it on all other operations.\n\nYou can learn more about conditional requests by reading RFC7232.\n\nOne of the more common uses for ETag headers is cache control, also referred to a \"conditional GET.\" This is especially useful when resources are large in size, expensive to compute/calculate, or hard to reach (significant network latency). That is, using the value of the ETag , the server can determine if the resource has changed. If there are no changes, then there is no need to return the resource, as the client already has the most recent version.\n\nImplementing this strategy is relatively straightforward. First, you will return an ETag with a value that uniquely identifies the instance (or version) of the resource. The Computing ETags section provides guidance on how to properly calculate the value of your ETag.\nIn these scenarios, when a request is made by the client an ETag header is returned, with a value that uniquely identifies that specific instance (or version) of the resource. The ETag value can then be sent in subsequent requests as part of the If-None-Match header.\nThis tells the service to compare the ETag that came in with the request, with the latest value that it has calculated. If the two values are the same, then it is not necessary to return the resource to the client--it already has it. If they are different, then the service will return the latest version of the resource, along with the updated ETag value in the header."
+    "text": "YOU SHOULD use ETags consistently across your API, i.e. if you use an ETag, accept it on all other operations.\n\nYou can learn more about conditional requests by reading RFC7232 (https://datatracker.ietf.org/doc/html/rfc7232) \n\nOne of the more common uses for ETag headers is cache control, also referred to a \"conditional GET.\" This is especially useful when resources are large in size, expensive to compute/calculate, or hard to reach (significant network latency). That is, using the value of the ETag , the server can determine if the resource has changed. If there are no changes, then there is no need to return the resource, as the client already has the most recent version.\n\nImplementing this strategy is relatively straightforward. First, you will return an ETag with a value that uniquely identifies the instance (or version) of the resource. The Computing ETags section provides guidance on how to properly calculate the value of your ETag.\nIn these scenarios, when a request is made by the client an ETag header is returned, with a value that uniquely identifies that specific instance (or version) of the resource. The ETag value can then be sent in subsequent requests as part of the If-None-Match header.\nThis tells the service to compare the ETag that came in with the request, with the latest value that it has calculated. If the two values are the same, then it is not necessary to return the resource to the client--it already has it. If they are different, then the service will return the latest version of the resource, along with the updated ETag value in the header."
   },
   {
     "id": "condreq-for-read",
@@ -1032,7 +1032,7 @@
   {
     "id": "condreq-for-read-behavior",
     "category": "Cache Control",
-    "text": "DO adhere to the following table for guidance:\n\n| GET Request | Return code | Response                                    |\n|:------------|:------------|:--------------------------------------------|\n| ETag value = If-None-Match value   | 304-Not Modified | no additional information   |\n| ETag value != If-None-Match value  | 200-OK           | Response body include the serialized value of the resource (typically JSON)    |\n\nFor more control over caching, please refer to the cache-control HTTP header.\n\nAn ETag should also be used to reflect the create, update, and delete policies of your service. Specifically, you should avoid a \"pessimistic\" strategy where the 'last write always wins.\" These can be expensive to build and scale because avoiding the \"lost update\" problem often requires sophisticated concurrency controls.\nInstead, implement an \"optimistic concurrency\" strategy, where the incoming state of the resource is first compared against what currently resides in the service. Optimistic concurrency strategies are implemented through the combination of ETags and the HTTP Request / Response Pattern."
+    "text": "DO adhere to the following table for guidance:\n\n| GET Request | Return code | Response                                    |\n|:------------|:------------|:--------------------------------------------|\n| ETag value = If-None-Match value   | 304-Not Modified | no additional information   |\n| ETag value != If-None-Match value  | 200-OK           | Response body include the serialized value of the resource (typically JSON)    |\n\nFor more control over caching, please refer to the cache-control HTTP header (https://developer.mozilla.org/docs/Web/HTTP/Headers/Cache-Control) \n\nAn ETag should also be used to reflect the create, update, and delete policies of your service. Specifically, you should avoid a \"pessimistic\" strategy where the 'last write always wins.\" These can be expensive to build and scale because avoiding the \"lost update\" problem often requires sophisticated concurrency controls.\nInstead, implement an \"optimistic concurrency\" strategy, where the incoming state of the resource is first compared against what currently resides in the service. Optimistic concurrency strategies are implemented through the combination of ETags and the HTTP Request / Response Pattern."
   },
   {
     "id": "condreq-no-pessimistic-update",
@@ -1087,6 +1087,6 @@
   {
     "id": "telemetry-allow-unrecognized-headers",
     "category": "Distributed Tracing & Telemetry",
-    "text": "DO NOT reject a call if you have custom headers you don't understand, and specifically, distributed tracing headers.\n\nAdditional References\nAzure SDK client guidelines\nAzure SDK User-Agent header policy\nAzure SDK Distributed tracing policy\nOpen Telemetry\n\nIn addition to distributed tracing, Azure also uses a set of common correlation headers:\n\n|Name                         |Applies to|Description|\n|-----------------------------|----------|-----------|\n|x-ms-client-request-id       |Both      |Optional. Caller-specified value identifying the request, in the form of a GUID with no decoration such as curly braces (e.g. x-ms-client-request-id: 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0). If the caller provides this header the service must include this in their log entries to facilitate correlation of log entries for a single request. Because this header can be client-generated, it should not be assumed to be unique by the service implementation.\n|x-ms-request-id              |Response  |Required. Service generated correlation id identifying the request, in the form of a GUID with no decoration such as curly braces. In contrast to the the x-ms-client-request-id, the service must ensure that this value is globally unique. Services should log this value with their traces to facilitate correlation of log entries for a single request.\n\nThese guidelines describe the upfront design considerations, technology building blocks, and common patterns that Azure teams encounter when building an API for their service. There is a great deal of information in them that can be difficult to follow. Fortunately, at Microsoft, there is a team committed to ensuring your success.\n\nThe Azure REST API Stewardship board is a collection of dedicated architects that are passionate about helping Azure service teams build interfaces that are intuitive, maintainable, consistent, and most importantly, delight our customers.\nBecause APIs affect nearly all downstream decisions, you are encouraged to reach out to the Stewardship board early in the development process.\nThese architects will work with you to apply these guidelines and identify any hidden pitfalls in your design. For more information on how to part with the Stewardship board, please refer to Considerations for Service Design."
+    "text": "DO NOT reject a call if you have custom headers you don't understand, and specifically, distributed tracing headers.\n\nAdditional References\nAzure SDK client guidelines (https://azure.github.io/azure-sdk/general_azurecore.html) \nAzure SDK User-Agent header policy (https://azure.github.io/azure-sdk/general_azurecore.html#azurecore-http-telemetry-x-ms-useragent) \nAzure SDK Distributed tracing policy (https://azure.github.io/azure-sdk/general_azurecore.html#distributed-tracing-policy) \nOpen Telemetry (https://opentelemetry.io/) \n\nIn addition to distributed tracing, Azure also uses a set of common correlation headers:\n\n|Name                         |Applies to|Description|\n|-----------------------------|----------|-----------|\n|x-ms-client-request-id       |Both      |Optional. Caller-specified value identifying the request, in the form of a GUID with no decoration such as curly braces (e.g. x-ms-client-request-id: 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0). If the caller provides this header the service must include this in their log entries to facilitate correlation of log entries for a single request. Because this header can be client-generated, it should not be assumed to be unique by the service implementation.\n|x-ms-request-id              |Response  |Required. Service generated correlation id identifying the request, in the form of a GUID with no decoration such as curly braces. In contrast to the the x-ms-client-request-id, the service must ensure that this value is globally unique. Services should log this value with their traces to facilitate correlation of log entries for a single request.\n\nThese guidelines describe the upfront design considerations, technology building blocks, and common patterns that Azure teams encounter when building an API for their service. There is a great deal of information in them that can be difficult to follow. Fortunately, at Microsoft, there is a team committed to ensuring your success.\n\nThe Azure REST API Stewardship board is a collection of dedicated architects that are passionate about helping Azure service teams build interfaces that are intuitive, maintainable, consistent, and most importantly, delight our customers.\nBecause APIs affect nearly all downstream decisions, you are encouraged to reach out to the Stewardship board early in the development process.\nThese architects will work with you to apply these guidelines and identify any hidden pitfalls in your design. For more information on how to part with the Stewardship board, please refer to Considerations for Service Design."
   }
 ]
