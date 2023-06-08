@@ -15,17 +15,17 @@ from typing import List, Optional, Tuple
 md = markdown_it.MarkdownIt()
 
 # API Doc Constants
-MAY_PATTERN = r'{% include requirement/MAY id="[a-zA-Z0-9_-]+" %}'
+MAY_PATTERN = r'{% include requirement/MAY\s*id=\\?"[a-zA-Z0-9_-]+\\?" %}'
 MAY_REPLACE = 'YOU MAY'
-MUST_DO_PATTERN = r'{% include requirement/MUST id="[a-zA-Z0-9_-]+" %}'
+MUST_DO_PATTERN = r'{% include requirement/MUST\s*id=\\?"[a-zA-Z0-9_-]+\\?" %}'
 MUST_NO_ID_PATTERN = r'{% include requirement/MUST %}'
 MUST_DO_REPLACE = 'DO'
-MUST_NOT_PATTERN = r'{% include requirement/MUSTNOT id="[a-zA-Z0-9_-]+" %}'
+MUST_NOT_PATTERN = r'{% include requirement/MUSTNOT\s*id=\\?"[a-zA-Z0-9_-]+\\?" %}'
 MUST_NOT_REPLACE = 'DO NOT'
-SHOULD_PATTERN = r'{% include requirement/SHOULD id="[a-zA-Z0-9_-]+" %}'
+SHOULD_PATTERN = r'{% include requirement/SHOULD\s*id=\\?"[a-zA-Z0-9_-]+\\?" %}'
 SHOULD_NO_ID_PATTERN = r'{% include requirement/SHOULD %}'
 SHOULD_REPLACE = 'YOU SHOULD'
-SHOULD_NOT_PATTERN = r'{% include requirement/SHOULDNOT id="[a-zA-Z0-9_-]+" %}'
+SHOULD_NOT_PATTERN = r'{% include requirement/SHOULDNOT\s*id=\\?"[a-zA-Z0-9_-]+\\?" %}'
 SHOULD_NOT_REPLACE = 'YOU SHOULD NOT'
 
 # Parse the markdown file
