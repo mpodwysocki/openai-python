@@ -33,6 +33,9 @@ SHOULD_NOT_PATTERN = r'{% include requirement/SHOULDNOT\s*id=\\?"[a-zA-Z0-9_-]+\
 SHOULD_NOT_REPLACE = 'YOU SHOULD NOT'
 INCLUDE_PATTERN = r'{%\s*(include|include_relative)\s*([^\s%}]+)\s*%}'
 
+ICON_PATTERN = r'^:[a-z_]+: '
+ICON_REPLACE = ''
+
 
 def add_links(text, item):
     """Find any links associated with the text and add them in format: text (link)
@@ -57,12 +60,17 @@ def parse_markdown(file) -> List[dict]:
     entries = []
     html = md.render(md_text)
     soup = BeautifulSoup(html, features="html.parser")
+    category = None
 
     for item in soup.find_all():
         if item.name in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
             category = item.text
+        # Skip the explanations of rule types in introduction section
+        if category == 'Prescriptive Guidance':
+            continue
+
         if item.name == 'p':
-            text, id = split_tags(item.text)
+            text, id = split_tags(item)
             text = add_links(text, item)
             text = expand_include_tags(text)
 
@@ -124,8 +132,9 @@ def convert_code_tag_to_markdown(html):
         return html
  
 # Split the tag from the ID
-def split_tags(text) -> Tuple[str, Optional[str]]:
-    id = extract_id_from_inline(text)
+def split_tags(item) -> Tuple[str, Optional[str]]:
+    text = item.text
+    id = extract_id_from_inline(item)
     text = re.sub(MAY_PATTERN, MAY_REPLACE, text)
     text = re.sub(MUST_DO_PATTERN, MUST_DO_REPLACE, text)
     text = re.sub(MUST_NO_ID_PATTERN, MUST_DO_REPLACE, text)
@@ -133,16 +142,19 @@ def split_tags(text) -> Tuple[str, Optional[str]]:
     text = re.sub(SHOULD_PATTERN, SHOULD_REPLACE, text)
     text = re.sub(SHOULD_NO_ID_PATTERN, SHOULD_REPLACE, text)
     text = re.sub(SHOULD_NOT_PATTERN, SHOULD_NOT_REPLACE, text)
+    text = re.sub(ICON_PATTERN, ICON_REPLACE, text)
     return text, id
 
 # Extract the id from the inline text
-def extract_id_from_inline(text):
-    id = re.search(r'id="([a-zA-Z0-9_-]+)"', text)
+def extract_id_from_inline(item):
+    id = re.search(r'id="([a-zA-Z0-9_-]+)"', item.text)
     if id:
         return id.group(1)
-    else:
-        return None
-
+    try:
+        id = item.next_element.attrs["name"]
+    except:
+        id = None
+    return id
 
 if __name__ == "__main__":
 
@@ -152,6 +164,10 @@ if __name__ == "__main__":
         raise Exception('Please set the AZURE_SDK_REPO_PATH environment variable manually or in your .env file.')
     if not rest_api_guidelines_path:
         raise Exception('Please set the REST_API_GUIDELINES_PATH environment variable manually or in your .env file.')
+    
+    repo_root = os.path.dirname(os.path.abspath(__file__))
+    
+    # Generate Azure SDK JSON
     sdk_folders_to_parse = ["android", "clang", "cpp", "dotnet", "general", "golang", "ios", "java", "python", "typescript"]
     files_to_parse = ["design.md", "implementation.md", "introduction.md", "azurecore.md", "compatibility.md", "documentation.md", "spring.md"]
     for folder in sdk_folders_to_parse:
@@ -162,10 +178,16 @@ if __name__ == "__main__":
                     results = parse_markdown(file_path)
                     json_str = json.dumps(results, indent=2)
                     filename = os.path.splitext(os.path.basename(file_path))[0]
-                    json_filename = filename + ".json"
-                    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                    json_filename = filename + ".json"                
                     json_path = os.path.join(repo_root, "docs", folder, json_filename)
+                    os.makedirs(os.path.dirname(json_path), exist_ok=True)
                     with open(json_path, 'w') as f:
                         f.write(json_str)
-                    test = "best"
-    
+    # Generate the REST API Guidelines JSON
+    guidelines__path = os.path.join(rest_api_guidelines_path, "azure", "Guidelines.md")
+    results = parse_markdown(guidelines__path)
+    json_path = os.path.join(repo_root, "docs", "rest", "guidelines.json")
+    json_str = json.dumps(results, indent=2)
+    os.makedirs(os.path.dirname(json_path), exist_ok=True)
+    with open(json_path, 'w') as f:
+        f.write(json_str)
