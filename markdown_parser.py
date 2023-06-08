@@ -4,12 +4,16 @@
 # license information.
 #--------------------------------------------------------------------------
 
+import dotenv
 from bs4 import BeautifulSoup
 import json
 import markdown_it
+import os
 import re
 import sys
 from typing import List, Optional, Tuple
+
+dotenv.load_dotenv()
 
 # Create a new MarkdownIt instance
 md = markdown_it.MarkdownIt()
@@ -27,6 +31,7 @@ SHOULD_NO_ID_PATTERN = r'{% include requirement/SHOULD %}'
 SHOULD_REPLACE = 'YOU SHOULD'
 SHOULD_NOT_PATTERN = r'{% include requirement/SHOULDNOT\s*id=\\?"[a-zA-Z0-9_-]+\\?" %}'
 SHOULD_NOT_REPLACE = 'YOU SHOULD NOT'
+INCLUDE_PATTERN = r'{%\s*(include|include_relative)\s*([^\s%}]+)\s*%}'
 
 
 def add_links(text, item):
@@ -59,6 +64,8 @@ def parse_markdown(file) -> List[dict]:
         if item.name == 'p':
             text, id = split_tags(item.text)
             text = add_links(text, item)
+            text = expand_include_tags(text)
+
             if id:
                 entries.append({
                     'id': id,
@@ -87,6 +94,21 @@ def parse_markdown(file) -> List[dict]:
             continue
     return entries
 
+
+def expand_include_tags(text) -> str:
+    matches = re.findall(INCLUDE_PATTERN, text)
+    if not matches:
+        return text
+    for match in matches:
+        include_tag = match[0]
+        include_path = match[1]
+        test = "best"
+        # with open(include_path, 'r', encoding='utf-8') as f:
+        #     include_text = f.read()
+        # if include_tag == 'include_relative':
+        #     include_text = expand_include_tags(include_text)
+        # text = text.replace(f'{{% {include_tag} {include_path} %}}', include_text)
+    return text
 
 def convert_code_tag_to_markdown(html):
     # Define the regular expression to match the code tag
@@ -123,14 +145,27 @@ def extract_id_from_inline(text):
 
 
 if __name__ == "__main__":
-    try:
-        file_path = sys.argv[1]
-    except IndexError:
-        print("Please provide a file path")
-        sys.exit(1)
 
-    results = parse_markdown(file_path)
-    json_str = json.dumps(results, indent=2)
-    outfile_path = file_path.replace('.md', '.json')
-    with open(outfile_path, 'w', encoding='utf-8') as f:
-        f.write(json_str)
+    azure_sdk_path = os.getenv('AZURE_SDK_REPO_PATH')
+    rest_api_guidelines_path = os.getenv('REST_API_GUIDELINES_PATH')
+    if not azure_sdk_path:
+        raise Exception('Please set the AZURE_SDK_REPO_PATH environment variable manually or in your .env file.')
+    if not rest_api_guidelines_path:
+        raise Exception('Please set the REST_API_GUIDELINES_PATH environment variable manually or in your .env file.')
+    sdk_folders_to_parse = ["android", "clang", "cpp", "dotnet", "general", "golang", "ios", "java", "python", "typescript"]
+    files_to_parse = ["design.md", "implementation.md", "introduction.md", "azurecore.md", "compatibility.md", "documentation.md", "spring.md"]
+    for folder in sdk_folders_to_parse:
+        for root, dirs, files in os.walk(os.path.join(azure_sdk_path, "docs", folder)):
+            for file in files:
+                if file in files_to_parse:
+                    file_path = os.path.join(root, file)
+                    results = parse_markdown(file_path)
+                    json_str = json.dumps(results, indent=2)
+                    filename = os.path.splitext(os.path.basename(file_path))[0]
+                    json_filename = filename + ".json"
+                    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                    json_path = os.path.join(repo_root, "docs", folder, json_filename)
+                    with open(json_path, 'w') as f:
+                        f.write(json_str)
+                    test = "best"
+    
