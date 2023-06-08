@@ -22,6 +22,6 @@
   {
     "id": "ios-language-objc",
     "category": "General Guidelines",
-    "text": "YOU MAY write the client library in Objective-C.\n\nThe intent is to ensure that the client library is idiomatic in Swift applications. The library should not make specific accommodations to support Objective-C applications.\n\n{% include refs.md %}\n{% include_relative refs.md %}"
+    "text": "YOU MAY write the client library in Objective-C.\n\nThe intent is to ensure that the client library is idiomatic in Swift applications. The library should not make specific accommodations to support Objective-C applications.\n\n<!-- Project Links -->\n"
   }
 ]

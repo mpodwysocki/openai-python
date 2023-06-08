@@ -87,6 +87,6 @@
   {
     "id": "android-library-proguard",
     "category": "Other Android-related considerations",
-    "text": "DO use consumerProguardFiles if you include a Proguard configuration in the library.\n\n{% include refs.md %}\n{% include_relative refs.md %}"
+    "text": "DO use consumerProguardFiles if you include a Proguard configuration in the library.\n\n<!-- Project Links -->\n<!-- Example Links -->\n<!-- Intra-document references -->\n"
   }
 ]

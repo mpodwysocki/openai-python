@@ -53,7 +53,7 @@ def add_links(text, item):
 
 
 # Parse the markdown file
-def parse_markdown(file) -> List[dict]:
+def parse_markdown(file, root_path) -> List[dict]:
     with open(file, 'r', encoding='utf-8') as f:
         md_text = f.read()
 
@@ -72,7 +72,7 @@ def parse_markdown(file) -> List[dict]:
         if item.name == 'p':
             text, id = split_tags(item)
             text = add_links(text, item)
-            text = expand_include_tags(text)
+            text = expand_include_tags(text, root_path, os.path.dirname(file))
 
             if id:
                 entries.append({
@@ -103,20 +103,31 @@ def parse_markdown(file) -> List[dict]:
     return entries
 
 
-def expand_include_tags(text) -> str:
+def expand_include_tags(text, root_path, rel_path) -> str:
     matches = re.findall(INCLUDE_PATTERN, text)
     if not matches:
         return text
     for match in matches:
         include_tag = match[0]
         include_path = match[1]
-        test = "best"
-        # with open(include_path, 'r', encoding='utf-8') as f:
-        #     include_text = f.read()
-        # if include_tag == 'include_relative':
-        #     include_text = expand_include_tags(include_text)
-        # text = text.replace(f'{{% {include_tag} {include_path} %}}', include_text)
-    return text
+        if include_tag == 'include_relative':
+            include_path = os.path.join(rel_path, include_path)
+            with open(include_path, 'r', encoding='utf-8') as f:
+                text = f.read()
+        else:
+            include_path = os.path.join(root_path, "_includes", include_path)
+            with open(include_path, 'r', encoding='utf-8') as f:
+                text = f.read()
+    # if text looks like html, convert it to markdown
+    if text.startswith('<'):
+        return convert_html_to_markdown(text)
+    else:
+        return text
+
+def convert_html_to_markdown(html) -> str:
+    # convert HTML text to markdown
+    markdown = md.render(html)
+    return markdown
 
 def convert_code_tag_to_markdown(html):
     # Define the regular expression to match the code tag
@@ -175,7 +186,7 @@ if __name__ == "__main__":
             for file in files:
                 if file in files_to_parse:
                     file_path = os.path.join(root, file)
-                    results = parse_markdown(file_path)
+                    results = parse_markdown(file_path, azure_sdk_path)
                     json_str = json.dumps(results, indent=2)
                     filename = os.path.splitext(os.path.basename(file_path))[0]
                     json_filename = filename + ".json"                
@@ -184,8 +195,8 @@ if __name__ == "__main__":
                     with open(json_path, 'w') as f:
                         f.write(json_str)
     # Generate the REST API Guidelines JSON
-    guidelines__path = os.path.join(rest_api_guidelines_path, "azure", "Guidelines.md")
-    results = parse_markdown(guidelines__path)
+    guidelines_path = os.path.join(rest_api_guidelines_path, "azure", "Guidelines.md")
+    results = parse_markdown(guidelines_path, rest_api_guidelines_path)
     json_path = os.path.join(repo_root, "docs", "rest", "guidelines.json")
     json_str = json.dumps(results, indent=2)
     os.makedirs(os.path.dirname(json_path), exist_ok=True)

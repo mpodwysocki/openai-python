@@ -172,7 +172,7 @@
   {
     "id": "general-client-standardize-verbs",
     "category": "Naming",
-    "text": "YOU SHOULD use standard verbs for methods that access or manipulate server resources.\n\n{% assign data = site.data.tables.net_standard_verbs.entries %}\n{% include tables/standard_verbs_template.html %}"
+    "text": "YOU SHOULD use standard verbs for methods that access or manipulate server resources.\n\n<div class=\"standard-verbs-table-container\">\n    <!-- Table Header -->\n    <div class=\"standard-verbs-table-row\">\n        <div class=\"standard-verbs-table-cell standard-verbs-table-cell-header standard-verbs-table-cell-verb\">Verb</div>\n        <div class=\"standard-verbs-table-cell standard-verbs-table-cell-header\">Parameters</div>\n        <div class=\"standard-verbs-table-cell standard-verbs-table-cell-header\">Returns</div>\n        <div class=\"standard-verbs-table-cell standard-verbs-table-cell-header standard-verbs-table-cell-comments\">\n            Comments</div>\n    </div>\n    <!-- Table Rows -->\n    {% for item in data %}\n    {% assign mod = forloop.index0 | modulo:2 %}\n    {% if mod == 0 %}\n    {% include tables/standard_verbs_row.html perRowCellStyle=\"standard-verbs-table-cell-pair\"%}\n    {% else %}\n    {% include tables/standard_verbs_row.html perRowStyle=\"\"%}\n    {% endif %}\n    {% endfor %}\n</div>\n"
   },
   {
     "id": "dotnet-service-methods-cancellation",
@@ -637,6 +637,6 @@
   {
     "id": "dotnet-problems-empty-types",
     "category": "Commonly Overlooked .NET API Design Guidelines {#dotnet-appendix-overlookedguidelines}",
-    "text": "DO NOT have empty types (types with no members).\n\n{% include refs.md %}\n{% include_relative refs.md %}"
+    "text": "DO NOT have empty types (types with no members).\n\n[.NET Framework Design Guidelines]: https://docs.microsoft.com/dotnet/standard/design-guidelines/\n[.NET Framework Constructor Design]: https://docs.microsoft.com/dotnet/standard/design-guidelines/constructor\n[Azure Application Configuration service]: https://github.com/Azure/azure-sdk-for-net/tree/main/sdk/appconfiguration/Azure.Data.AppConfiguration\n[Azure.Core]: https://www.nuget.org/packages/Azure.Core/\n[Moq]: https://github.com/moq/moq4\n[adparch]: https://github.com/azure/azure-sdk/issues\n[.NET Standard 2.0]: https://docs.microsoft.com/dotnet/standard/net-standard\n[azure/azure-sdk-for-net]: https://github.com/azure/azure-sdk-for-net\n[.NET Target Framework Monikers]: https://learn.microsoft.com/dotnet/standard/frameworks"
   }
 ]

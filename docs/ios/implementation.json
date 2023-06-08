@@ -157,6 +157,6 @@
   {
     "id": "ios-testing-unit-xctest",
     "category": "Testing",
-    "text": "DO use the built-in XCTest framework for unit testing.\nDO use the AzureTest static framework for end-to-end testing.\nYOU SHOULD NOT mock service calls for end-to-end tests due to the inherent complexity. Instead, AzureTest should be used for most end-to-end scenario tests.\nYOU MAY use OHHTTPStubs to perform mocking for abnormal network conditions such as dropped connectivity.\n\n{% include refs.md %}\n{% include_relative refs.md %}"
+    "text": "DO use the built-in XCTest framework for unit testing.\nDO use the AzureTest static framework for end-to-end testing.\nYOU SHOULD NOT mock service calls for end-to-end tests due to the inherent complexity. Instead, AzureTest should be used for most end-to-end scenario tests.\nYOU MAY use OHHTTPStubs to perform mocking for abnormal network conditions such as dropped connectivity.\n\n<!-- Project Links -->\n"
   }
 ]

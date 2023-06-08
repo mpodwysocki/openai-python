@@ -57,6 +57,6 @@
   {
     "id": "ts-need-browser-samples",
     "category": "Samples",
-    "text": "YOU SHOULD have browser samples tailored for browser scenarios.  You need not duplicate all samples for browsers.\n\n{% include refs.md %}\n{% include_relative refs.md %}"
+    "text": "YOU SHOULD have browser samples tailored for browser scenarios.  You need not duplicate all samples for browsers.\n\n[RequireJS]: https://requirejs.org/\n\n[azure/azure-sdk-for-js]: https://github.com/azure/azure-sdk-for-js\n[TypeScript client library template]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/template/template\n[cjs]: https://nodejs.org/api/modules.html\n[esm]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import\n[namespace guidelines]: typescript_design.html#ts-namespaces"
   }
 ]

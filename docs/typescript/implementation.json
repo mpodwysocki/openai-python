@@ -277,7 +277,7 @@
   {
     "id": "ts-dependencies-no-polyfills",
     "category": "Dependencies {#ts-dependencies}",
-    "text": "YOU SHOULD NOT depend directly on polyfills or other libraries that modify global scope. If developers using older runtimes need to polyfill some capability, the package install and usage instructions (in the README) should indicate this dependency.\n\nThe following table lists the well-known and already-blessed dependencies outside of Azure Core that may be used in production (non-test) code.\n\n\n{% include_relative approved_dependencies.md %}\n\nThere are occasions when common code needs to be shared between several client libraries.  For example, a set of cooperating client libraries may wish to share a set of exceptions or models."
+    "text": "YOU SHOULD NOT depend directly on polyfills or other libraries that modify global scope. If developers using older runtimes need to polyfill some capability, the package install and usage instructions (in the README) should indicate this dependency.\n\nThe following table lists the well-known and already-blessed dependencies outside of Azure Core that may be used in production (non-test) code.\n\n\n\n| Package             | Usage  |\n|---------------------|--------|\n| `axios`             | HTTP client abstraction with browser and node support |\n| `debug`             | Logging library |\n| `events`            | Node EventEmitter polyfill |\n| `stream-browserify` | Node Stream polyfill for browsers |\n| `process`           | Node Process polyfill (though you should prefer to use small stubs) |\n| `rhea`              | Library for talking over AMQP |\n| `rhea-promise`      | Promisified version of `rhea` |\n| `tough-cookie`      | Support cookies, even in Node |\n| `url`               | Node Url polyfill |\n| `util`              | Node Util polyfill |\n| `uuid`              | Generate GUIDs |\n\n\nThere are occasions when common code needs to be shared between several client libraries.  For example, a set of cooperating client libraries may wish to share a set of exceptions or models."
   },
   {
     "id": "general-implementing-common-library-usage",
@@ -512,6 +512,6 @@
   {
     "id": "ts-modules-no-default",
     "category": "Modules {#ts-modules}",
-    "text": "DO NOT have a default export at the top level\n\nAzure packages authored using TypeScript export standard ES6 modules. As Node doesn't support ES6 modules natively, authoring ES6 modules for consumption in Node has a bit of friction. Most notably, a commonJS package can only import a single value.\n\n{% include refs.md %}\n{% include_relative refs.md %}"
+    "text": "DO NOT have a default export at the top level\n\nAzure packages authored using TypeScript export standard ES6 modules. As Node doesn't support ES6 modules natively, authoring ES6 modules for consumption in Node has a bit of friction. Most notably, a commonJS package can only import a single value.\n\n[RequireJS]: https://requirejs.org/\n\n[azure/azure-sdk-for-js]: https://github.com/azure/azure-sdk-for-js\n[TypeScript client library template]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/template/template\n[cjs]: https://nodejs.org/api/modules.html\n[esm]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import\n[namespace guidelines]: typescript_design.html#ts-namespaces"
   }
 ]

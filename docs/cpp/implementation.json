@@ -97,7 +97,7 @@
   {
     "id": "cpp-approved-dependencies",
     "category": "Language-specific other",
-    "text": "DO utilize the following libraries as needed for commonly required operations:\n\n{% include_relative approved_dependencies.md %}"
+    "text": "DO utilize the following libraries as needed for commonly required operations:\n\n| Library    | Version | Usage                                               |\n|------------|---------|-----------------------------------------------------|\n| libxml2    | 2.7.6   | XML parser - http://www.xmlsoft.org/                |\n| gtest      | 1.10.0  | Google Test - https://github.com/google/googletest/ |\n\n> Note: None of the libraries in this list currently throw C++ exceptions; policy for propagation\n> of C++ exceptions from dependencies needs to be evaluated on a dependency-by-dependency basis.\n"
   },
   {
     "id": "cpp-test-implicit-assign",
