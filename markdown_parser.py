@@ -32,7 +32,7 @@ SHOULD_NOT_REPLACE = 'YOU SHOULD NOT'
 def add_links(text, item):
     """Find any links associated with the text and add them in format: text (link)
     """
-    links = [link for link in item.find_all("a") if link.attrs["href"].startswith("http")]
+    links = [link for link in item.find_all("a") if link.get("href", "").startswith("http")]
     if not links:
         return text
 
@@ -40,7 +40,7 @@ def add_links(text, item):
         index = text.find(link.text)
         if index == -1:
             continue
-        text = f"{text[:index]}{link.text} ({link.attrs['href']}) {text[len(link.text)+1 + index:]}"
+        text = f"{text[:index]}{link.text} ({link['href']}) {text[len(link.text)+1 + index:]}"
     return text
 
 
