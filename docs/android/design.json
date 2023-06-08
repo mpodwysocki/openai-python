@@ -322,7 +322,7 @@
   {
     "id": "android-pagination-distinct-types",
     "category": "Methods Returning Collections (Paging)",
-    "text": "DO use the same type for entities returned from a list operation vs. a get operation if those operations return different views of the same result. For example a list operation may provide only a minimal representation of each result, with the expectation that a get operation must be performed for each result to access the full representation. If the representations are compatible, reuse the same type for both the list and the get operation. Otherwise, it is permissible to use distinct types for each operation.\n\n{% include important.html content=\"Services should refrain from having a difference between the type of a particular entity as it exists in a list versus the result of a GET request for that individual item as it makes the client library's surface area simpler.\" %}"
+    "text": "DO use the same type for entities returned from a list operation vs. a get operation if those operations return different views of the same result. For example a list operation may provide only a minimal representation of each result, with the expectation that a get operation must be performed for each result to access the full representation. If the representations are compatible, reuse the same type for both the list and the get operation. Otherwise, it is permissible to use distinct types for each operation.\n\n**IMPORTANT:** Services should refrain from having a difference between the type of a particular entity as it exists in a list versus the result of a GET request for that individual item as it makes the client library's surface area simpler."
   },
   {
     "id": "android-pagination-large-get-iterator",
@@ -707,7 +707,7 @@
   {
     "id": "android-versioning-enum-value-naming",
     "category": "Versioning",
-    "text": "DO use the version naming used by the service itself in naming the version values in the enum. The standard approach takes the form V<year>_<month>_<day>, such as V2019_05_09. Being consistent with the service naming enables easier cross-referencing between service versions and the availability of features in the client library.\n\n{% include note.html content=\"Third-party reusable libraries shouldn't change behavior without an explicit decision by the developer.  When developing libraries that are based on the Azure SDK, lock the library to a specific service version to avoid changes in behavior.\" %}"
+    "text": "DO use the version naming used by the service itself in naming the version values in the enum. The standard approach takes the form V<year>_<month>_<day>, such as V2019_05_09. Being consistent with the service naming enables easier cross-referencing between service versions and the availability of features in the client library.\n\n**NOTE:** Third-party reusable libraries shouldn't change behavior without an explicit decision by the developer.  When developing libraries that are based on the Azure SDK, lock the library to a specific service version to avoid changes in behavior."
   },
   {
     "id": "android-versioning-new-package",

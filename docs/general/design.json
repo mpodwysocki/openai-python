@@ -267,7 +267,7 @@
   {
     "id": "general-pagination-use-distinct-types",
     "category": "Pagination",
-    "text": "DO use distinct types for entities in a list endpoint and an entity returned from a get endpoint if these are different types, and otherwise you must use the same types in these situations.\n\n{% include important.html content=\"Services should refrain from having a difference between the type of a particular entity as it exists in a list versus the result of a GET request for that individual item as it makes the client library's surface area simpler.\" %}"
+    "text": "DO use distinct types for entities in a list endpoint and an entity returned from a get endpoint if these are different types, and otherwise you must use the same types in these situations.\n\n**IMPORTANT:** Services should refrain from having a difference between the type of a particular entity as it exists in a list versus the result of a GET request for that individual item as it makes the client library's surface area simpler."
   },
   {
     "id": "general-pagination-expose-individual-items",

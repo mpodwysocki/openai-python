@@ -222,7 +222,7 @@
   {
     "id": "general-logging-error-if-exceptions",
     "category": "Logging {#general-logging}",
-    "text": "DO log exceptions thrown to the Warning channel. Additionally, send stack trace information to the Verbose channel.\n\nDistributed tracing mechanisms allow the consumer to trace their code from frontend to backend. The distributed tracing library creates spans - units of unique work.  Each span is in a parent-child relationship.  As you go deeper into the hierarchy of code, you create more spans.  These spans can then be exported to a suitable receiver as needed.  To keep track of the spans, a distributed tracing context (called a context in the remainder of this section) is passed into each successive layer.  For more information on this topic, visit the [OpenTelemetry] topic on tracing.\n\n{% include draft.html content=\"DRAFT GUIDELINES\" %}"
+    "text": "DO log exceptions thrown to the Warning channel. Additionally, send stack trace information to the Verbose channel.\n\nDistributed tracing mechanisms allow the consumer to trace their code from frontend to backend. The distributed tracing library creates spans - units of unique work.  Each span is in a parent-child relationship.  As you go deeper into the hierarchy of code, you create more spans.  These spans can then be exported to a suitable receiver as needed.  To keep track of the spans, a distributed tracing context (called a context in the remainder of this section) is passed into each successive layer.  For more information on this topic, visit the [OpenTelemetry] topic on tracing.\n\n**DRAFT:** DRAFT GUIDELINES"
   },
   {
     "id": "general-tracing-support-opentelemetry",
