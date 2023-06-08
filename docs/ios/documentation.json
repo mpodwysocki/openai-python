@@ -12,12 +12,12 @@
   {
     "id": "ios-docs-style-guide",
     "category": "General guidelines",
-    "text": "DO adhere to the Microsoft style guides when you write public-facing documentation. (MICROSOFT INTERNAL)\n[Microsoft Writing Style Guide]\n[Microsoft Cloud Style Guide]\n\nUse the style guides for both long-form documentation like a README and the docstrings in your code."
+    "text": "DO adhere to the Microsoft style guides when you write public-facing documentation. (MICROSOFT INTERNAL) [Microsoft Writing Style Guide] [Microsoft Cloud Style Guide] Use the style guides for both long-form documentation like a README and the docstrings in your code."
   },
   {
     "id": "ios-docs-to-silence",
     "category": "General guidelines",
-    "text": "YOU SHOULD attempt to document your library into silence. Preempt developers' usage questions and minimize GitHub issues by clearly explaining your API in the docstrings. Include information on service limits and errors they might hit, and how to avoid and recover from those errors.\n\nAs you write your code, doc it so you never hear about it again. The fewer questions you have to answer about your client library, the more time you have to build new features for your service."
+    "text": "YOU SHOULD attempt to document your library into silence. Preempt developers' usage questions and minimize GitHub issues by clearly explaining your API in the docstrings. Include information on service limits and errors they might hit, and how to avoid and recover from those errors. As you write your code, doc it so you never hear about it again. The fewer questions you have to answer about your client library, the more time you have to build new features for your service."
   },
   {
     "id": "ios-docs-lang-support",
@@ -27,12 +27,12 @@
   {
     "id": "ios-docs-lang-objc-support",
     "category": "General guidelines",
-    "text": "YOU SHOULD document the library with samples and code snippets in Objective-C.\n\nCode samples are small applications that demonstrate a certain feature that is relevant to the client library.  Samples allow developers to quickly understand the full usage requirements of your client library. Code samples shouldn't be any more complex than they needed to demonstrate the feature. Don't write full applications. Samples should have a high signal to noise ratio between useful code and boilerplate code for non-related reasons."
+    "text": "YOU SHOULD document the library with samples and code snippets in Objective-C. Code samples are small applications that demonstrate a certain feature that is relevant to the client library. Samples allow developers to quickly understand the full usage requirements of your client library. Code samples shouldn't be any more complex than they needed to demonstrate the feature. Don't write full applications. Samples should have a high signal to noise ratio between useful code and boilerplate code for non-related reasons."
   },
   {
     "id": "ios-samples-include-them",
     "category": "Code samples",
-    "text": "DO include code samples alongside your library's code within the repository. The samples should clearly and succinctly demonstrate the code most developers need to write with your library. Include samples for all common operations.  Pay attention to operations that are complex or might be difficult for new users of your library. Include samples for the champion scenarios you've identified for the library."
+    "text": "DO include code samples alongside your library's code within the repository. The samples should clearly and succinctly demonstrate the code most developers need to write with your library. Include samples for all common operations. Pay attention to operations that are complex or might be difficult for new users of your library. Include samples for the champion scenarios you've identified for the library."
   },
   {
     "id": "ios-samples-in-swift",
@@ -52,7 +52,7 @@
   {
     "id": "ios-samples-objc-support",
     "category": "Code samples",
-    "text": "YOU SHOULD write an Objective-C version when writing code samples.\n\nIf you write Objective-C samples, ensure ALL samples are duplicated in both Objective-C and Swift."
+    "text": "YOU SHOULD write an Objective-C version when writing code samples. If you write Objective-C samples, ensure ALL samples are duplicated in both Objective-C and Swift."
   },
   {
     "id": "ios-samples-xcode",
@@ -72,12 +72,12 @@
   {
     "id": "ios-samples-latest-major-library-version",
     "category": "Code samples",
-    "text": "DO compile sample code using the latest major release of the library. Review sample code for freshness.  At least one commit must be made (to update dependencies) to each sample per semester."
+    "text": "DO compile sample code using the latest major release of the library. Review sample code for freshness. At least one commit must be made (to update dependencies) to each sample per semester."
   },
   {
     "id": "ios-samples-grafting",
     "category": "Code samples",
-    "text": "DO ensure that code samples can be easily grafted from the documentation into a users own application.  For example, don't rely on variable declarations in other samples."
+    "text": "DO ensure that code samples can be easily grafted from the documentation into a users own application. For example, don't rely on variable declarations in other samples."
   },
   {
     "id": "ios-samples-comprehension",
@@ -92,16 +92,16 @@
   {
     "id": "ios-samples-no-combinations",
     "category": "Code samples",
-    "text": "DO NOT combine multiple operations in a code snippet unless it's required for demonstrating the type or member. For example, a Cosmos DB code sample doesn't include both database and container creation operations.  Create a sample for database creation, and another sample for container creation.  You may combine multiple code snippets in the same sample, but ensure you can cut and paste just one operation.\n\nCombined operations require knowledge of additional operations that might be outside their current focus. The developer must first understand the code surrounding the operation they're working on, and can't copy and paste the code sample into their project."
+    "text": "DO NOT combine multiple operations in a code snippet unless it's required for demonstrating the type or member. For example, a Cosmos DB code sample doesn't include both database and container creation operations. Create a sample for database creation, and another sample for container creation. You may combine multiple code snippets in the same sample, but ensure you can cut and paste just one operation. Combined operations require knowledge of additional operations that might be outside their current focus. The developer must first understand the code surrounding the operation they're working on, and can't copy and paste the code sample into their project."
   },
   {
     "id": "ios-swift-docstrings",
     "category": "Swift docstrings",
-    "text": "DO write docstrings in XCode Markup (https://developer.apple.com/library/archive/documentation/Xcode/Reference/xcode_markup_formatting_ref/)   The code can then be post-processed to extract the docstrings for generating API reference documentation."
+    "text": "DO write docstrings in XCode Markup (https://developer.apple.com/library/archive/documentation/Xcode/Reference/xcode_markup_formatting_ref/)  The code can then be post-processed to extract the docstrings for generating API reference documentation."
   },
   {
     "id": "ios-swift-build-apiref",
     "category": "Swift docstrings",
-    "text": "DO ensure that anybody can clone the repo containing the client library and execute jazzy to generate the full and complete API reference output for the code, without any need for additional processing steps.\n\nAdd the following .jazzy.yaml file to the project:\n\n<code>output: docs\nclean: true\nxcodebuild_argument:\n- -workspace\n- YourWorkspaceName.xcworkspace\n- -scheme\n- YourSchemeName\n- CODE_SIGNING_ALLOWED = NO\nauthor: Microsoft, Inc.\nmodule: Folder_Name_where_all_code_resides\nmodule_version: 1.0\ncopyright: Copyright (C) 2019 Microsoft, Inc.\nmin_acl: internal\ntheme: apple\n</code>\n\nReplace the YourWorkspaceName, YourSchemeName, and Folder_Name_where_all_code_resides appropriately for the project.\n\n<!-- Project Links -->\n"
+    "text": "DO ensure that anybody can clone the repo containing the client library and execute jazzy to generate the full and complete API reference output for the code, without any need for additional processing steps. Add the following .jazzy.yaml file to the project: <code>output: docs clean: true xcodebuild_argument: - -workspace - YourWorkspaceName.xcworkspace - -scheme - YourSchemeName - CODE_SIGNING_ALLOWED = NO author: Microsoft, Inc. module: Folder_Name_where_all_code_resides module_version: 1.0 copyright: Copyright (C) 2019 Microsoft, Inc. min_acl: internal theme: apple </code> Replace the YourWorkspaceName, YourSchemeName, and Folder_Name_where_all_code_resides appropriately for the project. <!-- Project Links --> "
   }
 ]

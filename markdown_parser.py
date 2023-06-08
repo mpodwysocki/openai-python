@@ -167,6 +167,13 @@ def extract_id_from_inline(item):
         id = None
     return id
 
+
+def clean_text(results):
+    for result in results:
+        result["text"] = result["text"].replace("\n", " ").replace("TODO", "").replace("  ", " ")
+    return results
+
+
 if __name__ == "__main__":
 
     azure_sdk_path = os.getenv('AZURE_SDK_REPO_PATH')
@@ -187,6 +194,7 @@ if __name__ == "__main__":
                 if file in files_to_parse:
                     file_path = os.path.join(root, file)
                     results = parse_markdown(file_path, azure_sdk_path)
+                    results = clean_text(results)
                     json_str = json.dumps(results, indent=2)
                     filename = os.path.splitext(os.path.basename(file_path))[0]
                     json_filename = filename + ".json"                
@@ -197,6 +205,7 @@ if __name__ == "__main__":
     # Generate the REST API Guidelines JSON
     guidelines_path = os.path.join(rest_api_guidelines_path, "azure", "Guidelines.md")
     results = parse_markdown(guidelines_path, rest_api_guidelines_path)
+    results = clean_text(results)
     json_path = os.path.join(repo_root, "docs", "rest", "guidelines.json")
     json_str = json.dumps(results, indent=2)
     os.makedirs(os.path.dirname(json_path), exist_ok=True)

@@ -2,17 +2,17 @@
   {
     "id": "golang-network-use-http-pipeline",
     "category": "Using azcore.Pipeline",
-    "text": "DO use the HTTP pipeline component within azcore library for communicating to service REST endpoints.\n\nThe HTTP pipeline consists of a HTTP transport that is wrapped by multiple policies. Each policy is a control point during which the pipeline can modify either the request and/or response. We prescribe a default set of policies to standardize how client libraries interact with Azure services. The order in the list is the most sensible order for implementation."
+    "text": "DO use the HTTP pipeline component within azcore library for communicating to service REST endpoints. The HTTP pipeline consists of a HTTP transport that is wrapped by multiple policies. Each policy is a control point during which the pipeline can modify either the request and/or response. We prescribe a default set of policies to standardize how client libraries interact with Azure services. The order in the list is the most sensible order for implementation."
   },
   {
     "id": "golang-network-policies",
     "category": "Using azcore.Pipeline",
-    "text": "DO implement the following policies in the HTTP pipeline:\nTelemetry\nRetry\nAuthentication\nResponse downloader\nDistributed tracing\nLogging\nThe HTTP transport itself"
+    "text": "DO implement the following policies in the HTTP pipeline: Telemetry Retry Authentication Response downloader Distributed tracing Logging The HTTP transport itself"
   },
   {
     "id": "golang-network-azure-core-policies",
     "category": "Using azcore.Pipeline",
-    "text": "YOU SHOULD use the policy implementations in Azure Core whenever possible. Do not try to \"write your own\" policy unless it is doing something unique to your service. If you need another option to an existing policy, engage with the [Architecture Board] to add the option.\n\nTODO\n\nTODO\n\nTODO\n\nTODO\n\nTODO\n\nTODO"
+    "text": "YOU SHOULD use the policy implementations in Azure Core whenever possible. Do not try to \"write your own\" policy unless it is doing something unique to your service. If you need another option to an existing policy, engage with the [Architecture Board] to add the option.      "
   },
   {
     "id": "golang-enum-type",
@@ -32,7 +32,7 @@
   {
     "id": "golang-enum-type-values",
     "category": "Constants as Enumerations",
-    "text": "DO define a function named <EnumTypeName>Values() that returns a slice containing all possible values for the enumeration.\n\n```go\n// WidgetColor specifies a Widget's color from the list of possible values.\ntype WidgetColor string\n\nconst (\n\tWidgetColorBlue  WidgetColor = \"blue\"\n\tWidgetColorGreen WidgetColor = \"green\"\n\tWidgetColorRed   WidgetColor = \"red\"\n)\n\n// PossibleWidgetColorValues returns a slice of possible values for WidgetColor.\nfunc PossibleWidgetColorValues() []WidgetColor {\n\t// ...\n}\n\n\n```\n\nTODO"
+    "text": "DO define a function named <EnumTypeName>Values() that returns a slice containing all possible values for the enumeration. ```go // WidgetColor specifies a Widget's color from the list of possible values. type WidgetColor string const ( \tWidgetColorBlue WidgetColor = \"blue\" \tWidgetColorGreen WidgetColor = \"green\" \tWidgetColorRed  WidgetColor = \"red\" ) // PossibleWidgetColorValues returns a slice of possible values for WidgetColor. func PossibleWidgetColorValues() []WidgetColor { \t// ... }  ``` "
   },
   {
     "id": "golang-config-global",
@@ -57,7 +57,7 @@
   {
     "id": "golang-config-behavior-changes",
     "category": "Configuration",
-    "text": "DO NOT change behavior based on configuration changes that occur after the client is constructed. Hierarchies of clients inherit parent client configuration unless explicitly changed or overridden. Exceptions to this requirement are as follows:\nLog level, which must take effect immediately across the Azure SDK.\nTracing on/off, which must take effect immediately across the Azure SDK."
+    "text": "DO NOT change behavior based on configuration changes that occur after the client is constructed. Hierarchies of clients inherit parent client configuration unless explicitly changed or overridden. Exceptions to this requirement are as follows: Log level, which must take effect immediately across the Azure SDK. Tracing on/off, which must take effect immediately across the Azure SDK."
   },
   {
     "id": "golang-envvars-prefix",
@@ -67,7 +67,7 @@
   {
     "id": "golang-envvars-client-prefix",
     "category": "Configuration via Environment Variables",
-    "text": "YOU MAY use client library-specific environment variables for portal-configured settings which are provided as parameters to your client library. This generally includes credentials and connection details. For example, Service Bus could support the following environment variables:\nAZURE_SERVICEBUS_CONNECTION_STRING\nAZURE_SERVICEBUS_NAMESPACE\nAZURE_SERVICEBUS_ISSUER\nAZURE_SERVICEBUS_ACCESS_KEY\n\nStorage could support:\nAZURE_STORAGE_ACCOUNT\nAZURE_STORAGE_ACCESS_KEY\nAZURE_STORAGE_DNS_SUFFIX\nAZURE_STORAGE_CONNECTION_STRING"
+    "text": "YOU MAY use client library-specific environment variables for portal-configured settings which are provided as parameters to your client library. This generally includes credentials and connection details. For example, Service Bus could support the following environment variables: AZURE_SERVICEBUS_CONNECTION_STRING AZURE_SERVICEBUS_NAMESPACE AZURE_SERVICEBUS_ISSUER AZURE_SERVICEBUS_ACCESS_KEY Storage could support: AZURE_STORAGE_ACCOUNT AZURE_STORAGE_ACCESS_KEY AZURE_STORAGE_DNS_SUFFIX AZURE_STORAGE_CONNECTION_STRING"
   },
   {
     "id": "golang-envvars-approval",
@@ -77,12 +77,12 @@
   {
     "id": "golang-envvars-syntax",
     "category": "Configuration via Environment Variables",
-    "text": "DO use this syntax for environment variables specific to a particular Azure service:\nAZURE_<ServiceName>_<ConfigurationKey>\n\nWhere ServiceName is the canonical shortname without spaces, and ConfigurationKey refers to an unnested configuration key for that client library."
+    "text": "DO use this syntax for environment variables specific to a particular Azure service: AZURE_<ServiceName>_<ConfigurationKey> Where ServiceName is the canonical shortname without spaces, and ConfigurationKey refers to an unnested configuration key for that client library."
   },
   {
     "id": "golang-envvars-posix-compliance",
     "category": "Configuration via Environment Variables",
-    "text": "DO NOT use non-alpha-numeric characters in your environment variable names with the exception of underscore. This ensures broad interoperability.\n\nClient libraries must support robust logging mechanisms so that the consumer can adequately diagnose issues with the method calls and quickly determine whether the issue is in the consumer code, client library code, or service."
+    "text": "DO NOT use non-alpha-numeric characters in your environment variable names with the exception of underscore. This ensures broad interoperability. Client libraries must support robust logging mechanisms so that the consumer can adequately diagnose issues with the method calls and quickly determine whether the issue is in the consumer code, client library code, or service."
   },
   {
     "id": "golang-log-api",
@@ -102,7 +102,7 @@
   {
     "id": "golang-log-exclude",
     "category": "Logging",
-    "text": "DO NOT log payloads or HTTP header/query parameter values that aren't on the allow list.  For header/query parameters not on the allow list use the value <REDACTED> in place of the real value."
+    "text": "DO NOT log payloads or HTTP header/query parameter values that aren't on the allow list. For header/query parameters not on the allow list use the value <REDACTED> in place of the real value."
   },
   {
     "id": "golang-tracing-abstraction",
@@ -112,7 +112,7 @@
   {
     "id": "golang-tracing-span-per-call",
     "category": "Distributed Tracing",
-    "text": "DO create a new trace span for each API call.  New spans must be children of the context that was passed in."
+    "text": "DO create a new trace span for each API call. New spans must be children of the context that was passed in."
   },
   {
     "id": "golang-tracing-span-name",
@@ -122,6 +122,6 @@
   {
     "id": "golang-tracing-propagate",
     "category": "Distributed Tracing",
-    "text": "DO propagate tracing context on each outgoing service request through the appropriate headers to support a tracing service like Azure Monitor (https://azure.microsoft.com/services/monitor/) or ZipKin (https://zipkin.io/)   This is generally done with the HTTP pipeline.\n\nTODO\n\nTODO"
+    "text": "DO propagate tracing context on each outgoing service request through the appropriate headers to support a tracing service like Azure Monitor (https://azure.microsoft.com/services/monitor/) or ZipKin (https://zipkin.io/)  This is generally done with the HTTP pipeline.  "
   }
 ]

@@ -2,12 +2,12 @@
   {
     "id": "http",
     "category": "Building Blocks: HTTP, REST, & JSON",
-    "text": "\n\nAzure services must adhere to the HTTP specification, RFC7231 (https://tools.ietf.org/html/rfc7231)  This section further refines and constrains how service implementors should apply the constructs defined in the HTTP specification. It is therefore, important that you have a firm understanding of the following concepts:\nUniform Resource Locators (URLs)\nHTTP Request / Response Pattern\nHTTP Query Parameters and Header Values\n\nA Uniform Resource Locator (URL) is how developers access the resources of your service. Ultimately, URLs are how developers form a cognitive model of your service's resources."
+    "text": " Azure services must adhere to the HTTP specification, RFC7231 (https://tools.ietf.org/html/rfc7231) This section further refines and constrains how service implementors should apply the constructs defined in the HTTP specification. It is therefore, important that you have a firm understanding of the following concepts: Uniform Resource Locators (URLs) HTTP Request / Response Pattern HTTP Query Parameters and Header Values A Uniform Resource Locator (URL) is how developers access the resources of your service. Ultimately, URLs are how developers form a cognitive model of your service's resources."
   },
   {
     "id": "http-url-pattern",
     "category": "Uniform Resource Locators (URLs)",
-    "text": "DO use this URL pattern:\n\n```text\nhttps://&lt;tenant&gt;.&lt;region&gt;.&lt;service&gt;.&lt;cloud&gt;/&lt;service-root&gt;/&lt;resource-collection&gt;/&lt;resource-id&gt;\n\n```\n\nWhere:\n| Field | Description\n| - | - |\n| tenant | Regionally-unique ID representing a tenant (used for isolation, billing, quota enforcement, lifetime of resources, etc.)\n| region | Identifies the tenant's selected region. This region string MUST match one of the strings in the \"Name\" column returned from running this Azure CLI's \"az account list-locations -o table\"\n| service | Name of the service (ex: blobstore, servicebus, directory, or management)\n| cloud | Cloud domain name, e.g. azure.net (see Azure CLI's \"az cloud list\")\n| service\u2011root | Service-specific path (ex: blobcontainer, myqueue)\n| resource\u2011collection | Name of the collection, unabbreviated, pluralized\n| resource\u2011id | Id of resource within the resource-collection. This MUST be the raw string/number/guid value with no quoting but properly escaped to fit in a URL segment."
+    "text": "DO use this URL pattern: ```text https://&lt;tenant&gt;.&lt;region&gt;.&lt;service&gt;.&lt;cloud&gt;/&lt;service-root&gt;/&lt;resource-collection&gt;/&lt;resource-id&gt; ``` Where: | Field | Description | - | - | | tenant | Regionally-unique ID representing a tenant (used for isolation, billing, quota enforcement, lifetime of resources, etc.) | region | Identifies the tenant's selected region. This region string MUST match one of the strings in the \"Name\" column returned from running this Azure CLI's \"az account list-locations -o table\" | service | Name of the service (ex: blobstore, servicebus, directory, or management) | cloud | Cloud domain name, e.g. azure.net (see Azure CLI's \"az cloud list\") | service\u2011root | Service-specific path (ex: blobcontainer, myqueue) | resource\u2011collection | Name of the collection, unabbreviated, pluralized | resource\u2011id | Id of resource within the resource-collection. This MUST be the raw string/number/guid value with no quoting but properly escaped to fit in a URL segment."
   },
   {
     "id": "http-url-casing",
@@ -22,7 +22,7 @@
   {
     "id": "http-url-case-sensitivity",
     "category": "Uniform Resource Locators (URLs)",
-    "text": "DO treat service-defined URL path segments as case-sensitive. If the passed-in case doesn't match what the service expects, the request MUST fail with a 404-Not found HTTP return code.\n\nSome customer-provided path segment values may be compared case-insensitivity if the abstraction they represent is normally compared with case-insensitivity. For example, a UUID path segment of 'c55f6b35-05f6-42da-8321-2af5099bd2a2' should be treated identical to 'C55F6B35-05F6-42DA-8321-2AF5099BD2A2'"
+    "text": "DO treat service-defined URL path segments as case-sensitive. If the passed-in case doesn't match what the service expects, the request MUST fail with a 404-Not found HTTP return code. Some customer-provided path segment values may be compared case-insensitivity if the abstraction they represent is normally compared with case-insensitivity. For example, a UUID path segment of 'c55f6b35-05f6-42da-8321-2af5099bd2a2' should be treated identical to 'C55F6B35-05F6-42DA-8321-2AF5099BD2A2'"
   },
   {
     "id": "http-url-return-casing",
@@ -32,12 +32,12 @@
   {
     "id": "http-url-allowed-characters",
     "category": "Uniform Resource Locators (URLs)",
-    "text": "DO restrict the characters in service-defined path segments to 0-9  A-Z  a-z  -  .  _  ~, with : allowed only as described below to designate an action operation."
+    "text": "DO restrict the characters in service-defined path segments to 0-9 A-Z a-z - . _ ~, with : allowed only as described below to designate an action operation."
   },
   {
     "id": "http-url-allowed-characters-2",
     "category": "Uniform Resource Locators (URLs)",
-    "text": "YOU SHOULD restrict the characters allowed in user-specified path segments (i.e. path parameters values) to 0-9  A-Z  a-z  -  .  _  ~ (do not allow :)."
+    "text": "YOU SHOULD restrict the characters allowed in user-specified path segments (i.e. path parameters values) to 0-9 A-Z a-z - . _ ~ (do not allow :)."
   },
   {
     "id": "http-url-should-be-readable",
@@ -47,12 +47,12 @@
   {
     "id": "http-url-allowed-characters-3",
     "category": "Uniform Resource Locators (URLs)",
-    "text": "YOU MAY use these other characters in the URL path but they will likely require %-encoding [RFC 3986 (https://datatracker.ietf.org/doc/html/rfc3986#section-2.1) : /  ?  #  [  ]  @  !  $  &  '  (  )  *  +  ,  ;  ="
+    "text": "YOU MAY use these other characters in the URL path but they will likely require %-encoding [RFC 3986 (https://datatracker.ietf.org/doc/html/rfc3986#section-2.1) : / ? # [ ] @ ! $ & ' ( ) * + , ; ="
   },
   {
     "id": "http-direct-endpoints",
     "category": "Uniform Resource Locators (URLs)",
-    "text": "YOU MAY support a direct endpoint URL for performance/routing:\n\n```text\nhttps://&lt;tenant&gt;-&lt;service-root&gt;.&lt;service&gt;.&lt;cloud&gt;/...\n\n```\n\nExamples:\nRequest URL: https://blobstore.azure.net/contoso.com/account1/container1/blob2\nResponse header (RFC2557 (https://datatracker.ietf.org/doc/html/rfc2557#section-4) : content-location : https://contoso-dot-com-account1.blobstore.azure.net/container1/blob2\nGUID format: https://00000000-0000-0000-C000-000000000046-account1.blobstore.azure.net/container1/blob2"
+    "text": "YOU MAY support a direct endpoint URL for performance/routing: ```text https://&lt;tenant&gt;-&lt;service-root&gt;.&lt;service&gt;.&lt;cloud&gt;/... ``` Examples: Request URL: https://blobstore.azure.net/contoso.com/account1/container1/blob2 Response header (RFC2557 (https://datatracker.ietf.org/doc/html/rfc2557#section-4) : content-location : https://contoso-dot-com-account1.blobstore.azure.net/container1/blob2 GUID format: https://00000000-0000-0000-C000-000000000046-account1.blobstore.azure.net/container1/blob2"
   },
   {
     "id": "http-url-return-consistent-form",
@@ -62,7 +62,7 @@
   {
     "id": "http-url-parameter-values",
     "category": "Uniform Resource Locators (URLs)",
-    "text": "YOU MAY use URLs as values\n\n```text\nhttps://api.contoso.com/items?url=https://resources.contoso.com/shoes/fancy\n\n```\n\nThe HTTP Request / Response pattern dictates how your API behaves. For example: POST methods that create resources must be idempotent, GET method results may be cached, the If-Modified and ETag headers offer optimistic concurrency. The URL of a service, along with its request/response bodies, establishes the overall contract that developers have with your service. As a service provider, how you manage the overall request / response pattern should be one of the first implementation decisions you make.\n\nCloud applications embrace failure. Therefore, to enable customers to write fault-tolerant applications, all service operations (including POST) must be idempotent. Implementing services in an idempotent manner, with an \"exactly once\" semantic, enables developers to retry requests without the risk of unintended consequences."
+    "text": "YOU MAY use URLs as values ```text https://api.contoso.com/items?url=https://resources.contoso.com/shoes/fancy ``` The HTTP Request / Response pattern dictates how your API behaves. For example: POST methods that create resources must be idempotent, GET method results may be cached, the If-Modified and ETag headers offer optimistic concurrency. The URL of a service, along with its request/response bodies, establishes the overall contract that developers have with your service. As a service provider, how you manage the overall request / response pattern should be one of the first implementation decisions you make. Cloud applications embrace failure. Therefore, to enable customers to write fault-tolerant applications, all service operations (including POST) must be idempotent. Implementing services in an idempotent manner, with an \"exactly once\" semantic, enables developers to retry requests without the risk of unintended consequences."
   },
   {
     "id": "http-all-methods-idempotent",
@@ -82,7 +82,7 @@
   {
     "id": "http-success-status-codes",
     "category": "HTTP Return Codes",
-    "text": "DO adhere to the return codes in the following table when the method completes synchronously and is successful:\n\nMethod | Description | Response Status Code\n-------|-------------|---------------------\nPATCH  | Create/Modify the resource with JSON Merge Patch | 200-OK, 201-Created\nPUT    | Create/Replace the whole resource | 200-OK, 201-Created\nPOST   | Create new resource (ID set by service) | 201-Created with URL of created resource\nPOST   | Action | 200-OK\nGET    | Read (i.e. list) a resource collection | 200-OK\nGET    | Read the resource | 200-OK\nDELETE | Remove the resource | 204-No Content; avoid 404-Not Found"
+    "text": "DO adhere to the return codes in the following table when the method completes synchronously and is successful: Method | Description | Response Status Code -------|-------------|--------------------- PATCH | Create/Modify the resource with JSON Merge Patch | 200-OK, 201-Created PUT  | Create/Replace the whole resource | 200-OK, 201-Created POST  | Create new resource (ID set by service) | 201-Created with URL of created resource POST  | Action | 200-OK GET  | Read (i.e. list) a resource collection | 200-OK GET  | Read the resource | 200-OK DELETE | Remove the resource | 204-No Content; avoid 404-Not Found"
   },
   {
     "id": "http-lro-status-code",
@@ -117,7 +117,7 @@
   {
     "id": "http-support-optimistic-concurrency",
     "category": "HTTP Return Codes",
-    "text": "DO support caching and optimistic concurrency by honoring the the If-Match, If-None-Match, if-modified-since, and if-unmodified-since request headers and by returning the ETag and last-modified response headers\n\nBecause information in the service URL, as well as the request / response, are strings, there must be a predictable, well-defined scheme to convert strings to their corresponding values."
+    "text": "DO support caching and optimistic concurrency by honoring the the If-Match, If-None-Match, if-modified-since, and if-unmodified-since request headers and by returning the ETag and last-modified response headers Because information in the service URL, as well as the request / response, are strings, there must be a predictable, well-defined scheme to convert strings to their corresponding values."
   },
   {
     "id": "http-parameter-validation",
@@ -127,7 +127,7 @@
   {
     "id": "http-parameter-serialization",
     "category": "HTTP Query Parameters and Header Values",
-    "text": "DO use the following table when translating strings:\n\nData type | Document that string must be\n--------- | -------\nBoolean   | true / false (all lowercase)\nInteger   | -253+1 to +253-1 (for consistency with JSON limits on integers RFC8259 (https://datatracker.ietf.org/doc/html/rfc8259) \nFloat     | IEEE-754 binary64 (https://en.wikipedia.org/wiki/Double-precision_floating-point_format) String    | (Un)quoted?, max length, legal characters, case-sensitive, multiple delimiter\nUUID      | 123e4567-e89b-12d3-a456-426614174000 (no {}s, hyphens, case-insensitive) RFC4122 (https://datatracker.ietf.org/doc/html/rfc4122) Date/Time (Header) | Sun, 06 Nov 1994 08:49:37 GMT RFC7231, Section 7.1.1.1 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1) Date/Time (Query parameter) | YYYY-MM-DDTHH:mm:ss.sssZ (with at most 3 digits of fractional seconds) RFC3339 (https://datatracker.ietf.org/doc/html/rfc3339) Byte array | Base-64 encoded, max length\nArray      | One of a) a comma-separated list of values (preferred), or b) separate name=value parameter instances for each value of the array\n\nThe table below lists the headers most used by Azure services:\n\nHeader Key          | Applies to | Example\n------------------- | ---------- | -------------\nauthorization     | Request    | Bearer eyJ0...Xd6j (Support Azure Active Directory)\nx-ms-useragent    | Request    | (see Distributed Tracing & Telemetry)\ntraceparent         | Request    | (see Distributed Tracing & Telemetry)\ntracecontext        | Request    | (see Distributed Tracing & Telemetry)\naccept              | Request    | application/json\nIf-Match            | Request    | \"67ab43\" or * (no quotes) (see Conditional Requests)\nIf-None-Match       | Request    | \"67ab43\" or * (no quotes) (see Conditional Requests)\nIf-Modified-Since   | Request    | Sun, 06 Nov 1994 08:49:37 GMT (see Conditional Requests)\nIf-Unmodified-Since | Request    | Sun, 06 Nov 1994 08:49:37 GMT (see Conditional Requests)\ndate                | Both       | Sun, 06 Nov 1994 08:49:37 GMT (see RFC7231, Section 7.1.1.2 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.2) \ncontent-type      | Both       | application/merge-patch+json\ncontent-length    | Both       | 1024\nx-ms-request-id   | Response   | 4227cdc5-9f48-4e84-921a-10967cb785a0\nETag                | Response   | \"67ab43\" (see Conditional Requests)\nlast-modified       | Response   | Sun, 06 Nov 1994 08:49:37 GMT\nx-ms-error-code   | Response   | (see Handling Errors)\nazure-deprecating | Response   | (see Deprecating Behavior Notification)\nretry-after         | Response   | 180 (see RFC 7231, Section 7.1.3 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.3) "
+    "text": "DO use the following table when translating strings: Data type | Document that string must be --------- | ------- Boolean  | true / false (all lowercase) Integer  | -253+1 to +253-1 (for consistency with JSON limits on integers RFC8259 (https://datatracker.ietf.org/doc/html/rfc8259) Float   | IEEE-754 binary64 (https://en.wikipedia.org/wiki/Double-precision_floating-point_format) String  | (Un)quoted?, max length, legal characters, case-sensitive, multiple delimiter UUID   | 123e4567-e89b-12d3-a456-426614174000 (no {}s, hyphens, case-insensitive) RFC4122 (https://datatracker.ietf.org/doc/html/rfc4122) Date/Time (Header) | Sun, 06 Nov 1994 08:49:37 GMT RFC7231, Section 7.1.1.1 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1) Date/Time (Query parameter) | YYYY-MM-DDTHH:mm:ss.sssZ (with at most 3 digits of fractional seconds) RFC3339 (https://datatracker.ietf.org/doc/html/rfc3339) Byte array | Base-64 encoded, max length Array   | One of a) a comma-separated list of values (preferred), or b) separate name=value parameter instances for each value of the array The table below lists the headers most used by Azure services: Header Key     | Applies to | Example ------------------- | ---------- | ------------- authorization   | Request  | Bearer eyJ0...Xd6j (Support Azure Active Directory) x-ms-useragent  | Request  | (see Distributed Tracing & Telemetry) traceparent     | Request  | (see Distributed Tracing & Telemetry) tracecontext    | Request  | (see Distributed Tracing & Telemetry) accept       | Request  | application/json If-Match      | Request  | \"67ab43\" or * (no quotes) (see Conditional Requests) If-None-Match    | Request  | \"67ab43\" or * (no quotes) (see Conditional Requests) If-Modified-Since  | Request  | Sun, 06 Nov 1994 08:49:37 GMT (see Conditional Requests) If-Unmodified-Since | Request  | Sun, 06 Nov 1994 08:49:37 GMT (see Conditional Requests) date        | Both    | Sun, 06 Nov 1994 08:49:37 GMT (see RFC7231, Section 7.1.1.2 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.2) content-type   | Both    | application/merge-patch+json content-length  | Both    | 1024 x-ms-request-id  | Response  | 4227cdc5-9f48-4e84-921a-10967cb785a0 ETag        | Response  | \"67ab43\" (see Conditional Requests) last-modified    | Response  | Sun, 06 Nov 1994 08:49:37 GMT x-ms-error-code  | Response  | (see Handling Errors) azure-deprecating | Response  | (see Deprecating Behavior Notification) retry-after     | Response  | 180 (see RFC 7231, Section 7.1.3 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.3) "
   },
   {
     "id": "http-header-support-standard-headers",
@@ -152,12 +152,12 @@
   {
     "id": "http-header-date-values",
     "category": "HTTP Query Parameters and Header Values",
-    "text": "DO accept date values in headers in HTTP-Date format and return date values in headers in the IMF-fixdate format as defined in RFC7231, Section 7.1.1.1 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1)  e.g. \"Sun, 06 Nov 1994 08:49:37 GMT\".\n\nNote: The RFC 7321 IMF-fixdate format is a \"fixed-length and single-zone subset\" of the RFC 1123 / RFC 5822 format, which means: a) year must be four digits, b) the seconds component of time is required, and c) the timezone must be GMT."
+    "text": "DO accept date values in headers in HTTP-Date format and return date values in headers in the IMF-fixdate format as defined in RFC7231, Section 7.1.1.1 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1) e.g. \"Sun, 06 Nov 1994 08:49:37 GMT\". Note: The RFC 7321 IMF-fixdate format is a \"fixed-length and single-zone subset\" of the RFC 1123 / RFC 5822 format, which means: a) year must be four digits, b) the seconds component of time is required, and c) the timezone must be GMT."
   },
   {
     "id": "http-header-request-id",
     "category": "HTTP Query Parameters and Header Values",
-    "text": "DO create an opaque value that uniquely identifies the request and return this value in the x-ms-request-id response header.\n\nYour service should include the x-ms-request-id value in error logs so that users can submit support requests for specific failures using this value."
+    "text": "DO create an opaque value that uniquely identifies the request and return this value in the x-ms-request-id response header. Your service should include the x-ms-request-id value in error logs so that users can submit support requests for specific failures using this value."
   },
   {
     "id": "http-allow-unrecognized-headers",
@@ -167,12 +167,12 @@
   {
     "id": "http-no-x-custom-headers",
     "category": "HTTP Query Parameters and Header Values",
-    "text": "DO NOT use \"x-\" prefix for custom headers, unless the header already exists in production [RFC 6648 (https://datatracker.ietf.org/doc/html/rfc6648) .\n\nAdditional References\nStackOverflow - Difference between http parameters and http headers (https://stackoverflow.com/questions/40492782) \nStandard HTTP Headers (https://httpwg.org/specs/rfc7231.html#header.field.registration) \nWhy isn't HTTP PUT allowed to do partial updates in a REST API? (https://stackoverflow.com/questions/19732423/why-isnt-http-put-allowed-to-do-partial-updates-in-a-rest-api) "
+    "text": "DO NOT use \"x-\" prefix for custom headers, unless the header already exists in production [RFC 6648 (https://datatracker.ietf.org/doc/html/rfc6648) . Additional References StackOverflow - Difference between http parameters and http headers (https://stackoverflow.com/questions/40492782) Standard HTTP Headers (https://httpwg.org/specs/rfc7231.html#header.field.registration) Why isn't HTTP PUT allowed to do partial updates in a REST API? (https://stackoverflow.com/questions/19732423/why-isnt-http-put-allowed-to-do-partial-updates-in-a-rest-api) "
   },
   {
     "id": "rest",
     "category": "HTTP Query Parameters and Header Values",
-    "text": "\n\nREST is an architectural style with broad reach that emphasizes scalability, generality, independent deployment, reduced latency via caching, and security. When applying REST to your API, you define your service\u2019s resources as a collections of items.\nThese are typically the nouns you use in the vocabulary of your service. Your service's URLs determine the hierarchical path developers use to perform CRUD (create, read, update, and delete) operations on resources. Note, it's important to model resource state, not behavior.\nThere are patterns, later in these guidelines, that describe how to invoke behavior on your service. See this article in the Azure Architecture Center (https://docs.microsoft.com/azure/architecture/best-practices/api-design) for a more detailed discussion of REST API design patterns.\n\nWhen designing your service, it is important to optimize for the developer using your API."
+    "text": " REST is an architectural style with broad reach that emphasizes scalability, generality, independent deployment, reduced latency via caching, and security. When applying REST to your API, you define your service\u2019s resources as a collections of items. These are typically the nouns you use in the vocabulary of your service. Your service's URLs determine the hierarchical path developers use to perform CRUD (create, read, update, and delete) operations on resources. Note, it's important to model resource state, not behavior. There are patterns, later in these guidelines, that describe how to invoke behavior on your service. See this article in the Azure Architecture Center (https://docs.microsoft.com/azure/architecture/best-practices/api-design) for a more detailed discussion of REST API design patterns. When designing your service, it is important to optimize for the developer using your API."
   },
   {
     "id": "rest-clear-naming",
@@ -207,7 +207,7 @@
   {
     "id": "rest-field-mutability",
     "category": "Resource Schema & Field Mutability",
-    "text": "DO think about your resource's fields and how they are used:\n\nField Mutability | Service Request's behavior for this field\n-----------------| -----------------------------------------\nCreate | Service honors field only when creating a resource. Minimize create-only fields so customers don't have to delete & re-create the resource.\nUpdate | Service honors field when creating or updating a resource\nRead   | Service returns this field in a response. If the client passed a read-only field, the service MUST fail the request unless the passed-in value matches the resource's current value\n\nIn addition to the above, a field may be \"required\" or \"optional\". A required field is guaranteed to always exist and will typically not become a nullable field in a SDK's data structure. This allows customers to write code without performing a null-check.\nBecause of this, required fields can only be introduced in the 1st version of a service; it is a breaking change to introduce required fields in a later version. In addition, it is a breaking change to remove a required field or make an optional field required or vice versa."
+    "text": "DO think about your resource's fields and how they are used: Field Mutability | Service Request's behavior for this field -----------------| ----------------------------------------- Create | Service honors field only when creating a resource. Minimize create-only fields so customers don't have to delete & re-create the resource. Update | Service honors field when creating or updating a resource Read  | Service returns this field in a response. If the client passed a read-only field, the service MUST fail the request unless the passed-in value matches the resource's current value In addition to the above, a field may be \"required\" or \"optional\". A required field is guaranteed to always exist and will typically not become a nullable field in a SDK's data structure. This allows customers to write code without performing a null-check. Because of this, required fields can only be introduced in the 1st version of a service; it is a breaking change to introduce required fields in a later version. In addition, it is a breaking change to remove a required field or make an optional field required or vice versa."
   },
   {
     "id": "rest-flat-is-better-than-nested",
@@ -257,17 +257,17 @@
   {
     "id": "rest-put-patch-status-codes",
     "category": "Create / Update / Replace Processing Rules",
-    "text": "DO follow the processing below to create/update/replace a resource:\n\nWhen using this method | if this condition happens | use\u00a0this\u00a0response\u00a0code\n---------------------- | ------------------------- | ----------------------\nPATCH/PUT | Any JSON field name/value not known/valid | 400-Bad Request\nPATCH/PUT | Any Read field passed (client can't set Read fields) | 400-Bad Request\n| If\u00a0the\u00a0resource\u00a0does\u00a0not\u00a0exist |\nPATCH/PUT | Any mandatory Create/Update field missing | 400-Bad Request\nPATCH/PUT | Create resource using Create/Update fields | 201-Created\n| If\u00a0the\u00a0resource\u00a0already\u00a0exists |\nPATCH | Any Create field doesn't match current value (allows retries) | 409-Conflict\nPATCH | Update resource using Update fields | 200-OK\nPUT | Any mandatory Create/Update field missing | 400-Bad Request\nPUT | Overwrite resource entirely using Create/Update fields | 200-OK\n\nThere are 2 kinds of errors:\nAn error where you expect customer code to gracefully recover at runtime\nAn error indicating a bug in customer code that is unlikely to be recoverable at runtime; the customer must just fix their code"
+    "text": "DO follow the processing below to create/update/replace a resource: When using this method | if this condition happens | use\u00a0this\u00a0response\u00a0code ---------------------- | ------------------------- | ---------------------- PATCH/PUT | Any JSON field name/value not known/valid | 400-Bad Request PATCH/PUT | Any Read field passed (client can't set Read fields) | 400-Bad Request | If\u00a0the\u00a0resource\u00a0does\u00a0not\u00a0exist | PATCH/PUT | Any mandatory Create/Update field missing | 400-Bad Request PATCH/PUT | Create resource using Create/Update fields | 201-Created | If\u00a0the\u00a0resource\u00a0already\u00a0exists | PATCH | Any Create field doesn't match current value (allows retries) | 409-Conflict PATCH | Update resource using Update fields | 200-OK PUT | Any mandatory Create/Update field missing | 400-Bad Request PUT | Overwrite resource entirely using Create/Update fields | 200-OK There are 2 kinds of errors: An error where you expect customer code to gracefully recover at runtime An error indicating a bug in customer code that is unlikely to be recoverable at runtime; the customer must just fix their code"
   },
   {
     "id": "rest-error-code-header",
     "category": "Handling Errors",
-    "text": "DO return an x-ms-error-code response header with a string error code indicating what went wrong.\n\nNOTE: x-ms-error-code values are part of your API contract (because customer code is likely to do comparisons against them) and cannot change in the future."
+    "text": "DO return an x-ms-error-code response header with a string error code indicating what went wrong. NOTE: x-ms-error-code values are part of your API contract (because customer code is likely to do comparisons against them) and cannot change in the future."
   },
   {
     "id": "rest-error-code-enum",
     "category": "Handling Errors",
-    "text": "YOU MAY implement the x-ms-error-code values as an enum with \"modelAsString\": true because it's possible add new values over time.  In particular, it's only a breaking change if the same conditions result in a different top-level error code."
+    "text": "YOU MAY implement the x-ms-error-code values as an enum with \"modelAsString\": true because it's possible add new values over time. In particular, it's only a breaking change if the same conditions result in a different top-level error code."
   },
   {
     "id": "rest-add-codes-in-new-api-version",
@@ -277,7 +277,7 @@
   {
     "id": "rest-descriptive-error-code-values",
     "category": "Handling Errors",
-    "text": "DO carefully craft unique x-ms-error-code string values for errors that are recoverable at runtime.  Reuse common error codes for usage errors that are not recoverable."
+    "text": "DO carefully craft unique x-ms-error-code string values for errors that are recoverable at runtime. Reuse common error codes for usage errors that are not recoverable."
   },
   {
     "id": "rest-error-code-grouping",
@@ -292,7 +292,7 @@
   {
     "id": "rest-error-response-body-structure",
     "category": "Handling Errors",
-    "text": "DO provide a response body with the following structure:\n\nErrorResponse : Object\n\nProperty | Type | Required | Description\n-------- | ---- | :------: | -----------\nerror | ErrorDetail | \u2714 | The top-level error object whose code matches the x-ms-error-code response header\n\nErrorDetail : Object\n\nProperty | Type | Required | Description\n-------- | ---- | :------: | -----------\ncode | String | \u2714 | One of a server-defined set of error codes.\nmessage | String | \u2714 | A human-readable representation of the error.\ntarget | String |  | The target of the error.\ndetails | ErrorDetail[] |  | An array of details about specific errors that led to this reported error.\ninnererror | InnerError |  | An object containing more specific information than the current object about the error.\nadditional properties |   | | Additional properties that can be useful when debugging.\n\nInnerError : Object\n\nProperty | Type | Required | Description\n-------- | ---- | :------: | -----------\ncode | String |  | A more specific error code than was provided by the containing error.\ninnererror | InnerError |  | An object containing more specific information than the current object about the error.\n\nExample:\n\n```json\n{\n  \"error\": {\n    \"code\": \"InvalidPasswordFormat\",\n    \"message\": \"Human-readable description\",\n    \"target\": \"target of error\",\n    \"innererror\": {\n      \"code\": \"PasswordTooShort\",\n      \"minLength\": 6,\n    }\n  }\n}\n\n```"
+    "text": "DO provide a response body with the following structure: ErrorResponse : Object Property | Type | Required | Description -------- | ---- | :------: | ----------- error | ErrorDetail | \u2714 | The top-level error object whose code matches the x-ms-error-code response header ErrorDetail : Object Property | Type | Required | Description -------- | ---- | :------: | ----------- code | String | \u2714 | One of a server-defined set of error codes. message | String | \u2714 | A human-readable representation of the error. target | String | | The target of the error. details | ErrorDetail[] | | An array of details about specific errors that led to this reported error. innererror | InnerError | | An object containing more specific information than the current object about the error. additional properties |  | | Additional properties that can be useful when debugging. InnerError : Object Property | Type | Required | Description -------- | ---- | :------: | ----------- code | String | | A more specific error code than was provided by the containing error. innererror | InnerError | | An object containing more specific information than the current object about the error. Example: ```json {  \"error\": {   \"code\": \"InvalidPasswordFormat\",   \"message\": \"Human-readable description\",   \"target\": \"target of error\",   \"innererror\": {    \"code\": \"PasswordTooShort\",    \"minLength\": 6,   }  } } ```"
   },
   {
     "id": "rest-document-error-code-values",
@@ -307,7 +307,7 @@
   {
     "id": "rest-error-additional-properties-allowed",
     "category": "Handling Errors",
-    "text": "YOU MAY add additional properties for any data values in your error message so customers don't resort to parsing your error message.  For example, an error with \"message\": \"A maximum of 16 keys are allowed per account.\" might also add a \"maximumKeys\": 16 property.  This is not part of your API contract and should only be used for diagnosing problems.\n\nNote: Do not use this mechanism to provide information developers need to rely on in code (ex: the error message can give details about why you've been throttled, but the Retry-After should be what developers rely on to back off)."
+    "text": "YOU MAY add additional properties for any data values in your error message so customers don't resort to parsing your error message. For example, an error with \"message\": \"A maximum of 16 keys are allowed per account.\" might also add a \"maximumKeys\": 16 property. This is not part of your API contract and should only be used for diagnosing problems. Note: Do not use this mechanism to provide information developers need to rely on in code (ex: the error message can give details about why you've been throttled, but the Retry-After should be what developers rely on to back off)."
   },
   {
     "id": "rest-error-use-default-response",
@@ -332,7 +332,7 @@
   {
     "id": "json-field-values-case-sensitivity",
     "category": "JSON",
-    "text": "DO treat JSON field values with case-sensitivity. There may be some exceptions (e.g. GUIDs) but avoid if at all possible.\n\nServices, and the clients that access them, may be written in multiple languages. To ensure interoperability, JSON establishes the \"lowest common denominator\" type system, which is always sent over the wire as UTF-8 bytes. This system is very simple and consists of three types:\n\nType | Description\n---- | -----------\nBoolean | true/false (always lowercase)\nNumber  | Signed floating point (IEEE-754 binary64; int range: -253+1 to +253-1)\nString  | Used for everything else"
+    "text": "DO treat JSON field values with case-sensitivity. There may be some exceptions (e.g. GUIDs) but avoid if at all possible. Services, and the clients that access them, may be written in multiple languages. To ensure interoperability, JSON establishes the \"lowest common denominator\" type system, which is always sent over the wire as UTF-8 bytes. This system is very simple and consists of three types: Type | Description ---- | ----------- Boolean | true/false (always lowercase) Number | Signed floating point (IEEE-754 binary64; int range: -253+1 to +253-1) String | Used for everything else"
   },
   {
     "id": "json-integer-values",
@@ -387,7 +387,7 @@
   {
     "id": "json-prefer-objects-over-arrays",
     "category": "JSON",
-    "text": "YOU SHOULD use JSON objects instead of arrays whenever possible.\n\nIt is common for strings to have an explicit set of values. These are often reflected in the OpenAPI definition as enumerations. These are extremely useful for developer tooling, e.g. code completion, and client library generation.\n\nHowever, it is not uncommon for the set of values to grow over the life of a service. For this reason, Microsoft's tooling uses the concept of an \"extensible enum,\" which indicates that the set of values should be treated as only a partial list.\nThis indicates to client libraries and customers that values of the enumeration field should be effectively treated as strings and that undocumented value may returned in the future. This enables the set of values to grow over time while ensuring stability in client libraries and customer code."
+    "text": "YOU SHOULD use JSON objects instead of arrays whenever possible. It is common for strings to have an explicit set of values. These are often reflected in the OpenAPI definition as enumerations. These are extremely useful for developer tooling, e.g. code completion, and client library generation. However, it is not uncommon for the set of values to grow over the life of a service. For this reason, Microsoft's tooling uses the concept of an \"extensible enum,\" which indicates that the set of values should be treated as only a partial list. This indicates to client libraries and customers that values of the enumeration field should be effectively treated as strings and that undocumented value may returned in the future. This enables the set of values to grow over time while ensuring stability in client libraries and customer code."
   },
   {
     "id": "json-use-extensible-enums",
@@ -417,12 +417,12 @@
   {
     "id": "json-avoid-polymorphism",
     "category": "Polymorphic types",
-    "text": "YOU SHOULD NOT use polymorphic JSON types because they greatly complicate the customer code due to runtime dynamic casts and the introduction of new types in the future.\n\nIf you can't avoid them, then follow the guideline below."
+    "text": "YOU SHOULD NOT use polymorphic JSON types because they greatly complicate the customer code due to runtime dynamic casts and the introduction of new types in the future. If you can't avoid them, then follow the guideline below."
   },
   {
     "id": "json-use-discriminator-for-polymorphism",
     "category": "Polymorphic types",
-    "text": "DO define a discriminator field indicating the kind of the resource and include any kind-specific fields in the body.\n\nBelow is an example of JSON for a Rectangle and Circle with a discriminator field named kind:\nRectangle\n\n```json\n{\n   \"kind\": \"rectangle\",\n   \"x\": 100,\n   \"y\": 50,\n   \"width\": 10,\n   \"length\": 24,\n   \"fillColor\": \"Red\",\n   \"lineColor\": \"White\",\n   \"subscription\": {\n      \"kind\": \"free\"\n   }\n}\n\n```\n\nCircle\n\n```json\n{\n  \"kind\": \"circle\",\n  \"x\": 100,\n  \"y\": 50,\n  \"radius\": 10,\n  \"fillColor\": \"Green\",\n  \"lineColor\": \"Black\",\n  \"subscription\": {\n     \"kind\": \"paid\",\n     \"expiration\": \"2024\",\n     \"invoice\": \"123456\"\n  }\n}\n\n```\n\nBoth Rectangle and Circle have common fields: kind, fillColor, lineColor, and subscription. A Rectangle also has x, y, width, and length while a Circle has x, y, and radius. The subscription is a nested polymorphic type. A free subscription has no additional fields and a paid subscription has expiration and invoice fields.\n\nThe Azure Naming Guidelines recommend that the discriminator field be named kind."
+    "text": "DO define a discriminator field indicating the kind of the resource and include any kind-specific fields in the body. Below is an example of JSON for a Rectangle and Circle with a discriminator field named kind: Rectangle ```json {  \"kind\": \"rectangle\",  \"x\": 100,  \"y\": 50,  \"width\": 10,  \"length\": 24,  \"fillColor\": \"Red\",  \"lineColor\": \"White\",  \"subscription\": {    \"kind\": \"free\"  } } ``` Circle ```json {  \"kind\": \"circle\",  \"x\": 100,  \"y\": 50,  \"radius\": 10,  \"fillColor\": \"Green\",  \"lineColor\": \"Black\",  \"subscription\": {   \"kind\": \"paid\",   \"expiration\": \"2024\",   \"invoice\": \"123456\"  } } ``` Both Rectangle and Circle have common fields: kind, fillColor, lineColor, and subscription. A Rectangle also has x, y, width, and length while a Circle has x, y, and radius. The subscription is a nested polymorphic type. A free subscription has no additional fields and a paid subscription has expiration and invoice fields. The Azure Naming Guidelines recommend that the discriminator field be named kind."
   },
   {
     "id": "json-polymorphism-kind-extensible",
@@ -442,22 +442,22 @@
   {
     "id": "json-polymorphism-arrays",
     "category": "Polymorphic types",
-    "text": "YOU SHOULD NOT have a property of an updatable resource whose value is an array of polymorphic objects.\n\nUpdating an array property with JSON merge-patch is not version-resilient if the array contains polymorphic types."
+    "text": "YOU SHOULD NOT have a property of an updatable resource whose value is an array of polymorphic objects. Updating an array property with JSON merge-patch is not version-resilient if the array contains polymorphic types."
   },
   {
     "id": "actions",
     "category": "Common API Patterns",
-    "text": "\n\nThe REST specification is used to model the state of a resource, and is primarily intended to handle CRUD (Create, Read, Update, Delete) operations. However, many services require the ability to perform an action on a resource, e.g. getting the thumbnail of an image or rebooting a VM.  It is also sometimes useful to perform an action on a collection."
+    "text": " The REST specification is used to model the state of a resource, and is primarily intended to handle CRUD (Create, Read, Update, Delete) operations. However, many services require the ability to perform an action on a resource, e.g. getting the thumbnail of an image or rebooting a VM. It is also sometimes useful to perform an action on a collection."
   },
   {
     "id": "actions-url-pattern-for-resource-action",
     "category": "Performing an Action",
-    "text": "YOU SHOULD pattern your URL like this to perform an action on a resource\nURL Pattern\n\n```text\nhttps://.../&lt;resource-collection&gt;/&lt;resource-id&gt;:&lt;action&gt;?&lt;input parameters&gt;\n\n```\n\nExample\n\n```text\nhttps://.../users/Bob:grant?access=read\n\n```"
+    "text": "YOU SHOULD pattern your URL like this to perform an action on a resource URL Pattern ```text https://.../&lt;resource-collection&gt;/&lt;resource-id&gt;:&lt;action&gt;?&lt;input parameters&gt; ``` Example ```text https://.../users/Bob:grant?access=read ```"
   },
   {
     "id": "actions-url-pattern-for-collection-action",
     "category": "Performing an Action",
-    "text": "YOU SHOULD pattern your URL like this to perform an action on a collection\nURL Pattern\n\n```text\nhttps://.../&lt;resource-collection&gt;:&lt;action&gt;?&lt;input parameters&gt;\n\n```\n\nExample\n\n```text\nhttps://.../users:grant?access=read\n\n```\n\nNote: To avoid potential collision of actions and resource ids, you should disallow the use of the \":\" character in resource ids."
+    "text": "YOU SHOULD pattern your URL like this to perform an action on a collection URL Pattern ```text https://.../&lt;resource-collection&gt;:&lt;action&gt;?&lt;input parameters&gt; ``` Example ```text https://.../users:grant?access=read ``` Note: To avoid potential collision of actions and resource ids, you should disallow the use of the \":\" character in resource ids."
   },
   {
     "id": "actions-use-post-method",
@@ -497,12 +497,12 @@
   {
     "id": "collections-support-server-driven-paging",
     "category": "Collections",
-    "text": "YOU SHOULD support paging today if there is ever a chance in the future that the number of items can grow to be very large.\n\nNOTE: It is a breaking change to add paging in the future"
+    "text": "YOU SHOULD support paging today if there is ever a chance in the future that the number of items can grow to be very large. NOTE: It is a breaking change to add paging in the future"
   },
   {
     "id": "collections-use-get-method",
     "category": "Collections",
-    "text": "YOU MAY expose an operation that lists your resources by supporting a GET method with a URL to a resource-collection (as opposed to a resource-id).\n\nExample Response Body\n\n```json\n{\n    \"value\": [\n       { \"id\": \"Item 01\", \"etag\": \"0xabc\", \"price\": 99.95, \"sizes\": null },\n       { \u2026 },\n       { \u2026 },\n       { \"id\": \"Item 99\", \"etag\": \"0xdef\", \"price\": 59.99, \"sizes\": null }\n    ],\n    \"nextLink\": \"{opaqueUrl}\"\n }\n\n```"
+    "text": "YOU MAY expose an operation that lists your resources by supporting a GET method with a URL to a resource-collection (as opposed to a resource-id). Example Response Body ```json {   \"value\": [    { \"id\": \"Item 01\", \"etag\": \"0xabc\", \"price\": 99.95, \"sizes\": null },    { \u2026 },    { \u2026 },    { \"id\": \"Item 99\", \"etag\": \"0xdef\", \"price\": 59.99, \"sizes\": null }   ],   \"nextLink\": \"{opaqueUrl}\" } ```"
   },
   {
     "id": "collections-items-have-id-and-etag",
@@ -517,7 +517,7 @@
   {
     "id": "collections-include-nextlink-for-more-results",
     "category": "Collections",
-    "text": "DO return a nextLink field with an absolute URL that the client can GET in order to retrieve the next page of the collection.\n\nNote: The service is responsible for performing any URL-encoding required on the nextLink URL."
+    "text": "DO return a nextLink field with an absolute URL that the client can GET in order to retrieve the next page of the collection. Note: The service is responsible for performing any URL-encoding required on the nextLink URL."
   },
   {
     "id": "collections-nextlink-includes-all-query-params",
@@ -547,7 +547,7 @@
   {
     "id": "collections-query-options",
     "category": "Query options",
-    "text": "YOU MAY support the following query parameters allowing customers to control the list operation:\n\nParameter\u00a0name | Type | Description\n------------------- | ---- | -----------\nfilter       | string            | an expression on the resource type that selects the resources to be returned\norderby      | string\u00a0array | a list of expressions that specify the order of the returned resources\nskip         | integer           | an offset into the collection of the first resource to be returned\ntop          | integer           | the maximum number of resources to return from the collection\nmaxpagesize  | integer           | the maximum number of resources to include in a single response\nselect       | string\u00a0array | a list of field names to be returned for each resource\nexpand       | string\u00a0array | a list of the related resources to be included in line with each resource"
+    "text": "YOU MAY support the following query parameters allowing customers to control the list operation: Parameter\u00a0name | Type | Description ------------------- | ---- | ----------- filter    | string      | an expression on the resource type that selects the resources to be returned orderby   | string\u00a0array | a list of expressions that specify the order of the returned resources skip     | integer      | an offset into the collection of the first resource to be returned top     | integer      | the maximum number of resources to return from the collection maxpagesize | integer      | the maximum number of resources to include in a single response select    | string\u00a0array | a list of field names to be returned for each resource expand    | string\u00a0array | a list of the related resources to be included in line with each resource"
   },
   {
     "id": "collections-error-on-unknown-parameter",
@@ -577,12 +577,12 @@
   {
     "id": "collections-filter-param",
     "category": "filter",
-    "text": "YOU MAY support filtering of the results of a list operation with the filter query parameter.\n\nThe value of the filter option is an expression involving the fields of the resource that produces a Boolean value. This expression is evaluated for each resource in the collection and only items where the expression evaluates to true are included in the response."
+    "text": "YOU MAY support filtering of the results of a list operation with the filter query parameter. The value of the filter option is an expression involving the fields of the resource that produces a Boolean value. This expression is evaluated for each resource in the collection and only items where the expression evaluates to true are included in the response."
   },
   {
     "id": "collections-filter-behavior",
     "category": "filter",
-    "text": "DO omit all resources from the collection for which the filter expression evaluates to false or to null, or references properties that are unavailable due to permissions.\n\nExample: return all Products whose Price is less than $10.00\n\n```text\nGET https://api.contoso.com/products?`filter`=price lt 10.00\n\n```\n\nYOU MAY support the following operators in filter expressions:\n\nOperator                 | Description           | Example\n--------------------     | --------------------- | -----------------------------------------------------\nComparison Operators |                       |\neq                       | Equal                 | city eq 'Redmond'\nne                       | Not equal             | city ne 'London'\ngt                       | Greater than          | price gt 20\nge                       | Greater than or equal | price ge 10\nlt                       | Less than             | price lt 20\nle                       | Less than or equal    | price le 100\nLogical Operators    |                       |\nand                      | Logical and           | price le 200 and price gt 3.5\nor                       | Logical or            | price le 3.5 or price gt 200\nnot                      | Logical negation      | not price le 3.5\nGrouping Operators   |                       |\n( )                      | Precedence grouping   | (priority eq 1 or city eq 'Redmond') and price gt 100"
+    "text": "DO omit all resources from the collection for which the filter expression evaluates to false or to null, or references properties that are unavailable due to permissions. Example: return all Products whose Price is less than $10.00 ```text GET https://api.contoso.com/products?`filter`=price lt 10.00 ``` YOU MAY support the following operators in filter expressions: Operator         | Description      | Example --------------------   | --------------------- | ----------------------------------------------------- Comparison Operators |            | eq            | Equal         | city eq 'Redmond' ne            | Not equal       | city ne 'London' gt            | Greater than     | price gt 20 ge            | Greater than or equal | price ge 10 lt            | Less than       | price lt 20 le            | Less than or equal  | price le 100 Logical Operators  |            | and           | Logical and      | price le 200 and price gt 3.5 or            | Logical or      | price le 3.5 or price gt 200 not           | Logical negation   | not price le 3.5 Grouping Operators  |            | ( )           | Precedence grouping  | (priority eq 1 or city eq 'Redmond') and price gt 100"
   },
   {
     "id": "collections-filter-unknown-operator",
@@ -592,17 +592,17 @@
   {
     "id": "collections-filter-operator-ordering",
     "category": "filter operators",
-    "text": "DO use the following operator precedence for supported operators when evaluating filter expressions. Operators are listed by category in order of precedence from highest to lowest. Operators in the same category have equal precedence and should be evaluated left to right:\n\n| Group           | Operator | Description\n| ----------------|----------|------------\n| Grouping        | ( )      | Precedence grouping   |\n| Unary           | not      | Logical Negation      |\n| Relational      | gt       | Greater Than          |\n|                 | ge       | Greater than or Equal |\n|                 | lt       | Less Than             |\n|                 | le       | Less than or Equal    |\n| Equality        | eq       | Equal                 |\n|                 | ne       | Not Equal             |\n| Conditional AND | and      | Logical And           |\n| Conditional OR  | or       | Logical Or            |"
+    "text": "DO use the following operator precedence for supported operators when evaluating filter expressions. Operators are listed by category in order of precedence from highest to lowest. Operators in the same category have equal precedence and should be evaluated left to right: | Group      | Operator | Description | ----------------|----------|------------ | Grouping    | ( )   | Precedence grouping  | | Unary      | not   | Logical Negation   | | Relational   | gt    | Greater Than     | |         | ge    | Greater than or Equal | |         | lt    | Less Than       | |         | le    | Less than or Equal  | | Equality    | eq    | Equal         | |         | ne    | Not Equal       | | Conditional AND | and   | Logical And      | | Conditional OR | or    | Logical Or      |"
   },
   {
     "id": "collections-filter-functions",
     "category": "filter operators",
-    "text": "YOU MAY support orderby and filter functions such as concat and contains. For more information, see odata Canonical Functions (https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31360979) \n\nThe following examples illustrate the use and semantics of each of the logical operators.\n\nExample: all products with a name equal to 'Milk'\n\n```text\nGET https://api.contoso.com/products?`filter`=name eq 'Milk'\n\n```\n\nExample: all products with a name not equal to 'Milk'\n\n```text\nGET https://api.contoso.com/products?`filter`=name ne 'Milk'\n\n```\n\nExample: all products with the name 'Milk' that also have a price less than 2.55:\n\n```text\nGET https://api.contoso.com/products?`filter`=name eq 'Milk' and price lt 2.55\n\n```\n\nExample: all products that either have the name 'Milk' or have a price less than 2.55:\n\n```text\nGET https://api.contoso.com/products?`filter`=name eq 'Milk' or price lt 2.55\n\n```\n\nExample: all products that have the name 'Milk' or 'Eggs' and have a price less than 2.55:\n\n```text\nGET https://api.contoso.com/products?`filter`=(name eq 'Milk' or name eq 'Eggs') and price lt 2.55\n\n```"
+    "text": "YOU MAY support orderby and filter functions such as concat and contains. For more information, see odata Canonical Functions (https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31360979)  The following examples illustrate the use and semantics of each of the logical operators. Example: all products with a name equal to 'Milk' ```text GET https://api.contoso.com/products?`filter`=name eq 'Milk' ``` Example: all products with a name not equal to 'Milk' ```text GET https://api.contoso.com/products?`filter`=name ne 'Milk' ``` Example: all products with the name 'Milk' that also have a price less than 2.55: ```text GET https://api.contoso.com/products?`filter`=name eq 'Milk' and price lt 2.55 ``` Example: all products that either have the name 'Milk' or have a price less than 2.55: ```text GET https://api.contoso.com/products?`filter`=name eq 'Milk' or price lt 2.55 ``` Example: all products that have the name 'Milk' or 'Eggs' and have a price less than 2.55: ```text GET https://api.contoso.com/products?`filter`=(name eq 'Milk' or name eq 'Eggs') and price lt 2.55 ```"
   },
   {
     "id": "collections-orderby-param",
     "category": "orderby",
-    "text": "YOU MAY support sorting of the results of a list operation with the orderby query parameter.\nNOTE: It is unusual for a service to support orderby because it is very expensive to implement as it requires sorting the entire large collection before being able to return any results.\n\nThe value of the orderby parameter is a comma-separated list of expressions used to sort the items.\nA special case of such an expression is a property path terminating on a primitive property.\n\nEach expression in the orderby parameter value may include the suffix \"asc\" for ascending or \"desc\" for descending, separated from the expression by one or more spaces."
+    "text": "YOU MAY support sorting of the results of a list operation with the orderby query parameter. NOTE: It is unusual for a service to support orderby because it is very expensive to implement as it requires sorting the entire large collection before being able to return any results. The value of the orderby parameter is a comma-separated list of expressions used to sort the items. A special case of such an expression is a property path terminating on a primitive property. Each expression in the orderby parameter value may include the suffix \"asc\" for ascending or \"desc\" for descending, separated from the expression by one or more spaces."
   },
   {
     "id": "collections-orderby-ordering",
@@ -627,7 +627,7 @@
   {
     "id": "collections-orderby-unsupported-field",
     "category": "orderby",
-    "text": "DO respond with an error message as defined in the Handling Errors section if the client requests sorting by a field that is not supported by the operation.\n\nFor example, to return all people sorted by name in ascending order:\n\n```text\nGET https://api.contoso.com/people?orderby=name\n\n```\n\nFor example, to return all people sorted by name in descending order and a secondary sort order of hireDate in ascending order.\n\n```text\nGET https://api.contoso.com/people?orderby=name desc,hireDate\n\n```\n\nSorting MUST compose with filtering such that:\n\n```text\nGET https://api.contoso.com/people?`filter`=name eq 'david'&amp;orderby=hireDate\n\n```\n\nwill return all people whose name is David sorted in ascending order by hireDate."
+    "text": "DO respond with an error message as defined in the Handling Errors section if the client requests sorting by a field that is not supported by the operation. For example, to return all people sorted by name in ascending order: ```text GET https://api.contoso.com/people?orderby=name ``` For example, to return all people sorted by name in descending order and a secondary sort order of hireDate in ascending order. ```text GET https://api.contoso.com/people?orderby=name desc,hireDate ``` Sorting MUST compose with filtering such that: ```text GET https://api.contoso.com/people?`filter`=name eq 'david'&amp;orderby=hireDate ``` will return all people whose name is David sorted in ascending order by hireDate."
   },
   {
     "id": "collections-consistent-options-with-pagination",
@@ -647,7 +647,7 @@
   {
     "id": "collections-",
     "category": "top",
-    "text": "\n:heavy_check_mark: YOU MAY allow clients to pass the top query parameter to specify the maximum number of resources to return from the collection.\n\nIf supporting top:\n:white_check_mark: DO define the top parameter as an integer with a minimum value of 1. If not specified, top has a default value of infinity."
+    "text": " :heavy_check_mark: YOU MAY allow clients to pass the top query parameter to specify the maximum number of resources to return from the collection. If supporting top: :white_check_mark: DO define the top parameter as an integer with a minimum value of 1. If not specified, top has a default value of infinity."
   },
   {
     "id": "collections-top-behavior",
@@ -672,12 +672,12 @@
   {
     "id": "versioning",
     "category": "maxpagesize",
-    "text": "\n\nAzure services need to change over time. However, when changing a service, there are 2 requirements:\nAlready-running customer workloads must not break due to a service change\nCustomers can adopt a new service version without requiring any code changes (Of course, the customer must modify code to leverage any new service features.)\n\nNOTE: the Azure Breaking Change Policy (http://aka.ms/AzBreakingChangesPolicy/) has tables (section 5) describing what kinds of changes are considered breaking. Breaking changes are allowable (due to security/compliance/etc.) if approved by the Azure Breaking Change Reviewers but only following ample communication to customers and a lengthy deprecation period."
+    "text": " Azure services need to change over time. However, when changing a service, there are 2 requirements: Already-running customer workloads must not break due to a service change Customers can adopt a new service version without requiring any code changes (Of course, the customer must modify code to leverage any new service features.) NOTE: the Azure Breaking Change Policy (http://aka.ms/AzBreakingChangesPolicy/) has tables (section 5) describing what kinds of changes are considered breaking. Breaking changes are allowable (due to security/compliance/etc.) if approved by the Azure Breaking Change Reviewers but only following ample communication to customers and a lengthy deprecation period."
   },
   {
     "id": "versioning-review-required",
     "category": "API Versioning",
-    "text": "DO review any API changes with the Azure API Stewardship Board\n\nClients specify the version of the API to be used in every request to the service, even requests to an Operation-Location or nextLink URL returned by the service."
+    "text": "DO review any API changes with the Azure API Stewardship Board Clients specify the version of the API to be used in every request to the service, even requests to an Operation-Location or nextLink URL returned by the service."
   },
   {
     "id": "versioning-api-version-query-param",
@@ -697,12 +697,12 @@
   {
     "id": "versioning-api-version-unsupported",
     "category": "API Versioning",
-    "text": "DO return HTTP 400 with error code \"UnsupportedApiVersionValue\" and message \"Unsupported api-version '{0}'. The supported api-versions are '{1}'.\" if client passes an api-version value unrecognized by the service. For the supported api-versions, just list all the stable versions still supported by the service and just the latest public preview version (if any).\n\n```text\nPUT https://service.azure.com/users/Jeff?api-version=2021-06-04\n\n```"
+    "text": "DO return HTTP 400 with error code \"UnsupportedApiVersionValue\" and message \"Unsupported api-version '{0}'. The supported api-versions are '{1}'.\" if client passes an api-version value unrecognized by the service. For the supported api-versions, just list all the stable versions still supported by the service and just the latest public preview version (if any). ```text PUT https://service.azure.com/users/Jeff?api-version=2021-06-04 ```"
   },
   {
     "id": "versioning-use-later-date",
     "category": "API Versioning",
-    "text": "DO use a later date for each new preview version\n\nWhen releasing a new preview, the service team may completely retire any previous preview versions after giving customers at least 90 days to upgrade their code"
+    "text": "DO use a later date for each new preview version When releasing a new preview, the service team may completely retire any previous preview versions after giving customers at least 90 days to upgrade their code"
   },
   {
     "id": "versioning-no-breaking-changes",
@@ -722,7 +722,7 @@
   {
     "id": "versioning-preview-goes-ga-within-one-year",
     "category": "API Versioning",
-    "text": "DO NOT keep a preview feature in preview for more than 1 year; it must go GA (or be removed) within 1 year after introduction.\n\nWhile removing a value from an enum is a breaking change, adding value to an enum can be handled with an extensible enum.  An extensible enum is a string value that has been marked with a special marker - setting modelAsString to true within an x-ms-enum block.  For example:\n\n```json\n\"createdByType\": {\n   \"type\": \"string\",\n   \"description\": \"The type of identity that created the resource.\",\n   \"enum\": [\n      \"User\",\n      \"Application\",\n      \"ManagedIdentity\",\n      \"Key\"\n   ],\n   \"x-ms-enum\": {\n      \"name\": \"createdByType\",\n      \"modelAsString\": true\n   }\n}\n\n```"
+    "text": "DO NOT keep a preview feature in preview for more than 1 year; it must go GA (or be removed) within 1 year after introduction. While removing a value from an enum is a breaking change, adding value to an enum can be handled with an extensible enum. An extensible enum is a string value that has been marked with a special marker - setting modelAsString to true within an x-ms-enum block. For example: ```json \"createdByType\": {  \"type\": \"string\",  \"description\": \"The type of identity that created the resource.\",  \"enum\": [    \"User\",    \"Application\",    \"ManagedIdentity\",    \"Key\"  ],  \"x-ms-enum\": {    \"name\": \"createdByType\",    \"modelAsString\": true  } } ```"
   },
   {
     "id": "versioning-use-extensible-enums",
@@ -732,17 +732,17 @@
   {
     "id": "deprecation",
     "category": "Use Extensible Enums",
-    "text": "\n\nWhen the API Versioning guidance above cannot be followed and the Azure Breaking Change Reviewers approve a breaking change to a specific API version it must be communicated to its callers. The API version that is being deprecated must add the azure-deprecating response header with a semicolon-delimited string notifying the caller what is being deprecated, when it will no longer function, and a URL linking to more information such as what new operation they should use instead.\n\nThe purpose is to inform customers (when debugging/logging responses) that they must take action to modify their call to the service's operation and use a newer API version or their call will soon stop working entirely. It is not expected that client code will examine/parse this header's value in any way; it is purely informational to a human being. The string is not part of an API contract (except for the semi-colon delimiters) and may be changed/improved at any time without incurring a breaking change."
+    "text": " When the API Versioning guidance above cannot be followed and the Azure Breaking Change Reviewers approve a breaking change to a specific API version it must be communicated to its callers. The API version that is being deprecated must add the azure-deprecating response header with a semicolon-delimited string notifying the caller what is being deprecated, when it will no longer function, and a URL linking to more information such as what new operation they should use instead. The purpose is to inform customers (when debugging/logging responses) that they must take action to modify their call to the service's operation and use a newer API version or their call will soon stop working entirely. It is not expected that client code will examine/parse this header's value in any way; it is purely informational to a human being. The string is not part of an API contract (except for the semi-colon delimiters) and may be changed/improved at any time without incurring a breaking change."
   },
   {
     "id": "deprecation-header",
     "category": "Deprecating Behavior Notification",
-    "text": "DO include the azure-deprecating header in the operation's response only if the operation will stop working in the future and the client must take action in order for it to keep working.\n\nNOTE: We do not want to scare customers with this header."
+    "text": "DO include the azure-deprecating header in the operation's response only if the operation will stop working in the future and the client must take action in order for it to keep working. NOTE: We do not want to scare customers with this header."
   },
   {
     "id": "deprecation-header-value",
     "category": "Deprecating Behavior Notification",
-    "text": "DO make the header's value a semicolon-delimited string indicating a set of deprecations where each one indicates what is deprecating, when it is deprecating, and a URL to more information.\n\nDeprecations should use the following pattern:\n\n```text\n&lt;description&gt; will retire on &lt;date&gt; (&lt;url&gt;)\n\n```\n\nMultiple deprecations are allowed, semicolon delimited.\n\nWhere the following placeholders should be provided:\ndescription: a human-readable description of what is being deprecated\ndate: the target date that this will be deprecated. This should be expressed following the format in ISO 8601 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1)  e.g. \"2022-10-31\".\nurl: a fully qualified url that the user can follow to learn more about what is being deprecated, preferably to Azure Updates.\n\nFor example:\nazure-deprecating: API version 2009-27-07 will retire on 2022-12-01 (https://azure.microsoft.com/updates/video-analyzer-retirement);TLS 1.0 & 1.1 will retire on 2020-10-30 (https://azure.microsoft.com/updates/azure-active-directory-registration-service-is-ending-support-for-tls-10-and-11/)\nazure-deprecating: Model version 2021-01-15 used in Sentiment analysis will retire on 2022-12-01 (https://aka.ms/ta-modelversions?sentimentAnalysis)\nazure-deprecating: TLS 1.0 & 1.1 support will retire on 2022-10-01 (https://devblogs.microsoft.com/devops/deprecating-weak-cryptographic-standards-tls-1-0-and-1-1-in-azure-devops-services/)"
+    "text": "DO make the header's value a semicolon-delimited string indicating a set of deprecations where each one indicates what is deprecating, when it is deprecating, and a URL to more information. Deprecations should use the following pattern: ```text &lt;description&gt; will retire on &lt;date&gt; (&lt;url&gt;) ``` Multiple deprecations are allowed, semicolon delimited. Where the following placeholders should be provided: description: a human-readable description of what is being deprecated date: the target date that this will be deprecated. This should be expressed following the format in ISO 8601 (https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1) e.g. \"2022-10-31\". url: a fully qualified url that the user can follow to learn more about what is being deprecated, preferably to Azure Updates. For example: azure-deprecating: API version 2009-27-07 will retire on 2022-12-01 (https://azure.microsoft.com/updates/video-analyzer-retirement);TLS 1.0 & 1.1 will retire on 2020-10-30 (https://azure.microsoft.com/updates/azure-active-directory-registration-service-is-ending-support-for-tls-10-and-11/) azure-deprecating: Model version 2021-01-15 used in Sentiment analysis will retire on 2022-12-01 (https://aka.ms/ta-modelversions?sentimentAnalysis) azure-deprecating: TLS 1.0 & 1.1 support will retire on 2022-10-01 (https://devblogs.microsoft.com/devops/deprecating-weak-cryptographic-standards-tls-1-0-and-1-1-in-azure-devops-services/)"
   },
   {
     "id": "deprecation-header-review",
@@ -752,17 +752,17 @@
   {
     "id": "repeatability",
     "category": "Deprecating Behavior Notification",
-    "text": "\n\nThe ability to retry failed requests for which a client never received a response greatly simplifies the ability to write resilient distributed applications. While HTTP designates some methods as safe and/or idempotent (and thus retryable), being able to retry other operations such as create-using-POST-to-collection is desirable."
+    "text": " The ability to retry failed requests for which a client never received a response greatly simplifies the ability to write resilient distributed applications. While HTTP designates some methods as safe and/or idempotent (and thus retryable), being able to retry other operations such as create-using-POST-to-collection is desirable."
   },
   {
     "id": "repeatability-headers",
     "category": "Repeatability of requests",
-    "text": "YOU SHOULD support repeatable requests according as defined in OASIS Repeatable Requests Version 1.0 (https://docs.oasis-open.org/odata/repeatable-requests/v1.0/repeatable-requests-v1.0.html) \nThe tracked time window (difference between the Repeatability-First-Sent value and the current time) MUST be at least 5 minutes.\nA service advertises support for repeatability requests by adding the Repeatability-First-Sent and Repeatability-Request-ID to the set of headers for a given operation.\nWhen understood, all endpoints co-located behind a DNS name MUST understand the header. This means that a service MUST NOT ignore the presence of a header for any endpoints behind the DNS name, but rather fail the request containing a Repeatability-Request-ID header if that particular endpoint lacks support for repeatable requests. Such partial support SHOULD be avoided due to the confusion it causes for clients."
+    "text": "YOU SHOULD support repeatable requests according as defined in OASIS Repeatable Requests Version 1.0 (https://docs.oasis-open.org/odata/repeatable-requests/v1.0/repeatable-requests-v1.0.html) The tracked time window (difference between the Repeatability-First-Sent value and the current time) MUST be at least 5 minutes. A service advertises support for repeatability requests by adding the Repeatability-First-Sent and Repeatability-Request-ID to the set of headers for a given operation. When understood, all endpoints co-located behind a DNS name MUST understand the header. This means that a service MUST NOT ignore the presence of a header for any endpoints behind the DNS name, but rather fail the request containing a Repeatability-Request-ID header if that particular endpoint lacks support for repeatable requests. Such partial support SHOULD be avoided due to the confusion it causes for clients."
   },
   {
     "id": "lro",
     "category": "Repeatability of requests",
-    "text": "\n\nWhen the processing for an operation may take a significant amount of time to complete, it should be\nimplemented as a long-running operation (LRO). This allows clients to continue running while the\noperation is being processed. The client obtains the outcome of the operation at some later time\nthrough another API call.\nSee the Long Running Operations section in\nConsiderations for Service Design for an introduction to the design of long-running operations."
+    "text": " When the processing for an operation may take a significant amount of time to complete, it should be implemented as a long-running operation (LRO). This allows clients to continue running while the operation is being processed. The client obtains the outcome of the operation at some later time through another API call. See the Long Running Operations section in Considerations for Service Design for an introduction to the design of long-running operations."
   },
   {
     "id": "lro-response-time",
@@ -772,7 +772,7 @@
   {
     "id": "lro-no-patch-lro",
     "category": "Long-Running Operations & Jobs",
-    "text": "DO NOT implement PATCH as an LRO.  If LRO update is required it must be implemented with POST.\n\nIn rare instances where an operation may take a very long time to complete, e.g. longer than 15 minutes,\nit may be better to expose this as a first class resource of the API rather than as an operation on another resource.\n\nThere are two basic patterns for long-running operations in Azure. The first pattern is used for a POST and DELETE\noperations that initiate the LRO. These return a 202 Accepted response with a JSON status monitor in the response body.\nThe second pattern applies only in the case of a PUT operation to create a resource that also involves additional long-running processing.\nFor guidance on when to use a specific pattern, please refer to Considerations for Service Design, Long Running Operations.\nThese are described in the following two sections.\n\nA POST or DELETE long-running operation accepts a request from the client to initiate the operation processing and returns\na status monitor (https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.3) that reports the operation's progress."
+    "text": "DO NOT implement PATCH as an LRO. If LRO update is required it must be implemented with POST. In rare instances where an operation may take a very long time to complete, e.g. longer than 15 minutes, it may be better to expose this as a first class resource of the API rather than as an operation on another resource. There are two basic patterns for long-running operations in Azure. The first pattern is used for a POST and DELETE operations that initiate the LRO. These return a 202 Accepted response with a JSON status monitor in the response body. The second pattern applies only in the case of a PUT operation to create a resource that also involves additional long-running processing. For guidance on when to use a specific pattern, please refer to Considerations for Service Design, Long Running Operations. These are described in the following two sections. A POST or DELETE long-running operation accepts a request from the client to initiate the operation processing and returns a status monitor (https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.3) that reports the operation's progress."
   },
   {
     "id": "lro-no-post-create",
@@ -822,7 +822,7 @@
   {
     "id": "lro-operation-location-includes-api-version",
     "category": "POST or DELETE LRO pattern",
-    "text": "YOU SHOULD include the api-version query parameter in the Operation-Location header with the same version passed on the initial request if it is required by the get operation on the status monitor.\n\nFor a PUT (create or replace) with additional long-running processing:"
+    "text": "YOU SHOULD include the api-version query parameter in the Operation-Location header with the same version passed on the initial request if it is required by the get operation on the status monitor. For a PUT (create or replace) with additional long-running processing:"
   },
   {
     "id": "lro-put-operation-id-request-header",
@@ -867,7 +867,7 @@
   {
     "id": "lro-put-operation-location-includes-api-version",
     "category": "PUT operation with additional long-running processing",
-    "text": "YOU SHOULD include the api-version query parameter in the Operation-Location header with the same version passed on the initial request if it is required by the get operation on the status monitor.\n\nFor all long-running operations, the client will issue a GET on a status monitor resource to obtain the current status of the operation."
+    "text": "YOU SHOULD include the api-version query parameter in the Operation-Location header with the same version passed on the initial request if it is required by the get operation on the status monitor. For all long-running operations, the client will issue a GET on a status monitor resource to obtain the current status of the operation."
   },
   {
     "id": "lro-status-monitor-get-returns-200",
@@ -877,12 +877,12 @@
   {
     "id": "lro-status-monitor-accepts-any-api-version",
     "category": "Obtaining status and results of long-running operations",
-    "text": "YOU SHOULD allow any valid value of the api-version query parameter to be used in the get operation on the status monitor.\n\nNote: Clients may replace the value of api-version in the Operation-Location URI with a value appropriate for their application."
+    "text": "YOU SHOULD allow any valid value of the api-version query parameter to be used in the get operation on the status monitor. Note: Clients may replace the value of api-version in the Operation-Location URI with a value appropriate for their application."
   },
   {
     "id": "lro-status-monitor-structure",
     "category": "Obtaining status and results of long-running operations",
-    "text": "DO return a status monitor in the response body that conforms with the following structure:\n\nOperationStatus : Object\n\nProperty | Type        | Required | Description\n-------- | ----------- | :------: | -----------\nid     | string      | true     | The unique id of the operation\nstatus | string      | true     | enum that includes values \"NotStarted\", \"Running\", \"Succeeded\", \"Failed\", and \"Canceled\"\nerror  | ErrorDetail |          | Error object that describes the error when status is \"Failed\"\nresult | object      |          | Only for POST action-type LRO, the results of the operation when completed successfully\nadditionalproperties | |     | Additional named or dynamic properties of the operation"
+    "text": "DO return a status monitor in the response body that conforms with the following structure: OperationStatus : Object Property | Type    | Required | Description -------- | ----------- | :------: | ----------- id   | string   | true   | The unique id of the operation status | string   | true   | enum that includes values \"NotStarted\", \"Running\", \"Succeeded\", \"Failed\", and \"Canceled\" error | ErrorDetail |     | Error object that describes the error when status is \"Failed\" result | object   |     | Only for POST action-type LRO, the results of the operation when completed successfully additionalproperties | |   | Additional named or dynamic properties of the operation"
   },
   {
     "id": "lro-status-monitor-includes-all-fields",
@@ -912,7 +912,7 @@
   {
     "id": "byos",
     "category": "Obtaining status and results of long-running operations",
-    "text": "\n\nMany services need to store and retrieve data files. For this scenario, the service should not implement its own\nstorage APIs and should instead leverage the existing Azure Storage service. When doing this, the customer\n\"owns\" the storage account and just tells your service to use it. Colloquially, we call this Bring Your Own Storage as the customer is bringing their storage account to another service. BYOS provides significant benefits to service implementors: security, performance, uptime, etc. And, of course, most Azure customers are already familiar with the Azure Storage service.\n\nWhile Azure Managed Storage may be easier to get started with, as your service evolves and matures, BYOS provides the most flexibility and implementation choices. Further, when designing your APIs, be cognizant of expressing storage concepts and how clients will access your data. For example, if you are working with blobs, then you should not expose the concept of folders."
+    "text": " Many services need to store and retrieve data files. For this scenario, the service should not implement its own storage APIs and should instead leverage the existing Azure Storage service. When doing this, the customer \"owns\" the storage account and just tells your service to use it. Colloquially, we call this Bring Your Own Storage as the customer is bringing their storage account to another service. BYOS provides significant benefits to service implementors: security, performance, uptime, etc. And, of course, most Azure customers are already familiar with the Azure Storage service. While Azure Managed Storage may be easier to get started with, as your service evolves and matures, BYOS provides the most flexibility and implementation choices. Further, when designing your APIs, be cognizant of expressing storage concepts and how clients will access your data. For example, if you are working with blobs, then you should not expose the concept of folders."
   },
   {
     "id": "byos-pattern",
@@ -932,7 +932,7 @@
   {
     "id": "byos-authorization",
     "category": "Bring your own Storage (BYOS)",
-    "text": "DO use managed identity and Role Based Access Control (RBAC (https://docs.microsoft.com/azure/role-based-access-control/overview)  as the mechanism allowing customers to grant permission to their Storage account to your service."
+    "text": "DO use managed identity and Role Based Access Control (RBAC (https://docs.microsoft.com/azure/role-based-access-control/overview) as the mechanism allowing customers to grant permission to their Storage account to your service."
   },
   {
     "id": "byos-define-rbac-roles",
@@ -942,12 +942,12 @@
   {
     "id": "byos-rbac-compatibility",
     "category": "Bring your own Storage (BYOS)",
-    "text": "DO Ensure that RBAC roles are backward compatible, and specifically, do not take away permissions from a role that would break the operation of the service. Any change of RBAC roles that results in a change of the service behavior is considered a breaking change.\n\nIt is not uncommon to rely on other services, e.g. storage, when implementing your service. Inevitably, the services you depend on will fail. In these situations, you can include the downstream error code and text in the inner-error of the response body. This provides a consistent pattern for handling errors in the services you depend upon."
+    "text": "DO Ensure that RBAC roles are backward compatible, and specifically, do not take away permissions from a role that would break the operation of the service. Any change of RBAC roles that results in a change of the service behavior is considered a breaking change. It is not uncommon to rely on other services, e.g. storage, when implementing your service. Inevitably, the services you depend on will fail. In these situations, you can include the downstream error code and text in the inner-error of the response body. This provides a consistent pattern for handling errors in the services you depend upon."
   },
   {
     "id": "byos-include-downstream-errors",
     "category": "Handling 'downstream' errors",
-    "text": "DO include error from downstream services as the 'inner-error' section of the response body.\n\nGenerally speaking, there are two patterns that you will encounter when working with files; single file access, and file collections.\n\nDesigning an API for accessing a single file, depending on your scenario, is relatively straight forward."
+    "text": "DO include error from downstream services as the 'inner-error' section of the response body. Generally speaking, there are two patterns that you will encounter when working with files; single file access, and file collections. Designing an API for accessing a single file, depending on your scenario, is relatively straight forward."
   },
   {
     "id": "byos-sas-token",
@@ -977,7 +977,7 @@
   {
     "id": "byos-last-modified",
     "category": "Single file access",
-    "text": "YOU MAY allow the customer to provide a last-modified (https://datatracker.ietf.org/doc/html/rfc7232#section-2.2) timestamp (in RFC1123 format) for read-only files. This allows the client to specify exactly which version of the files your service should use.\nWhen reading a file, your service passes this timestamp to Azure Storage using the if-unmodified-since (https://datatracker.ietf.org/doc/html/rfc7232#section-3.4) request header. If the Storage operation fails with 412, the Storage object was modified and your service operation should return an appropriate 4xx status code and return the Storage error in your operation's 'inner-error' (see guideline above)."
+    "text": "YOU MAY allow the customer to provide a last-modified (https://datatracker.ietf.org/doc/html/rfc7232#section-2.2) timestamp (in RFC1123 format) for read-only files. This allows the client to specify exactly which version of the files your service should use. When reading a file, your service passes this timestamp to Azure Storage using the if-unmodified-since (https://datatracker.ietf.org/doc/html/rfc7232#section-3.4) request header. If the Storage operation fails with 412, the Storage object was modified and your service operation should return an appropriate 4xx status code and return the Storage error in your operation's 'inner-error' (see guideline above)."
   },
   {
     "id": "byos-folder-support",
@@ -987,7 +987,7 @@
   {
     "id": "byos-extensions",
     "category": "Single file access",
-    "text": "YOU MAY offer an extensions field representing an array of strings indicating file extensions of desired blobs within the logical folder.\n\nA common pattern when working with multiple files is for your service to receive requests that contain the location(s) of files to process (\"input\") and a location(s) to place any files that result from processing (\"output\"). Note: the terms \"input\" and \"output\" are just examples; use terms more appropriate to your service's domain.\n\nFor example, a service's request body to configure BYOS may look like this:\n\n```json\n{\n  \"input\":{\n    \"location\": \"https://mycompany.blob.core.windows.net/documents/english/?&lt;sas token&gt;\",\n    \"delimiter\": \"/\",\n    \"extensions\" : [ \".bmp\", \".jpg\", \".tif\", \".png\" ],\n    \"lastModified\": \"Wed, 21 Oct 2015 07:28:00 GMT\"\n  },\n  \"output\":{\n    \"location\": \"https://mycompany.blob.core.windows.net/documents/spanish/?&lt;sas token&gt;\",\n    \"delimiter\":\"/\"\n  }\n}\n\n```\n\nDepending on the requirements of the service, there can be any number of \"input\" and \"output\" sections, including none."
+    "text": "YOU MAY offer an extensions field representing an array of strings indicating file extensions of desired blobs within the logical folder. A common pattern when working with multiple files is for your service to receive requests that contain the location(s) of files to process (\"input\") and a location(s) to place any files that result from processing (\"output\"). Note: the terms \"input\" and \"output\" are just examples; use terms more appropriate to your service's domain. For example, a service's request body to configure BYOS may look like this: ```json {  \"input\":{   \"location\": \"https://mycompany.blob.core.windows.net/documents/english/?&lt;sas token&gt;\",   \"delimiter\": \"/\",   \"extensions\" : [ \".bmp\", \".jpg\", \".tif\", \".png\" ],   \"lastModified\": \"Wed, 21 Oct 2015 07:28:00 GMT\"  },  \"output\":{   \"location\": \"https://mycompany.blob.core.windows.net/documents/spanish/?&lt;sas token&gt;\",   \"delimiter\":\"/\"  } } ``` Depending on the requirements of the service, there can be any number of \"input\" and \"output\" sections, including none."
   },
   {
     "id": "byos-location-and-delimiter",
@@ -1012,7 +1012,7 @@
   {
     "id": "condreq",
     "category": "Single file access",
-    "text": "\n\nWhen designing an API, you will almost certainly have to manage how your resource is updated. For example, if your resource is a bank account, you will want to ensure that one transaction--say depositing money--does not overwrite a previous transaction.\nSimilarly, it could be very expensive to send a resource to a client. This could be because of its size, network conditions, or a myriad of other reasons. To enable this level of control, services should leverage an ETag header, or \"entity tag,\" which will identify the 'version' or 'instance' of the resource a particular client is working with.\nAn ETag is always set by the service and will enable you to conditionally control how your service responds to requests, enabling you to provide predictable updates and more efficient access."
+    "text": " When designing an API, you will almost certainly have to manage how your resource is updated. For example, if your resource is a bank account, you will want to ensure that one transaction--say depositing money--does not overwrite a previous transaction. Similarly, it could be very expensive to send a resource to a client. This could be because of its size, network conditions, or a myriad of other reasons. To enable this level of control, services should leverage an ETag header, or \"entity tag,\" which will identify the 'version' or 'instance' of the resource a particular client is working with. An ETag is always set by the service and will enable you to conditionally control how your service responds to requests, enabling you to provide predictable updates and more efficient access."
   },
   {
     "id": "condreq-return-etags",
@@ -1022,32 +1022,32 @@
   {
     "id": "condreq-support-etags-consistently",
     "category": "Conditional Requests",
-    "text": "YOU SHOULD use ETags consistently across your API, i.e. if you use an ETag, accept it on all other operations.\n\nYou can learn more about conditional requests by reading RFC7232 (https://datatracker.ietf.org/doc/html/rfc7232) \n\nOne of the more common uses for ETag headers is cache control, also referred to a \"conditional GET.\" This is especially useful when resources are large in size, expensive to compute/calculate, or hard to reach (significant network latency). That is, using the value of the ETag , the server can determine if the resource has changed. If there are no changes, then there is no need to return the resource, as the client already has the most recent version.\n\nImplementing this strategy is relatively straightforward. First, you will return an ETag with a value that uniquely identifies the instance (or version) of the resource. The Computing ETags section provides guidance on how to properly calculate the value of your ETag.\nIn these scenarios, when a request is made by the client an ETag header is returned, with a value that uniquely identifies that specific instance (or version) of the resource. The ETag value can then be sent in subsequent requests as part of the If-None-Match header.\nThis tells the service to compare the ETag that came in with the request, with the latest value that it has calculated. If the two values are the same, then it is not necessary to return the resource to the client--it already has it. If they are different, then the service will return the latest version of the resource, along with the updated ETag value in the header."
+    "text": "YOU SHOULD use ETags consistently across your API, i.e. if you use an ETag, accept it on all other operations. You can learn more about conditional requests by reading RFC7232 (https://datatracker.ietf.org/doc/html/rfc7232)  One of the more common uses for ETag headers is cache control, also referred to a \"conditional GET.\" This is especially useful when resources are large in size, expensive to compute/calculate, or hard to reach (significant network latency). That is, using the value of the ETag , the server can determine if the resource has changed. If there are no changes, then there is no need to return the resource, as the client already has the most recent version. Implementing this strategy is relatively straightforward. First, you will return an ETag with a value that uniquely identifies the instance (or version) of the resource. The Computing ETags section provides guidance on how to properly calculate the value of your ETag. In these scenarios, when a request is made by the client an ETag header is returned, with a value that uniquely identifies that specific instance (or version) of the resource. The ETag value can then be sent in subsequent requests as part of the If-None-Match header. This tells the service to compare the ETag that came in with the request, with the latest value that it has calculated. If the two values are the same, then it is not necessary to return the resource to the client--it already has it. If they are different, then the service will return the latest version of the resource, along with the updated ETag value in the header."
   },
   {
     "id": "condreq-for-read",
     "category": "Cache Control",
-    "text": "YOU SHOULD implement conditional read strategies\n\nWhen supporting conditional read strategies:"
+    "text": "YOU SHOULD implement conditional read strategies When supporting conditional read strategies:"
   },
   {
     "id": "condreq-for-read-behavior",
     "category": "Cache Control",
-    "text": "DO adhere to the following table for guidance:\n\n| GET Request | Return code | Response                                    |\n|:------------|:------------|:--------------------------------------------|\n| ETag value = If-None-Match value   | 304-Not Modified | no additional information   |\n| ETag value != If-None-Match value  | 200-OK           | Response body include the serialized value of the resource (typically JSON)    |\n\nFor more control over caching, please refer to the cache-control HTTP header (https://developer.mozilla.org/docs/Web/HTTP/Headers/Cache-Control) \n\nAn ETag should also be used to reflect the create, update, and delete policies of your service. Specifically, you should avoid a \"pessimistic\" strategy where the 'last write always wins.\" These can be expensive to build and scale because avoiding the \"lost update\" problem often requires sophisticated concurrency controls.\nInstead, implement an \"optimistic concurrency\" strategy, where the incoming state of the resource is first compared against what currently resides in the service. Optimistic concurrency strategies are implemented through the combination of ETags and the HTTP Request / Response Pattern."
+    "text": "DO adhere to the following table for guidance: | GET Request | Return code | Response                  | |:------------|:------------|:--------------------------------------------| | ETag value = If-None-Match value  | 304-Not Modified | no additional information  | | ETag value != If-None-Match value | 200-OK      | Response body include the serialized value of the resource (typically JSON)  | For more control over caching, please refer to the cache-control HTTP header (https://developer.mozilla.org/docs/Web/HTTP/Headers/Cache-Control)  An ETag should also be used to reflect the create, update, and delete policies of your service. Specifically, you should avoid a \"pessimistic\" strategy where the 'last write always wins.\" These can be expensive to build and scale because avoiding the \"lost update\" problem often requires sophisticated concurrency controls. Instead, implement an \"optimistic concurrency\" strategy, where the incoming state of the resource is first compared against what currently resides in the service. Optimistic concurrency strategies are implemented through the combination of ETags and the HTTP Request / Response Pattern."
   },
   {
     "id": "condreq-no-pessimistic-update",
     "category": "Optimistic Concurrency",
-    "text": "YOU SHOULD NOT implement pessimistic update strategies, e.g. last writer wins.\n\nWhen supporting optimistic concurrency:"
+    "text": "YOU SHOULD NOT implement pessimistic update strategies, e.g. last writer wins. When supporting optimistic concurrency:"
   },
   {
     "id": "condreq-behavior",
     "category": "Optimistic Concurrency",
-    "text": "DO adhere to the following table for guidance:\n\n| Operation   | Header        | Value | ETag check | Return code | Response       |\n|:------------|:--------------|:------|:-----------|:------------|----------------|\n| PATCH / PUT | If-None-Match | *     | check for any version of the resource ('*' is a wildcard used to match anything), if none are found, create the resource. | 200-OK or  201-Created  | Response header MUST include the new ETag value. Response body SHOULD include the serialized value of the resource (typically JSON).  |\n| PATCH / PUT | If-None-Match | *     | check for any version of the resource, if one is found, fail the operation |  412-Precondition Failed | Response body SHOULD return the serialized value of the resource (typically JSON) that was passed along with the request.|\n| PATCH / PUT | If-Match | value of ETag     | value of If-Match equals the latest ETag value on the server, confirming that the version of the resource is the most current | 200-OK or  201-Created  | Response header MUST include the new ETag value. Response body SHOULD include the serialized value of the resource (typically JSON).  |\n| PATCH / PUT | If-Match | value of ETag     | value of If-Match header DOES NOT equal the latest ETag value on the server, indicating a change has ocurred since after the client fetched the resource|  412-Precondition Failed | Response body SHOULD return the serialized value of the resource (typically JSON) that was passed along with the request.|\n| DELETE      | If-Match | value of ETag     | value matches the latest value on the server | 204-No Content | Response body SHOULD be empty.  |\n| DELETE      | If-Match | value of ETag     | value does NOT match the latest value on the server | 412-Preconditioned Failed | Response body SHOULD be empty.|\n\nThe strategy that you use to compute the ETag depends on its semantic. For example, it is natural, for resources that are inherently versioned, to use the version as the value of the ETag. Another common strategy for determining the value of an ETag is to use a hash of the resource. If a resource is not versioned, and unless computing a hash is prohibitively expensive, this is the preferred mechanism."
+    "text": "DO adhere to the following table for guidance: | Operation  | Header    | Value | ETag check | Return code | Response    | |:------------|:--------------|:------|:-----------|:------------|----------------| | PATCH / PUT | If-None-Match | *   | check for any version of the resource ('*' is a wildcard used to match anything), if none are found, create the resource. | 200-OK or 201-Created | Response header MUST include the new ETag value. Response body SHOULD include the serialized value of the resource (typically JSON). | | PATCH / PUT | If-None-Match | *   | check for any version of the resource, if one is found, fail the operation | 412-Precondition Failed | Response body SHOULD return the serialized value of the resource (typically JSON) that was passed along with the request.| | PATCH / PUT | If-Match | value of ETag   | value of If-Match equals the latest ETag value on the server, confirming that the version of the resource is the most current | 200-OK or 201-Created | Response header MUST include the new ETag value. Response body SHOULD include the serialized value of the resource (typically JSON). | | PATCH / PUT | If-Match | value of ETag   | value of If-Match header DOES NOT equal the latest ETag value on the server, indicating a change has ocurred since after the client fetched the resource| 412-Precondition Failed | Response body SHOULD return the serialized value of the resource (typically JSON) that was passed along with the request.| | DELETE   | If-Match | value of ETag   | value matches the latest value on the server | 204-No Content | Response body SHOULD be empty. | | DELETE   | If-Match | value of ETag   | value does NOT match the latest value on the server | 412-Preconditioned Failed | Response body SHOULD be empty.| The strategy that you use to compute the ETag depends on its semantic. For example, it is natural, for resources that are inherently versioned, to use the version as the value of the ETag. Another common strategy for determining the value of an ETag is to use a hash of the resource. If a resource is not versioned, and unless computing a hash is prohibitively expensive, this is the preferred mechanism."
   },
   {
     "id": "condreq-etag-is-hash",
     "category": "Computing ETags",
-    "text": "YOU SHOULD use a hash of the representation of a resource rather than a last modified/version number\n\nWhile it may be tempting to use a revision/version number for the resource as the ETag, it interferes with client's ability to retry update requests. If a client sends a conditional update request, the service acts on the request, but the client never receives a response, a subsequent identical update will be seen as a conflict even though the retried request is attempting to make the same update."
+    "text": "YOU SHOULD use a hash of the representation of a resource rather than a last modified/version number While it may be tempting to use a revision/version number for the resource as the ETag, it interferes with client's ability to retry update requests. If a client sends a conditional update request, the service acts on the request, but the client never receives a response, a subsequent identical update will be seen as a conflict even though the retried request is attempting to make the same update."
   },
   {
     "id": "condreq-etag-hash-entire-resource",
@@ -1077,7 +1077,7 @@
   {
     "id": "telemetry",
     "category": "Computing ETags",
-    "text": "\n\nAzure SDK client guidelines specify that client libraries must send telemetry data through the User-Agent header, X-MS-UserAgent header, and Open Telemetry.\nClient libraries are required to send telemetry and distributed tracing information on every  request. Telemetry information is vital to the effective operation of your service and should be a consideration from the outset of design and implementation efforts."
+    "text": " Azure SDK client guidelines specify that client libraries must send telemetry data through the User-Agent header, X-MS-UserAgent header, and Open Telemetry. Client libraries are required to send telemetry and distributed tracing information on every request. Telemetry information is vital to the effective operation of your service and should be a consideration from the outset of design and implementation efforts."
   },
   {
     "id": "telemetry-headers",
@@ -1087,6 +1087,6 @@
   {
     "id": "telemetry-allow-unrecognized-headers",
     "category": "Distributed Tracing & Telemetry",
-    "text": "DO NOT reject a call if you have custom headers you don't understand, and specifically, distributed tracing headers.\n\nAdditional References\nAzure SDK client guidelines (https://azure.github.io/azure-sdk/general_azurecore.html) \nAzure SDK User-Agent header policy (https://azure.github.io/azure-sdk/general_azurecore.html#azurecore-http-telemetry-x-ms-useragent) \nAzure SDK Distributed tracing policy (https://azure.github.io/azure-sdk/general_azurecore.html#distributed-tracing-policy) \nOpen Telemetry (https://opentelemetry.io/) \n\nIn addition to distributed tracing, Azure also uses a set of common correlation headers:\n\n|Name                         |Applies to|Description|\n|-----------------------------|----------|-----------|\n|x-ms-client-request-id       |Both      |Optional. Caller-specified value identifying the request, in the form of a GUID with no decoration such as curly braces (e.g. x-ms-client-request-id: 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0). If the caller provides this header the service must include this in their log entries to facilitate correlation of log entries for a single request. Because this header can be client-generated, it should not be assumed to be unique by the service implementation.\n|x-ms-request-id              |Response  |Required. Service generated correlation id identifying the request, in the form of a GUID with no decoration such as curly braces. In contrast to the the x-ms-client-request-id, the service must ensure that this value is globally unique. Services should log this value with their traces to facilitate correlation of log entries for a single request.\n\nThese guidelines describe the upfront design considerations, technology building blocks, and common patterns that Azure teams encounter when building an API for their service. There is a great deal of information in them that can be difficult to follow. Fortunately, at Microsoft, there is a team committed to ensuring your success.\n\nThe Azure REST API Stewardship board is a collection of dedicated architects that are passionate about helping Azure service teams build interfaces that are intuitive, maintainable, consistent, and most importantly, delight our customers.\nBecause APIs affect nearly all downstream decisions, you are encouraged to reach out to the Stewardship board early in the development process.\nThese architects will work with you to apply these guidelines and identify any hidden pitfalls in your design. For more information on how to part with the Stewardship board, please refer to Considerations for Service Design."
+    "text": "DO NOT reject a call if you have custom headers you don't understand, and specifically, distributed tracing headers. Additional References Azure SDK client guidelines (https://azure.github.io/azure-sdk/general_azurecore.html) Azure SDK User-Agent header policy (https://azure.github.io/azure-sdk/general_azurecore.html#azurecore-http-telemetry-x-ms-useragent) Azure SDK Distributed tracing policy (https://azure.github.io/azure-sdk/general_azurecore.html#distributed-tracing-policy) Open Telemetry (https://opentelemetry.io/)  In addition to distributed tracing, Azure also uses a set of common correlation headers: |Name             |Applies to|Description| |-----------------------------|----------|-----------| |x-ms-client-request-id    |Both   |Optional. Caller-specified value identifying the request, in the form of a GUID with no decoration such as curly braces (e.g. x-ms-client-request-id: 9C4D50EE-2D56-4CD3-8152-34347DC9F2B0). If the caller provides this header the service must include this in their log entries to facilitate correlation of log entries for a single request. Because this header can be client-generated, it should not be assumed to be unique by the service implementation. |x-ms-request-id       |Response |Required. Service generated correlation id identifying the request, in the form of a GUID with no decoration such as curly braces. In contrast to the the x-ms-client-request-id, the service must ensure that this value is globally unique. Services should log this value with their traces to facilitate correlation of log entries for a single request. These guidelines describe the upfront design considerations, technology building blocks, and common patterns that Azure teams encounter when building an API for their service. There is a great deal of information in them that can be difficult to follow. Fortunately, at Microsoft, there is a team committed to ensuring your success. The Azure REST API Stewardship board is a collection of dedicated architects that are passionate about helping Azure service teams build interfaces that are intuitive, maintainable, consistent, and most importantly, delight our customers. Because APIs affect nearly all downstream decisions, you are encouraged to reach out to the Stewardship board early in the development process. These architects will work with you to apply these guidelines and identify any hidden pitfalls in your design. For more information on how to part with the Stewardship board, please refer to Considerations for Service Design."
   }
 ]

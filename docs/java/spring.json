@@ -22,12 +22,12 @@
   {
     "id": "java-spring-maven-artifactid",
     "category": "Maven",
-    "text": "DO specify the artifactId to be of the form azure-spring-boot-starter-<group>-<service>[-<feature>], for example, azure-spring-boot-starter-storage-blob or azure-spring-boot-starter-security-keyvault-secrets.\nFor Spring data abstraction, the artifactId should be of the form azure-spring-data-<group>-<service>[-<feature>].\nFor Spring cloud starters, the artifactId should be of the form azure-spring-cloud-starter-<group>-<service>[-<feature>]."
+    "text": "DO specify the artifactId to be of the form azure-spring-boot-starter-<group>-<service>[-<feature>], for example, azure-spring-boot-starter-storage-blob or azure-spring-boot-starter-security-keyvault-secrets. For Spring data abstraction, the artifactId should be of the form azure-spring-data-<group>-<service>[-<feature>]. For Spring cloud starters, the artifactId should be of the form azure-spring-cloud-starter-<group>-<service>[-<feature>]."
   },
   {
     "id": "java-spring-azure-sdk-bom",
     "category": "Maven",
-    "text": "DO include a dependencyManagement dependency on the Azure Java SDK BOM, so that users who use Azure Spring libraries can bring in additional dependencies on other Azure Java client libraries without needing to choose versions.\n\nSpring Cloud for Azure modules must be versioned in a way that enables the following goals:\nEach Spring Cloud for Azure module must be able to release at different release cadences.\nEach Spring Cloud for Azure module must have full semantic versioning for major, minor, and patch versions, in all releases. Versioning must not be tied to the Spring dependency version as in earlier iterations of the Azure Spring Cloud for Azure modules.\nAllow developers to easily choose Spring Cloud for Azure modules which work together."
+    "text": "DO include a dependencyManagement dependency on the Azure Java SDK BOM, so that users who use Azure Spring libraries can bring in additional dependencies on other Azure Java client libraries without needing to choose versions. Spring Cloud for Azure modules must be versioned in a way that enables the following goals: Each Spring Cloud for Azure module must be able to release at different release cadences. Each Spring Cloud for Azure module must have full semantic versioning for major, minor, and patch versions, in all releases. Versioning must not be tied to the Spring dependency version as in earlier iterations of the Azure Spring Cloud for Azure modules. Allow developers to easily choose Spring Cloud for Azure modules which work together."
   },
   {
     "id": "java-spring-supported-versions",

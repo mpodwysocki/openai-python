@@ -12,12 +12,12 @@
   {
     "id": "general-docs-follow-style-guide",
     "category": "title: \"TypeScript Guidelines: Documentation\"\nkeywords: guidelines typescript\npermalink: typescript_documentation.html\nfolder: typescript\nsidebar: general_sidebar",
-    "text": "DO adhere to the specifications set forth in the Microsoft style guides when you write public-facing documentation. This applies to both long-form documentation like a README and the docstrings in your code. (MICROSOFT INTERNAL)\n[Microsoft Writing Style Guide].\n[Microsoft Cloud Style Guide]."
+    "text": "DO adhere to the specifications set forth in the Microsoft style guides when you write public-facing documentation. This applies to both long-form documentation like a README and the docstrings in your code. (MICROSOFT INTERNAL) [Microsoft Writing Style Guide]. [Microsoft Cloud Style Guide]."
   },
   {
     "id": "general-docs-document-to-silence",
     "category": "title: \"TypeScript Guidelines: Documentation\"\nkeywords: guidelines typescript\npermalink: typescript_documentation.html\nfolder: typescript\nsidebar: general_sidebar",
-    "text": "YOU SHOULD attempt to document your library into silence. Preempt developers' usage questions and minimize GitHub issues by clearly explaining your API in the docstrings. Include information on service limits and errors they might hit, and how to avoid and recover from those errors.\n\nAs you write your code, doc it so you never hear about it again. The less questions you have to answer about your client library, the more time you have to build new features for your service."
+    "text": "YOU SHOULD attempt to document your library into silence. Preempt developers' usage questions and minimize GitHub issues by clearly explaining your API in the docstrings. Include information on service limits and errors they might hit, and how to avoid and recover from those errors. As you write your code, doc it so you never hear about it again. The less questions you have to answer about your client library, the more time you have to build new features for your service."
   },
   {
     "id": "ts-readme-ts-config",
@@ -42,7 +42,7 @@
   {
     "id": "general-docs-dont-combine-snippets",
     "category": "Code snippets",
-    "text": "DO NOT combine more than one operation in a code snippet unless it's required for demonstrating the type or member, or it's in addition to existing snippets that demonstrate atomic operations. For example, a Cosmos DB code snippet should not include both account and container creation operations--create two different snippets, one for account creation, and one for container creation.\n\nCombined operations cause unnecessary friction for a library consumer by requiring knowledge of additional operations which might be outside their current focus. It requires them to first understand the tangential code surrounding the operation they're working on, then carefully extract just the code they need for their task. The developer can no longer simply copy and paste the code snippet into their project."
+    "text": "DO NOT combine more than one operation in a code snippet unless it's required for demonstrating the type or member, or it's in addition to existing snippets that demonstrate atomic operations. For example, a Cosmos DB code snippet should not include both account and container creation operations--create two different snippets, one for account creation, and one for container creation. Combined operations cause unnecessary friction for a library consumer by requiring knowledge of additional operations which might be outside their current focus. It requires them to first understand the tangential code surrounding the operation they're working on, then carefully extract just the code they need for their task. The developer can no longer simply copy and paste the code snippet into their project."
   },
   {
     "id": "ts-need-js-samples",
@@ -57,6 +57,6 @@
   {
     "id": "ts-need-browser-samples",
     "category": "Samples",
-    "text": "YOU SHOULD have browser samples tailored for browser scenarios.  You need not duplicate all samples for browsers.\n\n[RequireJS]: https://requirejs.org/\n\n[azure/azure-sdk-for-js]: https://github.com/azure/azure-sdk-for-js\n[TypeScript client library template]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/template/template\n[cjs]: https://nodejs.org/api/modules.html\n[esm]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import\n[namespace guidelines]: typescript_design.html#ts-namespaces"
+    "text": "YOU SHOULD have browser samples tailored for browser scenarios. You need not duplicate all samples for browsers. [RequireJS]: https://requirejs.org/ [azure/azure-sdk-for-js]: https://github.com/azure/azure-sdk-for-js [TypeScript client library template]: https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/template/template [cjs]: https://nodejs.org/api/modules.html [esm]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import [namespace guidelines]: typescript_design.html#ts-namespaces"
   }
 ]
