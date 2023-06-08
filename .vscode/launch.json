@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "args": [
-                "docs/python_design.md",
+                "docs/rest-api-guidelines.md",
             ],
             "console": "integratedTerminal",
             "justMyCode": true
