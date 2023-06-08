@@ -317,7 +317,7 @@
   {
     "id": "python-auth-service-credentials",
     "category": "Authentication",
-    "text": "{% include requirement/MAY  id=\"python-auth-service-credentials\" %} add additional credential types if required by the service. Contact the [Architecture board] for guidance if you believe you have need to do so."
+    "text": "YOU MAY add additional credential types if required by the service. Contact the [Architecture board] for guidance if you believe you have need to do so."
   },
   {
     "id": "python-auth-service-support",
