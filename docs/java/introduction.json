@@ -647,7 +647,7 @@
   {
     "id": "java-versioning-enum--value-naming",
     "category": "Versioning",
-    "text": "DO use the version naming used by the service itself in naming the version values in the enum. The standard approach takes the form V<year>_<month>_<day>, such as V2019_05_09. Being consistent with the service naming enables easier cross-referencing between service versions and the availability of features in the client library.\n\n{% include note.html content=\"Third-party reusable libraries shouldn't change behavior without an explicit decision by the developer.  When developing libraries that are based on the Azure SDK, lock the library to a specific service version to avoid changes in behavior.\" %}"
+    "text": "DO use the version naming used by the service itself in naming the version values in the enum. The standard approach takes the form V<year>_<month>_<day>, such as V2019_05_09. Being consistent with the service naming enables easier cross-referencing between service versions and the availability of features in the client library.\n\n**NOTE:** Third-party reusable libraries shouldn't change behavior without an explicit decision by the developer.  When developing libraries that are based on the Azure SDK, lock the library to a specific service version to avoid changes in behavior."
   },
   {
     "id": "java-versioning-new-package",

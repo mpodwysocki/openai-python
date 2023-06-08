@@ -367,7 +367,7 @@
   {
     "id": "ios-pagination-distinct-types",
     "category": "Methods Returning Collections (Paging)",
-    "text": "DO use the same type for entities returned from a list operation vs. a get operation if those operations return different views of the same result. For example a list operation may provide only a minimal representation of each result, with the expectation that a get operation must be performed for each result to access the full representation. If the representations are compatible, reuse the same type for both the list and the get operation. Otherwise, it is permissable to use distinct types for each operation.\n\n{% include important.html content=\"Services should refrain from having a difference between the type of a particular entity as it exists in a list versus the result of a GET request for that individual item as it makes the client library's surface area simpler.\" %}"
+    "text": "DO use the same type for entities returned from a list operation vs. a get operation if those operations return different views of the same result. For example a list operation may provide only a minimal representation of each result, with the expectation that a get operation must be performed for each result to access the full representation. If the representations are compatible, reuse the same type for both the list and the get operation. Otherwise, it is permissable to use distinct types for each operation.\n\n**IMPORTANT:** Services should refrain from having a difference between the type of a particular entity as it exists in a list versus the result of a GET request for that individual item as it makes the client library's surface area simpler."
   },
   {
     "id": "ios-pagination-large-get-iterator",

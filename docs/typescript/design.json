@@ -352,7 +352,7 @@
   {
     "id": "general-pagination-distinct-types",
     "category": "Pagination {#ts-pagination}",
-    "text": "DO use different types for entities returned from a list endpoint and a get endpoint if the returned entities have a different shape.  If both entities are the same form, use the same type.\n\n{% include note.html content=\"Services should return the same shape for entities from a list endpoint vs. a get endpoint unless there's a good reason for the difference.  Using the same type for both operations will make the API surface in the client library simpler.\" %}"
+    "text": "DO use different types for entities returned from a list endpoint and a get endpoint if the returned entities have a different shape.  If both entities are the same form, use the same type.\n\n**NOTE:** Services should return the same shape for entities from a list endpoint vs. a get endpoint unless there's a good reason for the difference.  Using the same type for both operations will make the API surface in the client library simpler."
   },
   {
     "id": "general-pagination-no-item-iterators",
@@ -392,7 +392,7 @@
   {
     "id": "ts-lro-progress-reporting",
     "category": "Long Running Operations {#ts-lro}",
-    "text": "DO expose a progress reporting mechanism to the consumer if the service reports progress as part of the polling operation.  Language-dependent guidelines will present additional guidance on how to expose progress reporting in this case.\n\n{% include draft.html content=\"Long-running operations will use the @azure/core-lro package, which is an abstraction that provides the above requirements\" %}\n\nTODO: If this is largely implemented for the API Designer, please include an example of how to use the Azure Core type in the public API.  It would be ideal to remove guidelines where the requirement has already been addressed for the API Designer in the type.\n\nThere are two patterns in use depending on whether etag is a member of the model type or not."
+    "text": "DO expose a progress reporting mechanism to the consumer if the service reports progress as part of the polling operation.  Language-dependent guidelines will present additional guidance on how to expose progress reporting in this case.\n\n**DRAFT:** Long-running operations will use the @azure/core-lro package, which is an abstraction that provides the above requirements\n\nTODO: If this is largely implemented for the API Designer, please include an example of how to use the Azure Core type in the public API.  It would be ideal to remove guidelines where the requirement has already been addressed for the API Designer in the type.\n\nThere are two patterns in use depending on whether etag is a member of the model type or not."
   },
   {
     "id": "ts-conditional-request-options-1",

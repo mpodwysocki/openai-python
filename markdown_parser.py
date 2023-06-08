@@ -32,6 +32,12 @@ SHOULD_REPLACE = 'YOU SHOULD'
 SHOULD_NOT_PATTERN = r'{% include requirement/SHOULDNOT\s*id=\\?"[a-zA-Z0-9_-]+\\?" %}'
 SHOULD_NOT_REPLACE = 'YOU SHOULD NOT'
 INCLUDE_PATTERN = r'{%\s*(include|include_relative)\s*([^\s%}]+)\s*%}'
+INCLUDE_NOTE_PATTERN = r'{% include note.html content=\\?"([^\\]+)\\?" %}'
+INCLUDE_NOTE_REPLACE = r'**NOTE:** \1'
+INCLUDE_DRAFT_PATTERN = r'{% include draft.html content=\\?"([^\\]+)\\?" %}'
+INCLUDE_DRAFT_REPLACE = r'**DRAFT:** \1'
+INCLUDE_IMPORTANT_PATTERN = r'{% include important.html content=\\?"([^\\]+)\\?" %}'
+INCLUDE_IMPORTANT_REPLACE = r'**IMPORTANT:** \1'
 
 ICON_PATTERN = r'^:[a-z_]+: '
 ICON_REPLACE = ''
@@ -154,6 +160,9 @@ def split_tags(item) -> Tuple[str, Optional[str]]:
     text = re.sub(SHOULD_NO_ID_PATTERN, SHOULD_REPLACE, text)
     text = re.sub(SHOULD_NOT_PATTERN, SHOULD_NOT_REPLACE, text)
     text = re.sub(ICON_PATTERN, ICON_REPLACE, text)
+    text = re.sub(INCLUDE_NOTE_PATTERN, INCLUDE_NOTE_REPLACE, text)
+    text = re.sub(INCLUDE_IMPORTANT_PATTERN, INCLUDE_IMPORTANT_REPLACE, text)
+    text = re.sub(INCLUDE_DRAFT_PATTERN, INCLUDE_DRAFT_REPLACE, text)
     return text, id
 
 # Extract the id from the inline text
