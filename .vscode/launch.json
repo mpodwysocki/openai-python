@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "args": [
-                "docs/Guidelines.md",
+                "docs/rest-api-guidelines.md",
             ],
             "console": "integratedTerminal",
             "justMyCode": true
