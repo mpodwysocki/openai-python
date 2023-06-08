@@ -47,7 +47,7 @@
   {
     "id": "python-client-constructor-transport-argument",
     "category": "Client configuration",
-    "text": "DO allow users to pass in a transport keyword-only argument that allows the caller to specify a specific transport instance. The default value should be the RequestsTransport for synchronous clients and the AioHttpTransport for async clients."
+    "text": "DO allow users to pass in a transport keyword-only argument that allows the caller to specify a specific transport instance. The default value should be the RequestsTransport (https://azuresdkdocs.blob.core.windows.net/$web/python/azure-core/1.1.1/azure.core.pipeline.transport.html?highlight=transport#azure.core.pipeline.transport.RequestsTransport) for synchronous clients and the AioHttpTransport (https://azuresdkdocs.blob.core.windows.net/$web/python/azure-core/1.1.1/azure.core.pipeline.transport.html?highlight=transport#azure.core.pipeline.transport.AioHttpTransport) for async clients."
   },
   {
     "id": "python-client-connection-string",
@@ -132,7 +132,7 @@
   {
     "id": "python-client-cancellation-async-methods",
     "category": "Cancellation",
-    "text": "DO use the standard asyncio.Task.cancel method to cancel async methods."
+    "text": "DO use the standard asyncio.Task.cancel (https://docs.python.org/3/library/asyncio-task.html#asyncio.Task.cancel) method to cancel async methods."
   },
   {
     "id": "python-client-optional-arguments-keyword-only",
@@ -142,7 +142,7 @@
   {
     "id": "python-client-service-per-call-args",
     "category": "Service Method Parameters",
-    "text": "DO provide keyword-only arguments that override per-request policy options. The name of the parameters MUST mirror the name of the arguments provided in the client constructor or factory methods.\nFor a full list of supported optional arguments used for pipeline policy and transport configuration (both at the client constructor and per service operation), see the Azure Core developer documentation."
+    "text": "DO provide keyword-only arguments that override per-request policy options. The name of the parameters MUST mirror the name of the arguments provided in the client constructor or factory methods.\nFor a full list of supported optional arguments used for pipeline policy and transport configuration (both at the client constructor and per service operation), see the Azure Core developer documentation (https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/core/azure-core/CLIENT_LIBRARY_DEVELOPER.md) "
   },
   {
     "id": "python-client-service-args-conflict",
@@ -197,7 +197,7 @@
   {
     "id": "python-paged-non-server-paged-list",
     "category": "Methods returning collections (paging)",
-    "text": "DO return a value that implements the ItemPaged protocol even if the service API currently do not support server driven paging. This allows server driven paging to be added to the service API without introducing breaking changes in the client library.\n\nService operations that take a long time (currently defined in the Microsoft REST API Guidelines as not completing in 0.5s in P99) to complete are modeled by services as long running operations.\n\nPython client libraries abstracts the long running operation using the Long running operation Poller protocol.\nIn cases where a service API is not explicitly implemented as a long-running operation, but the common usage pattern requires a customer to sleep or poll a status - it's likely that these API's should still be represented in the SDK using the Poller protocol."
+    "text": "DO return a value that implements the ItemPaged protocol even if the service API currently do not support server driven paging. This allows server driven paging to be added to the service API without introducing breaking changes in the client library.\n\nService operations that take a long time (currently defined in the Microsoft REST API Guidelines (https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#141-principles) as not completing in 0.5s in P99) to complete are modeled by services as long running operations.\n\nPython client libraries abstracts the long running operation using the Long running operation Poller protocol.\nIn cases where a service API is not explicitly implemented as a long-running operation, but the common usage pattern requires a customer to sleep or poll a status - it's likely that these API's should still be represented in the SDK using the Poller protocol."
   },
   {
     "id": "python-lro-poller",
@@ -282,17 +282,17 @@
   {
     "id": "python-errors-azure-exceptions",
     "category": "Exceptions",
-    "text": "YOU SHOULD prefer raising existing exception types from the azure-core package over creating new exception types."
+    "text": "YOU SHOULD prefer raising existing exception types from the azure-core (https://azuresdkdocs.blob.core.windows.net/$web/python/azure-core/1.9.0/index.html#azure-core-library-exceptions) package over creating new exception types."
   },
   {
     "id": "python-errors-use-standard-exceptions",
     "category": "Exceptions",
-    "text": "DO NOT create new exception types when a built-in exception type will suffice."
+    "text": "DO NOT create new exception types when a built-in exception type (https://docs.python.org/3/library/exceptions.html) will suffice."
   },
   {
     "id": "python-errors-new-exceptions",
     "category": "Exceptions",
-    "text": "YOU SHOULD NOT create a new exception type unless the developer can handle the error programmatically.  Specialized exception types related to service operation failures should be based on existing exception types from the azure-core package.\n\nFor higher-level methods that use multiple HTTP requests, either the last exception or an aggregate exception of all failures should be produced."
+    "text": "YOU SHOULD NOT create a new exception type unless the developer can handle the error programmatically.  Specialized exception types related to service operation failures should be based on existing exception types from the azure-core (https://azuresdkdocs.blob.core.windows.net/$web/python/azure-core/1.9.0/index.html#azure-core-library-exceptions) package.\n\nFor higher-level methods that use multiple HTTP requests, either the last exception or an aggregate exception of all failures should be produced."
   },
   {
     "id": "python-errors-rich-info",
@@ -367,7 +367,7 @@
   {
     "id": "python-client-async-keywords",
     "category": "Async support",
-    "text": "DO use the async/await keywords (requires Python 3.5+). Do not use the yield from coroutine or asyncio.coroutine syntax."
+    "text": "DO use the async/await keywords (requires Python 3.5+). Do not use the yield from coroutine or asyncio.coroutine (https://docs.python.org/3.4/library/asyncio-task.html) syntax."
   },
   {
     "id": "python-client-separate-sync-async",
@@ -397,7 +397,7 @@
   {
     "id": "python-client-async-http-stack",
     "category": "Async support",
-    "text": "DO use aiohttp as the default HTTP stack for async operations. Use azure.core.pipeline.transport.AioHttpTransport as the default transport type for the async client."
+    "text": "DO use aiohttp (https://aiohttp.readthedocs.io/en/stable/) as the default HTTP stack for async operations. Use azure.core.pipeline.transport.AioHttpTransport as the default transport type for the async client."
   },
   {
     "id": "python-packaging-name",
@@ -417,12 +417,12 @@
   {
     "id": "python-packaging-follow-repo-rules",
     "category": "Packaging",
-    "text": "DO follow the specific package guidance from the azure-sdk-packaging wiki"
+    "text": "DO follow the specific package guidance from the azure-sdk-packaging wiki (https://github.com/Azure/azure-sdk-for-python/wiki/Azure-packaging) "
   },
   {
     "id": "python-packaging-follow-python-rules",
     "category": "Packaging",
-    "text": "DO follow the namespace package recommendations for Python 3.x for packages that only need to target 3.x."
+    "text": "DO follow the namespace package recommendations for Python 3.x (https://docs.python.org/3/reference/import.html#namespace-packages) for packages that only need to target 3.x."
   },
   {
     "id": "python-general-supply-sdist",
@@ -437,7 +437,7 @@
   {
     "id": "python-general-wheel-behavior",
     "category": "Packaging",
-    "text": "DO test correct behavior for both CPython and PyPy for pure and universal Python wheels."
+    "text": "DO test correct behavior for both CPython and PyPy for pure (https://packaging.python.org/guides/distributing-packages-using-setuptools/#id75) and universal (https://packaging.python.org/guides/distributing-packages-using-setuptools/#universal-wheels) Python wheels."
   },
   {
     "id": "python-packaging-nspkg",
@@ -467,12 +467,12 @@
   {
     "id": "python-versioning-semver",
     "category": "Package Versioning",
-    "text": "DO use semantic versioning for your package."
+    "text": "DO use semantic versioning (https://semver.org) for your package."
   },
   {
     "id": "python-versioning-beta",
     "category": "Package Versioning",
-    "text": "DO use the bN pre-release segment for beta releases.\n\nDon't use pre-release segments other than the ones defined in PEP440 (aN, bN, rcN). Build tools, publication tools, and index servers may not sort the versions correctly."
+    "text": "DO use the bN pre-release segment for beta releases (https://www.python.org/dev/peps/pep-0440/#pre-releases) \n\nDon't use pre-release segments other than the ones defined in PEP440 (https://www.python.org/dev/peps/pep-0440) (aN, bN, rcN). Build tools, publication tools, and index servers may not sort the versions correctly."
   },
   {
     "id": "python-versioning-changes",
@@ -527,7 +527,7 @@
   {
     "id": "python-dependencies-pin-version",
     "category": "Dependencies",
-    "text": "DO NOT pin a specific version of a dependency unless that is the only way to work around a bug in said dependencies versioning scheme.\n\nOnly applications are expected to pin exact dependencies. Libraries are not. A library should use a compatible release identifier for the dependency."
+    "text": "DO NOT pin a specific version of a dependency unless that is the only way to work around a bug in said dependencies versioning scheme.\n\nOnly applications are expected to pin exact dependencies. Libraries are not. A library should use a compatible release (https://www.python.org/dev/peps/pep-0440/#compatible-release) identifier for the dependency."
   },
   {
     "id": "python-native-approval",
@@ -537,7 +537,7 @@
   {
     "id": "python-native-plat-support",
     "category": "Binary extensions (native code)",
-    "text": "DO support Windows, Linux (manylinux - see PEP513, PEP571), and MacOS.  Support the earliest possible manylinux to maximize your reach."
+    "text": "DO support Windows, Linux (manylinux - see PEP513 (https://www.python.org/dev/peps/pep-0513/)  PEP571 (https://www.python.org/dev/peps/pep-0571/) , and MacOS.  Support the earliest possible manylinux to maximize your reach."
   },
   {
     "id": "python-native-arch-support",
@@ -547,7 +547,7 @@
   {
     "id": "python-docstrings-pydocs",
     "category": "Docstrings",
-    "text": "DO follow the documentation guidelines unless explicitly overridden in this document."
+    "text": "DO follow the documentation guidelines (http://aka.ms/pydocs) unless explicitly overridden in this document."
   },
   {
     "id": "python-docstrings-all",

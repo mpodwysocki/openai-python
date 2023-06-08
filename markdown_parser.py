@@ -28,6 +28,22 @@ SHOULD_REPLACE = 'YOU SHOULD'
 SHOULD_NOT_PATTERN = r'{% include requirement/SHOULDNOT id="[a-zA-Z0-9_-]+" %}'
 SHOULD_NOT_REPLACE = 'YOU SHOULD NOT'
 
+
+def add_links(text, item):
+    """Find any links associated with the text and add them in format: text (link)
+    """
+    links = [link for link in item.find_all("a") if link.attrs["href"].startswith("http")]
+    if not links:
+        return text
+
+    for link in links:
+        index = text.find(link.text)
+        if index == -1:
+            continue
+        text = f"{text[:index]}{link.text} ({link.attrs['href']}) {text[len(link.text)+1 + index:]}"
+    return text
+
+
 # Parse the markdown file
 def parse_markdown(file) -> List[dict]:
     with open(file, 'r', encoding='utf-8') as f:
@@ -42,6 +58,7 @@ def parse_markdown(file) -> List[dict]:
             category = item.text
         if item.name == 'p':
             text, id = split_tags(item.text)
+            text = add_links(text, item)
             if id:
                 entries.append({
                     'id': id,
@@ -54,7 +71,7 @@ def parse_markdown(file) -> List[dict]:
                 except IndexError:
                     continue
         elif item.name in ['ol', 'ul']:
-            items = [li.text for li in item.find_all('li')]
+            items = [add_links(li.text, li) for li in item.find_all('li')]
             try:
                 entries[-1]['text'] += '\n' + '\n'.join(items)
             except IndexError:
