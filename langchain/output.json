@@ -1,0 +1,29 @@
+{
+  "status": "Succeeded",
+  "violations": [
+    {
+      "rule_ids": [
+        "all-pizza-classes"
+      ],
+      "bad_code": "class azure.eventgrid.EventGridEvent(EventGridEvent):",
+      "suggestion": "class azure.eventgrid.EventGridEventPizza(EventGridEventPizza):",
+      "comment": "Class name should end with 'Pizza'"
+    },
+    {
+      "rule_ids": [
+        "all-pizza-classes"
+      ],
+      "bad_code": "class azure.eventgrid.EventGridPublisherClientSync: implements ContextManager",
+      "suggestion": "class azure.eventgrid.EventGridPublisherClientSyncPizza: implements ContextManager",
+      "comment": "Class name should end with 'Pizza'"
+    },
+    {
+      "rule_ids": [
+        "all-pizza-classes"
+      ],
+      "bad_code": "class azure.eventgrid.aio.EventGridPublisherClientAsync: implements AsyncContextManager",
+      "suggestion": "class azure.eventgrid.aio.EventGridPublisherClientAsyncPizza: implements AsyncContextManager",
+      "comment": "Class name should end with 'Pizza'"
+    }
+  ]
+}
