@@ -24,7 +24,7 @@ class Violation(BaseModel):
     rule_ids: List[str] = Field(description="unique rule ID or IDs that were violated.")
     bad_code: str = Field(description="the original code that was bad.")
     suggestion: str = Field(description="the suggested fix for the bad code.")
-    comment: str = Field(description="a comment about the violation.")
+    comment: str = Field(description="a description of what was wrong with the code and how the suggestion fixes it.")
 
 class GuidelinesResult(BaseModel):
     status: str = Field(description="Succeeded if the request completed, or Error if it did not")
@@ -39,14 +39,20 @@ class APIViewModel:
             input_variables=["apiview", "guidelines", "language"],
             partial_variables={"format_instructions": self.output_parser.get_format_instructions()},
             template="""
-                Given the following {language} Azure SDK Guidelines:
-                  {guidelines}
-                Verify whether the following code satisfies the guidelines:
-                ```
-                  {apiview}
-                ```
-                
-                {format_instructions}
+    # GUIDELINES
+    {guidelines}
+    
+    # CODE
+    ```
+    {apiview}
+    ```
+    
+    # INSTRUCTIONS
+    - The language you are evaluating is {language}.
+    - Ensure that your code suggestions do not conflict with one another.
+    
+    # FORMAT INSTRUCTIONS
+    {format_instructions}
             """
         )
         self.chain = LLMChain(llm=self.llm, prompt=self.prompt_template)
@@ -55,35 +61,36 @@ class APIViewModel:
         general_guidelines, language_guidelines = self.retrieve_guidelines(language)
         all_guidelines = general_guidelines + language_guidelines
 
-        guidelines = self.select_guidelines(all_guidelines, [
-            "python-client-sync-async-separate-clients",
-            "python-client-naming",
-            "python-client-constructor-form",
-            "python-client-options-naming",
-            "python-codestyle-pep484"
+        # select the guidelines to evaluate
+        guidelines = self.select_guidelines(all_guidelines, categories=[
+            "Service client",
+            "General guidelines",
+            "Client configuration",
         ])
+        formatted_guidelines = json.dumps(guidelines, indent=2)
 
-        # TODO: remove this!
-        guidelines.append({
-            "id": "all-pizza-classes",
-            "text": "DO ensure all class names end with Pizza",
-            "category": "naming",
-        })
+        # dump the formatted template to file for debugging
+        formatted_template = self.prompt_template.format(apiview=apiview, guidelines=formatted_guidelines, language=language)
+        with open(os.path.join(os.path.dirname(__file__), "formatted_template.txt"), "w") as f:
+            f.write(formatted_template)
 
-        results = None
-        for guideline in guidelines:
-            print(f"Checking guideline: {guideline['id']}")
-            result = self.chain.run(apiview=apiview, guidelines=guideline, language=language)
-            parsed = self.output_parser.parse(result)
-            if results is None:
-                results = parsed
-            else:
-                results.violations.extend(parsed.violations)
+        result = self.chain.run(apiview=apiview, guidelines=guidelines, language=language, temperature=0)
+        parsed = self.output_parser.parse(result)
         with open(os.path.join(os.path.dirname(__file__), "output.json"), "w") as f:
-            f.write(results.json(indent=2))
+            f.write(json.dumps(parsed.dict(), indent=2))
 
-    def select_guidelines(self, all, select_ids):
-        return [guideline for guideline in all if guideline["id"] in select_ids]
+    def select_guidelines(self, all, *, ids=None, categories=None):
+        rules = {}
+        if ids:
+            rules = {guideline["id"]: guideline for guideline in all if guideline["id"] in ids}
+        if categories:
+            category_rules = {guideline["id"]: guideline for guideline in all if guideline["category"] in categories}
+            rules.update(category_rules)
+        # numbering the guidelines improves the quality of the output
+        for i, key in enumerate(rules):
+            rules[key]["number"] = i
+        return list(rules.values())
+        
 
     def retrieve_guidelines(self, language):
         general_guidelines = []
