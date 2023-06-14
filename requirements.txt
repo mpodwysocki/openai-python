@@ -3,4 +3,4 @@ python-dotenv
 gradio
 markdown
 openai
-
+langchain

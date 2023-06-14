@@ -1,0 +1,210 @@
+
+    # GUIDELINES
+    [
+  {
+    "id": "general-config-global-config",
+    "category": "Client configuration",
+    "text": "DO use relevant global configuration settings either by default or when explicitly requested to by the user, for example by passing in a configuration object to a client constructor.",
+    "number": 0
+  },
+  {
+    "id": "general-config-for-different-clients",
+    "category": "Client configuration",
+    "text": "DO allow different clients of the same type to use different configurations.",
+    "number": 1
+  },
+  {
+    "id": "general-config-optout",
+    "category": "Client configuration",
+    "text": "DO allow consumers of your service clients to opt out of all global configuration settings at once.",
+    "number": 2
+  },
+  {
+    "id": "general-config-global-overrides",
+    "category": "Client configuration",
+    "text": "DO allow all global configuration settings to be overridden by client-provided options. The names of these options should align with any user-facing global configuration keys.",
+    "number": 3
+  },
+  {
+    "id": "general-config-behaviour-changes",
+    "category": "Client configuration",
+    "text": "DO NOT change behavior based on configuration changes that occur after the client is constructed. Hierarchies of clients inherit parent client configuration unless explicitly changed or overridden. Exceptions to this requirement are as follows:\nLog level, which must take effect immediately across the Azure SDK.\nTracing on/off, which must take effect immediately across the Azure SDK.",
+    "number": 4
+  },
+  {
+    "id": "python-feature-support",
+    "category": "General guidelines",
+    "text": "DO support 100% of the features provided by the Azure service the client library represents. Gaps in functionality cause confusion and frustration among developers.\n\nThese guidelines were written primarily with a HTTP based request/response in mind, but many general guidelines apply to other types of services as well. This includes, but is not limited to, packaging and naming, tools and project structures.\n\nPlease contact the [Architecture board] for more guidance on non HTTP/REST based services.",
+    "number": 5
+  },
+  {
+    "id": "python-client-namespace",
+    "category": "Service client",
+    "text": "DO expose the service clients the user is more likely to interact with from the root namespace of your package. Specialized service clients may be placed in sub-namespaces.",
+    "number": 6
+  },
+  {
+    "id": "python-client-naming",
+    "category": "Service client",
+    "text": "DO name service client types with a Client suffix.",
+    "number": 7
+  },
+  {
+    "id": "python-client-sync-async-separate-clients",
+    "category": "Service client",
+    "text": "DO provide separate sync and async clients. See the Async Support section for more information.\n\n```python\n# Yes\nclass CosmosClient: ...\n\n# No\nclass CosmosProxy: ...\n\n# No\nclass CosmosUrl: ...\n\n```",
+    "number": 8
+  },
+  {
+    "id": "python-client-immutable",
+    "category": "Service client",
+    "text": "DO make the service client immutable. See the Client Immutability section for more information.\n\nOnly the minimal information needed to connect and interact with the service should be required in order to construct a client instance. All additional information should be optional and passed in as optional keyword-only arguments.",
+    "number": 9
+  },
+  {
+    "id": "python-client-constructor-form",
+    "category": "Client configuration",
+    "text": "DO provide a constructor that takes positional binding parameters (for example, the name of, or a URL pointing to the service instance), a positional credential parameter, a transport keyword-only parameter, and keyword-only arguments for passing settings through to individual HTTP pipeline policies. See the Authentication section for more information on the credential parameter.",
+    "number": 10
+  },
+  {
+    "id": "python-client-options-naming",
+    "category": "Client configuration",
+    "text": "DO NOT use an \"options bag\" object to group optional parameters. Instead, pass as individual keyword-only arguments.",
+    "number": 11
+  },
+  {
+    "id": "python-client-constructor-policy-arguments",
+    "category": "Client configuration",
+    "text": "DO accept optional default request options as keyword arguments and pass them along to its pipeline policies. See Common service operation parameters for more information.\n\n```python\n# Change default number of retries to 18 and overall timeout to 2s.\nclient = ExampleClient('https://contoso.com/xmpl',\n                       DefaultAzureCredential(),\n                       max_retries=18,\n                       timeout=2)\n\n```",
+    "number": 12
+  },
+  {
+    "id": "python-client-constructor-transport-argument",
+    "category": "Client configuration",
+    "text": "DO allow users to pass in a transport keyword-only argument that allows the caller to specify a specific transport instance. The default value should be the RequestsTransport (https://azuresdkdocs.blob.core.windows.net/$web/python/azure-core/1.1.1/azure.core.pipeline.transport.html?highlight=transport#azure.core.pipeline.transport.RequestsTransport) for synchronous clients and the AioHttpTransport (https://azuresdkdocs.blob.core.windows.net/$web/python/azure-core/1.1.1/azure.core.pipeline.transport.html?highlight=transport#azure.core.pipeline.transport.AioHttpTransport) for async clients.",
+    "number": 13
+  },
+  {
+    "id": "python-client-connection-string",
+    "category": "Client configuration",
+    "text": "DO use a separate factory classmethod from_connection_string to create a client from a connection string (if the client supports connection strings). The from_connection_string factory method should take the same set of arguments (excluding information provided in the connection string) as the constructor. The constructor (__init__ method) must not take a connection string, even if it means that using the from_connection_string is the only supported method to create an instance of the client.\n\nThe method should parse the connection string and pass the values along with any additional keyword-only arguments except credential to the constructor.  Only provide a from_connection_string factory method if the Azure portal exposes a connection string for your service.\n\n```python\nclass ExampleClientWithConnectionString:\n\n    @classmethod\n    def _parse_connection_string(cls, connection_string): ...\n\n    @classmethod\n    def from_connection_string(cls, connection_string, **kwargs):\n        endpoint, credential = cls._parse_connection_string(connection_string)\n        return cls(endpoint, credential, **kwargs)\n\n```\n\n\"\"\"Example client using some of the most common API patterns\n\"\"\"\n\nimport models\nimport azure.core.pipeline.transport as transports\n\nclass Thing:\n    \"\"\"A simple model type representing a Thing.\n\n    :ivar name: The name of the thing. \n    :vartype name: str\n    :ivar size: The size of the thing. \n    :vartype size: int\n    \"\"\"\n\n    def __init__(self, name: str, size: int) -> None:\n        \"\"\"Create a new Thing\n\n        :param name: The name of the thing\n        :type name: str\n        :param size: The size of the thing\n        :type size: int\n        \"\"\"\n\n        # Please note that we are using attributes rather than properties.\n        self.name = name\n        self.size = size\n\n    @classmethod\n    def from_response(self, response: \"azure.core.rest.HttpResponse\") -> \"Thing\":\n        \"\"\"Factory method to, given a response, construct a ~Thing\n        \"\"\"\n        return Thing(**response.context['deserialized_data'])\n\n    def __repr__(self):\n        # For simple model types, we can just dump our __dict__ and\n        # truncate the output at 1024 characters.\n        return json.dumps(self.__dict__)[:1024]\n\nclass ExampleClient:\n\n    def __init__(self, endpoint: str, credential: \"azure.core.credentials.TokenCredential\", **kwargs) -> None:\n        \"\"\"Create a new example client instance\n\n        :param endpoint: Endpoint to connect to.\n        :type endpoint str:\n        :param credential: Credentials to use when connecting to the service.\n        :type credential: ~azure.core.credentials.TokenCredential\n        :keyword api_version: API version to use when talking to the service. Default is '2020-12-31'\n        :paramtype api_version: str\n        :keyword transport: HttpTransport to use. Default is ~transports.RequestsHttpTransport.\n        :paramtype transport: ~azure.core.pipeline.transport.HttpTransport\n        \"\"\"\n        self._api_version = kwargs.pop('api_version', '2020-12-31')\n        transport = kwargs.pop('transport', None) or transports.RequestsTransport(**kwargs)\n        \n        # continue to build up your client...\n        self._pipeline = [\n            ..., # List of policies for this specific client\n            transport\n        ]\n\n    @classmethod\n    def from_connection_string(cls, connection_string: str, **kwargs) -> \"Thing\":\n        \"\"\"Optional factory method if the service supports connection strings\n        \n        :param connection_string: Connection string containing endpoint and credentials\n        :type connection_string: str\n        :returns: The newly created client.\n        :rtype: ~ExampleClient\n        \"\"\"\n        endpoint, credential = _parse(connection_string)\n        return cls(endpoint, credential, **kwargs)\n\n\n    def get_thing(self, name: str, **kwargs) -> \"Thing\":\n        \"\"\"Get the Thing with name `name`.\n\n        :param name: The name of the ~Thing to get\n        :type name: str\n        :rtype: ~Thing\n        \"\"\"\n        model_factory = kwargs.pop('cls', Thing.from_response)\n        request = self._build_get_thing_request(name)\n        # Pass along all policy parameters when making the request\n        response = self._pipeline.send(request, **kwargs) \n        return model_factory(response)\n\n    def list_things(self, **kwargs) -> \"azure.core.paging.ItemPaged[Thing]\":\n        \"\"\"List all things.\n        \n        :rtype: ~azure.core.ItemPaged[~Thing]\n        \"\"\"\n        ...\n        return azure.core.paging.ItemPaged(...)\n\n    def begin_restart_thing(self, name: str, **kwargs) -> \"azure.core.polling.LROPoller[bool]\":\n        \"\"\"Restart the thing\n\n        :param name: The name of the thing to restart\n        :type name: str\n        \"\"\"\n        model = kwargs.pop('cls', dict)\n        request = self._build_begin_restart_thing(name)\n        # Pass along all policy parameters when making the request\n        response = self._pipeline.send(request, **kwargs)\n\n        # TODO: show how to construct the poller instance\n        return azure.core.polling.LROPoller(...)\n\n\n\n\n\n\n",
+    "number": 14
+  },
+  {
+    "id": "python-client-constructor-from-url",
+    "category": "Client configuration",
+    "text": "YOU MAY use a separate factory classmethod from_<resource type>_url (e.g. from_blob_url) to create a client from a URL (if the service relies on passing URLs to resources around - e.g. Azure Blob Storage). The from_url factory method should take the same set of optional keyword arguments as the constructor.",
+    "number": 15
+  }
+]
+    
+    # CODE
+    ```
+    # Package is parsed using apiview-stub-generator(version:0.3.7), Python version: 3.10.11
+
+class azure.eventgrid.EventGridEvent(EventGridEvent):
+    ivar data: object
+    ivar data_version: str
+    ivar event_time: datetime
+    ivar event_type: str
+    ivar id: str
+    ivar metadata_version: str
+    ivar subject: str
+    ivar topic: str
+    def __eq__(self, other: Any) -> bool
+    def __init__(
+            self, 
+            subject, 
+            event_type, 
+            data, 
+            data_version, 
+            event_time, 
+            id, 
+            metadata_version, 
+            topic, 
+        )
+    def __ne__(self, other: Any) -> bool
+    def __repr__(self)
+    def __str__(self) -> str
+    @classmethod
+    def deserialize(
+            cls: Type[ModelType], 
+            data: Any, 
+            content_type: Optional[str] = None
+        ) -> ModelType
+    @classmethod
+    def enable_additional_properties_sending(cls) -> None
+    @classmethod
+    def from_dict(
+            cls: Type[ModelType], 
+            data: Any, 
+            key_extractors: Optional[Callable[[str, Dict[str, Any], Any], Any]] = None, 
+            content_type: Optional[str] = None
+        ) -> ModelType
+    @classmethod
+    def from_json(cls, event: object) -> EventGridEvent
+    @classmethod
+    def is_xml_model(cls) -> bool
+    def as_dict(
+            self, 
+            keep_readonly: bool = True, 
+            key_transformer: Callable[[str, Dict[str, Any], Any], Any] = attribute_transformer, 
+            **kwargs: Any
+        ) -> JSON
+    def serialize(
+            self, 
+            keep_readonly: bool = False, 
+            **kwargs: Any
+        ) -> JSON
+
+class azure.eventgrid.EventGridPublisherClientSync: implements ContextManager
+    def __init__(
+            self, 
+            endpoint: str, 
+            credential: Union[AzureKeyCredential, AzureSasCredential, TokenCredential], 
+            options: ClientOptions
+        ) -> None
+    def close(self) -> None
+    @distributed_trace
+    def send(
+            self, 
+            events, 
+            channel_name, 
+            content_type, 
+        )
+
+class azure.eventgrid.aio.EventGridPublisherClientAsync: implements AsyncContextManager
+    def __init__(
+            self, 
+            endpoint: str, 
+            credential: Union[AsyncTokenCredential, AzureKeyCredential, AzureSasCredential], 
+            options: ClientOptions
+        ) -> None
+    async def close(self) -> None
+    @distributed_trace_async
+    async def send(
+            self, 
+            events: SendType, 
+            channel_name: Optional[str] = ..., 
+            content_type: Optional[str] = ..., 
+            **kwargs: Any
+        ) -> None
+
+    ```
+    
+    # INSTRUCTIONS
+    - The language you are evaluating is python.
+    - Ensure that your code suggestions do not conflict with one another.
+    
+    # FORMAT INSTRUCTIONS
+    The output should be formatted as a JSON instance that conforms to the JSON schema below.
+
+As an example, for the schema {"properties": {"foo": {"title": "Foo", "description": "a list of strings", "type": "array", "items": {"type": "string"}}}, "required": ["foo"]}}
+the object {"foo": ["bar", "baz"]} is a well-formatted instance of the schema. The object {"properties": {"foo": ["bar", "baz"]}} is not well-formatted.
+
+Here is the output schema:
+```
+{"properties": {"status": {"title": "Status", "description": "Succeeded if the request completed, or Error if it did not", "type": "string"}, "violations": {"title": "Violations", "description": "list of violations if any", "type": "array", "items": {"$ref": "#/definitions/Violation"}}}, "required": ["status", "violations"], "definitions": {"Violation": {"title": "Violation", "type": "object", "properties": {"rule_ids": {"title": "Rule Ids", "description": "unique rule ID or IDs that were violated.", "type": "array", "items": {"type": "string"}}, "bad_code": {"title": "Bad Code", "description": "the original code that was bad.", "type": "string"}, "suggestion": {"title": "Suggestion", "description": "the suggested fix for the bad code.", "type": "string"}, "comment": {"title": "Comment", "description": "a description of what was wrong with the code and how the suggestion fixes it.", "type": "string"}}, "required": ["rule_ids", "bad_code", "suggestion", "comment"]}}}
+```
+            
