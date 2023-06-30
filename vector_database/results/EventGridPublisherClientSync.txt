@@ -1,0 +1,26 @@
+1. Violates: The code sample does not have a separate factory classmethod `from_connection_string` to create a client from a connection string. To fix this, add the following method to the `EventGridPublisherClientSync` class:
+
+```python
+@classmethod
+def from_connection_string(cls, connection_string: str, **kwargs):
+    endpoint, credential = cls._parse_connection_string(connection_string)
+    return cls(endpoint, credential, **kwargs)
+```
+
+2. Does not violate: The class name `EventGridPublisherClientSync` has a "Client" suffix.
+
+3. Does not violate: The constructor takes positional binding parameters (endpoint and credential), and a keyword-only argument for passing settings (options).
+
+4. Violates: The constructor does not accept an optional `api_version` keyword-only argument of type string. To fix this, add the `api_version` parameter to the constructor:
+
+```python
+def __init__(
+        self, 
+        endpoint: str, 
+        credential: Union[AzureKeyCredential, AzureSasCredential, TokenCredential], 
+        options: ClientOptions,
+        api_version: Optional[str] = None
+    ) -> None
+```
+
+5. Not applicable: This guideline is for async clients, and the code sample is for a sync client.

@@ -8,6 +8,7 @@ We take the top X results or everything above a confidence threshold and then ju
 and ask if it violates the guideline.
 """
 
+import json
 import os
 import openai
 import uuid
@@ -74,76 +75,79 @@ except:
         definition = IndexDefinition(prefix=INDEX_PREFIX, index_type=IndexType.HASH)
 )
 
+guidelines_path = os.path.join(os.path.dirname(__file__), "eventgrid.txt")
+with open(guidelines_path, "r", encoding="utf-8") as fd:
+    guidelines = json.loads(fd.read())
 
-guideline = {
-    "guideline": "python-client-naming",
-    "category": "Service client",
-    "text": "DO name service client types with a Client suffix.",
-    "code_example": "class azure.service.ExampleClientAsync: implements ContextManager",  # should this be a good or bad fingerprint?
-}
-
-
-embeddings = get_embedding(guideline["code_example"], EMBEDDINGS_MODEL)
-guideline["embedding"] = np.array(embeddings).astype(dtype=np.float32).tobytes()
-
-code = \
-"""
-class azure.eventgrid.EventGridClientSync(EventGridClientOperationsMixin): implements ContextManager
-
-    def __init__(
-            self,
-            endpoint: str,
-            credential: AzureKeyCredential,
-            *,
-            api_version: str = ...,
-            **kwargs: Any
-        ) -> None
-"""
-
-id = "doc" + str(uuid.uuid4())
-redis_index.hset(id, mapping=guideline)
-
-code_embedding = get_embedding(code, EMBEDDINGS_MODEL)
-
-TOP_K = 10
-
-fields = ["id", "guideline", "category", "text", "code_example", "embedding"]
-
-base_query = f'*=>[KNN {TOP_K} @embedding $vector AS score]'
-query = (
-    Query(base_query)
-    .return_fields(*fields)
-    .sort_by("score")
-    .dialect(2)
-)
-params_dict = {"vector": np.array(code_embedding).astype(dtype=np.float32).tobytes()}
-results = redis_index.ft(INDEX_NAME).search(query, query_params=params_dict)
-
-captured_guidelines = []
-for result in results.docs:
-    guideline_text = result["text"]
-    captured_guidelines.append(guideline_text)
-
-question = f"{', '.join(captured_guidelines)}\n\n{code}"
+for guideline in guidelines:
+    embeddings = get_embedding(guideline["code_example"], EMBEDDINGS_MODEL)
+    guideline["embedding"] = np.array(embeddings).astype(dtype=np.float32).tobytes()
+    redis_index.hset(INDEX_PREFIX + str(uuid.uuid4()), mapping=guideline)
 
 
-# TODO: improve the system prompt
-messages = [
-    {
-        "role": "system",
-        "content": f"Given the comma-separated guidelines and code sample, answer if the code violates the guideline." \
-        f"Use the following format:\n\nGuideline: <guideline>\n\n<code example>\nAnswer: <answer or \"I couldn't find the answer to that question\">\n\n" \
-        f"If the code violates the guidelines, suggest a way to fix the code based on what the guideline states."
-    }
-]
-messages.append({"role": "user", "content": f"Guideline: {question}\nAnswer:"})
-response = openai.ChatCompletion.create(
-    messages=messages,
-    deployment_id=GENERATIVE_MODEL,
-    max_tokens=1000,
-    temperature=0,
-)
+# code that answer.txt uses
+# code = \
+# """
+# class azure.eventgrid.EventGridClientSync(EventGridClientOperationsMixin): implements ContextManager
 
-choices = response["choices"]
-answer = choices[0].message.content.strip()
-print(answer)
+#     def __init__(
+#             self,
+#             **kwargs: Any
+#         ) -> None
+# """
+
+apiview_path = os.path.join(os.path.dirname(__file__), "eventgrid.txt")
+with open(apiview_path, "r") as f:
+    apiview = f.read()
+
+# split/chunk the APIView by class
+# Note: not sure if this is the best way to chunk it
+# Also this strategy is very error-prone, don't use it :)
+classes = [cls for cls in apiview.split("class ") if cls.startswith("azure")]
+
+for num, code in enumerate(classes):
+    code_embedding = get_embedding(code, EMBEDDINGS_MODEL)
+
+    TOP_K = 5
+
+    fields = ["id", "guideline", "category", "text", "code_example", "embedding", "score"]
+
+    base_query = f'*=>[KNN {TOP_K} @embedding $vector AS score]'
+    query = (
+        Query(base_query)
+        .return_fields(*fields)
+        .sort_by("score")
+        .dialect(2)
+    )
+    params_dict = {"vector": np.array(code_embedding).astype(dtype=np.float32).tobytes()}
+    results = redis_index.ft(INDEX_NAME).search(query, query_params=params_dict)
+    # TODO we could only consider guidelines above a certain score threshold if we want
+
+    captured_guidelines = []
+    for idx, result in enumerate(results.docs):
+        guideline_text = f"{idx+1}. {result['text']}\n"
+        captured_guidelines.append(guideline_text)
+
+    question = f"\n\nCODE:\n{code}\n\n####\n\nGuidelines:{''.join(captured_guidelines)}\n\n####\n\n"
+
+    messages = [
+        {
+            "role": "system",
+            "content": f"Given the code sample and numbered guidelines with code examples, answer if the code sample violates each guideline." \
+            f"The input will be in the following format:\n\nCODE:\n<code example>\n\n####\n\nGuidelines: <guidelines>\n\n####\n\nAnswer: <answer if code sample violates guideline or \"I couldn't find the answer to that question\">\n\n" \
+            f"If the code violates a guideline, suggest a way to fix the code based on what the guideline states."
+        }
+    ]
+    messages.append({"role": "user", "content": f"{question}Answer:"})
+    response = openai.ChatCompletion.create(
+        messages=messages,
+        deployment_id=GENERATIVE_MODEL,
+        max_tokens=1000,
+        temperature=0,
+    )
+
+    choices = response["choices"]
+    answer = choices[0].message.content.strip()
+    print(answer)
+    with open(f"answer{str(num+1)}.txt", "w+") as fd:
+        fd.write(answer)
