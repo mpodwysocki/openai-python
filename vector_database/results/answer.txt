@@ -1,0 +1,34 @@
+1. Violates: The constructor in the code sample does not take positional binding parameters, a positional credential parameter, a transport keyword-only parameter, and keyword-only arguments for passing settings through to individual HTTP pipeline policies.
+
+Fix: Modify the constructor to include the required parameters:
+
+```python
+def __init__(self, endpoint: str, credential: "azure.core.credentials.TokenCredential", **kwargs: Any) -> None:
+    self._endpoint = endpoint
+    self._credential = credential
+    self._transport = kwargs.get('transport')
+```
+
+2. Violates: The code sample does not accept an optional api_version keyword-only argument of type string.
+
+Fix: Add the api_version keyword-only argument to the constructor:
+
+```python
+def __init__(self, endpoint: str, credential: "azure.core.credentials.TokenCredential", *, api_version: Optional[str] = None, **kwargs: Any) -> None:
+    self._endpoint = endpoint
+    self._credential = credential
+    self._transport = kwargs.get('transport')
+    self._api_version = api_version or 'latest_known_version'
+```
+
+3. Does not violate: The code sample does not have a from_connection_string factory method, but it is not required as it is not mentioned that the service supports connection strings.
+
+4. Violates: The class name does not have a "Client" suffix.
+
+Fix: Rename the class to have a "Client" suffix:
+
+```python
+class EventGridClientSync(EventGridClientOperationsMixin): implements ContextManager
+```
+
+5. Not applicable: The guideline is related to async clients, and the code sample is for a sync client.

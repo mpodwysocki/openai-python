@@ -1,0 +1,26 @@
+1. The code does not violate guideline 1. The service client is named with a "Client" suffix: `EventGridPublisherClientAsync`.
+
+2. The code violates guideline 2. There is no separate factory classmethod `from_connection_string` to create a client from a connection string. To fix this, add the following classmethod to the `EventGridPublisherClientAsync` class:
+
+```python
+@classmethod
+def from_connection_string(cls, connection_string: str, **kwargs) -> "EventGridPublisherClientAsync":
+    endpoint, credential = cls._parse_connection_string(connection_string)
+    return cls(endpoint, credential, **kwargs)
+```
+
+3. The code does not violate guideline 3. The constructor takes positional binding parameters (endpoint and credential), and a keyword-only argument for passing settings (options).
+
+4. The code violates guideline 4. There is no optional `api_version` keyword-only argument of type string. To fix this, add the `api_version` parameter to the constructor:
+
+```python
+def __init__(
+        self, 
+        endpoint: str, 
+        credential: Union[AsyncTokenCredential, AzureKeyCredential, AzureSasCredential], 
+        options: ClientOptions,
+        api_version: Optional[str] = None
+    ) -> None
+```
+
+5. The code does not violate guideline 5. The async client uses the `.aio` suffix in the namespace: `azure.eventgrid.aio.EventGridPublisherClientAsync`.

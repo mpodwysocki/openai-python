@@ -1,0 +1,122 @@
+[
+    {
+        "guideline": "python-client-naming",
+        "category": "Service client",
+        "text": "DO name service client types with a Client suffix.",
+        "code_example": "class azure.service.ExampleClientAsync: implements ContextManager"
+    },
+    {
+        "id": "python-client-constructor-form",
+        "category": "Client configuration",
+        "text": "DO provide a constructor that takes positional binding parameters (for example, the name of, or a URL pointing to the service instance), a positional credential parameter, a transport keyword-only parameter, and keyword-only arguments for passing settings through to individual HTTP pipeline policies. See the Authentication section for more information on the credential parameter.",
+        "code_example": "class azure.service.ExampleClient: implements ContextManager def __init__(self, **kwargs: Any) -> None:"
+    },
+    {
+        "id": "python-client-options-naming",
+        "category": "Client configuration",
+        "text": "DO NOT use an \"options bag\" object to group optional parameters. Instead, pass as individual keyword-only arguments.",
+        "code_example": "def create(self, options) -> None:"
+    },
+    {
+        "id": "python-client-connection-string",
+        "category": "Client configuration",
+        "text": "DO use a separate factory classmethod from_connection_string to create a client from a connection string (if the client supports connection strings). The from_connection_string factory method should take the same set of arguments (excluding information provided in the connection string) as the constructor. The constructor (__init__ method) must not take a connection string, even if it means that using the from_connection_string is the only supported method to create an instance of the client.\n\nThe method should parse the connection string and pass the values along with any additional keyword-only arguments except credential to the constructor.  Only provide a from_connection_string factory method if the Azure portal exposes a connection string for your service.\n\n```python\nclass ExampleClientWithConnectionString:\n\n    @classmethod\n    def _parse_connection_string(cls, connection_string): ...\n\n    @classmethod\n    def from_connection_string(cls, connection_string, **kwargs):\n        endpoint, credential = cls._parse_connection_string(connection_string)\n        return cls(endpoint, credential, **kwargs)\n\n```\n\n\"\"\"Example client using some of the most common API patterns\n\"\"\"\n\nimport models\nimport azure.core.pipeline.transport as transports\n\nclass Thing:\n    \"\"\"A simple model type representing a Thing.\n\n    :ivar name: The name of the thing. \n    :vartype name: str\n    :ivar size: The size of the thing. \n    :vartype size: int\n    \"\"\"\n\n    def __init__(self, name: str, size: int) -> None:\n        \"\"\"Create a new Thing\n\n        :param name: The name of the thing\n        :type name: str\n        :param size: The size of the thing\n        :type size: int\n        \"\"\"\n\n        # Please note that we are using attributes rather than properties.\n        self.name = name\n        self.size = size\n\n    @classmethod\n    def from_response(self, response: \"azure.core.rest.HttpResponse\") -> \"Thing\":\n        \"\"\"Factory method to, given a response, construct a ~Thing\n        \"\"\"\n        return Thing(**response.context['deserialized_data'])\n\n    def __repr__(self):\n        # For simple model types, we can just dump our __dict__ and\n        # truncate the output at 1024 characters.\n        return json.dumps(self.__dict__)[:1024]\n\nclass ExampleClient:\n\n    def __init__(self, endpoint: str, credential: \"azure.core.credentials.TokenCredential\", **kwargs) -> None:\n        \"\"\"Create a new example client instance\n\n        :param endpoint: Endpoint to connect to.\n        :type endpoint str:\n        :param credential: Credentials to use when connecting to the service.\n        :type credential: ~azure.core.credentials.TokenCredential\n        :keyword api_version: API version to use when talking to the service. Default is '2020-12-31'\n        :paramtype api_version: str\n        :keyword transport: HttpTransport to use. Default is ~transports.RequestsHttpTransport.\n        :paramtype transport: ~azure.core.pipeline.transport.HttpTransport\n        \"\"\"\n        self._api_version = kwargs.pop('api_version', '2020-12-31')\n        transport = kwargs.pop('transport', None) or transports.RequestsTransport(**kwargs)\n        \n        # continue to build up your client...\n        self._pipeline = [\n            ..., # List of policies for this specific client\n            transport\n        ]\n\n    @classmethod\n    def from_connection_string(cls, connection_string: str, **kwargs) -> \"Thing\":\n        \"\"\"Optional factory method if the service supports connection strings\n        \n        :param connection_string: Connection string containing endpoint and credentials\n        :type connection_string: str\n        :returns: The newly created client.\n        :rtype: ~ExampleClient\n        \"\"\"\n        endpoint, credential = _parse(connection_string)\n        return cls(endpoint, credential, **kwargs)\n\n\n    def get_thing(self, name: str, **kwargs) -> \"Thing\":\n        \"\"\"Get the Thing with name `name`.\n\n        :param name: The name of the ~Thing to get\n        :type name: str\n        :rtype: ~Thing\n        \"\"\"\n        model_factory = kwargs.pop('cls', Thing.from_response)\n        request = self._build_get_thing_request(name)\n        # Pass along all policy parameters when making the request\n        response = self._pipeline.send(request, **kwargs) \n        return model_factory(response)\n\n    def list_things(self, **kwargs) -> \"azure.core.paging.ItemPaged[Thing]\":\n        \"\"\"List all things.\n        \n        :rtype: ~azure.core.ItemPaged[~Thing]\n        \"\"\"\n        ...\n        return azure.core.paging.ItemPaged(...)\n\n    def begin_restart_thing(self, name: str, **kwargs) -> \"azure.core.polling.LROPoller[bool]\":\n        \"\"\"Restart the thing\n\n        :param name: The name of the thing to restart\n        :type name: str\n        \"\"\"\n        model = kwargs.pop('cls', dict)\n        request = self._build_begin_restart_thing(name)\n        # Pass along all policy parameters when making the request\n        response = self._pipeline.send(request, **kwargs)\n\n        # TODO: show how to construct the poller instance\n        return azure.core.polling.LROPoller(...)\n\n\n\n\n\n\n",
+        "code_example": "class azure.service.ExampleClient: implements ContextManager def __init__(self, connection_string, **kwargs: Any) -> None:"
+    },
+    {
+        "id": "python-client-constructor-api-version-argument-1",
+        "category": "Specifying the Service Version",
+        "text": "DO accept an optional api_version keyword-only argument of type string. If specified, the provided api version MUST be used when interacting with the service. If the parameter is not provided, the default value MUST be the latest non-preview API version understood by the client library (if there the service has a non-preview version) or the latest preview API version understood by the client library (if the service does not have any non-preview API versions yet). This parameter MUST be available even if there is only one API version understood by the service in order to allow library developers to lock down the API version they expect to interact with the service with.\n\n```python\nfrom azure.identity import DefaultAzureCredential\n\n# By default, use the latest supported API version\nlatest_known_version_client = ExampleClient('https://contoso.com/xmpl',\n                                            DefaultAzureCredential())\n\n# ...but allow the caller to specify a specific API version as welll\nspecific_api_version_client = ExampleClient('https://contoso.com/xmpl',\n                                            DefaultAzureCredential(),\n                                            api_version='1971-11-01')\n\n```",
+        "code_example": "class azure.service.ExampleClient: implements ContextManager def __init__(self, **kwargs: Any) -> None:"
+    },
+    {
+        "id": "python-lro-prefix",
+        "category": "Naming",
+        "text": "DO prefix methods with begin_ for long running operations.",
+        "code_example": "def example(self, **kwargs: Any) -> LROPoller:"
+    },
+    {
+        "id": "python-paged-prefix",
+        "category": "Naming",
+        "text": "DO prefix methods with list_ for methods that enumerate (lists) resources\n\nRequests to the service fall into two basic groups - methods that make a single logical request, or a deterministic sequence of requests. An example of a single logical request is a request that may be retried inside the operation. An example of a deterministic sequence of requests is a paged operation.\n\nThe logical entity is a protocol neutral representation of a response. For HTTP, the logical entity may combine data from headers, body, and the status line. For example, you may wish to expose an ETag header as an etag attribute on the logical entity. For more information see Model Types.",
+        "code_example": "def example(self, **kwargs: Any) -> ItemPaged:"
+    },
+    {
+        "id": "python-client-optional-arguments-keyword-only",
+        "category": "Service Method Parameters",
+        "text": "DO provide optional operation-specific arguments as keyword only. See [positional and keyword-only arguments] for more information.",
+        "code_example": "def example(self, thing: Optional[str] = None, **kwargs):"
+    },
+    {
+        "id": "python-response-paged-results",
+        "category": "Methods returning collections (paging)",
+        "text": "YOU MAY expose a results_per_page keyword-only parameter where supported by the service (e.g. an OData $top query parameter).",
+        "code_example": "def example(self, top, **kwargs):"
+    },
+    {
+        "id": "python-response-paged-continuation",
+        "category": "Methods returning collections (paging)",
+        "text": "YOU SHOULD NOT expose a continuation parameter in the list_ client method - this is supported in the by_page() function.\n\n```python\nclient = ExampleClient(...)\n\n# No - don't pass in the continuation token directly to the method...\nfor thing in client.list_things(continuation_token='...'):\n    print(thing)\n\n# Yes - provide a continuation_token to in the `by_page` method...\nfor page in client.list_things().by_page(continuation_token='...'):\n    print(page)\n\n```",
+        "code_example": "def list_example(self, continuation_token, **kwargs):"
+    },
+    {
+        "id": "python-paged-non-server-paged-list",
+        "category": "Methods returning collections (paging)",
+        "text": "DO return a value that implements the ItemPaged protocol even if the service API currently do not support server driven paging. This allows server driven paging to be added to the service API without introducing breaking changes in the client library.\n\nService operations that take a long time (currently defined in the Microsoft REST API Guidelines (https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md#141-principles) as not completing in 0.5s in P99) to complete are modeled by services as long running operations.\n\nPython client libraries abstracts the long running operation using the Long running operation Poller protocol.\nIn cases where a service API is not explicitly implemented as a long-running operation, but the common usage pattern requires a customer to sleep or poll a status - it's likely that these API's should still be represented in the SDK using the Poller protocol.",
+        "code_example": "def list_example(self, **kwargs: Any) -> List:"
+    },
+    {
+        "id": "python-lro-poller",
+        "category": "Methods invoking long running operations",
+        "text": "DO return an object that implements the Poller protocol for long running operations.",
+        "code_example": "def begin_example(self, **kwargs: Any) -> List:"
+    },
+    {
+        "id": "python-lro-poller-begin-naming",
+        "category": "Methods invoking long running operations",
+        "text": "DO use a begin_ prefix for all long running operations.",
+        "code_example": "def example(self, **kwargs: Any) -> LROPoller:"
+    },
+    {
+        "id": "python-models-async",
+        "category": "Model types",
+        "text": "DO NOT duplicate models between the root and aio namespace.\n\nIn order to facilitate round-trip of responses (common in get resource -> conditionally modify resource -> set resource workflows), output model types should use the input model type (e.g. ConfigurationSetting) whenever possible. The ConfigurationSetting type should include both server generated (read-only) attributes even though they will be ignored when used as input to the set resource method.\n<model>Item for each item in an enumeration if the enumeration returns a partial schema for the model. For example, GetBlobs() return an enumeration of BlobItem, which contains the blob name and metadata, but not the content of the blob.\n<operation>Result for the result of an operation. The <operation> is tied to a specific service operation. If the same result can be used for multiple operations, use a suitable noun-verb phrase instead. For example, use UploadBlobResult for the result from UploadBlob, but ContainerChangeResult for results from the various methods that change a blob container.",
+        "code_example": "class azure.service.aio.Example(Model)"
+    },
+    {
+        "id": "python-models-enum-string",
+        "category": "Enumerations",
+        "text": "DO use extensible enumerations.",
+        "code_example": "class azure.service.Example(str, Enum)"
+    },
+    {
+        "id": "python-models-enum-name-uppercase",
+        "category": "Enumerations",
+        "text": "DO use UPPERCASE names for enum names.\n\n```python\n\n# Yes\nclass MyGoodEnum(str, Enum):\n    ONE = 'one'\n    TWO = 'two'\n\n# No\nclass MyBadEnum(str, Enum):\n    One = 'one' # No - using PascalCased name.\n    two = 'two' # No - using all lower case name.\n\n```",
+        "code_example": "class MyBadEnum(str, Enum):\n    One = 'one' \n    two = 'two'"
+    },
+    {
+        "id": "python-namespaces-prefix",
+        "category": "Namespaces",
+        "text": "DO implement your library as a sub-package of the azure root namespace.\n\nNote: You MUST NOT use microsoft as your root namespace. If you need to include microsoft in the namespace (e.g. because of policy requirements for extensions to other projects such as opentelemetry), you should concatenate it with the package specific namespace with an underscore (e.g. microsoft_myservice). You may still use microsoft-myservice as the distribution package name in this scenario.",
+        "code_example": "class microsoft.azure.Example"
+    },
+    {
+        "id": "python-namespaces-async",
+        "category": "Namespaces",
+        "text": "DO use an .aio suffix added to the namespace of the sync client for async clients.\n\nExample:\n\n```python\n# Yes:\nfrom azure.exampleservice.aio import ExampleServiceClient\n\n# No: Wrong namespace, wrong client name...\nfrom azure.exampleservice import AsyncExampleServiceClient\n\n```\n\nHere are some examples of namespaces that meet these guidelines:\nazure.storage.blob\nazure.keyvault.certificates\nazure.ai.textanalytics\nazure.mgmt.servicebus\n\nThe asyncio library has been available since Python 3.4, and the async/await keywords were introduced in Python 3.5. Despite such availability, most Python developers aren't familiar with or comfortable using libraries that only provide asynchronous methods.",
+        "code_example": "class azure.exampleservice.AsyncExampleServiceClient"
+    },
+    {
+        "id": "python-codestyle-vars-naming",
+        "category": "Naming conventions",
+        "text": "DO use snake_case for variable, function, and method names:\n\n```python\n# Yes:\nservice_client = ServiceClient()\n\nservice_client.list_things()\n\ndef do_something():\n    ...\n\n# No:\nserviceClient = ServiceClient()\n\nservice_client.listThings()\n\ndef DoSomething():\n    ...\n\n```",
+        "code_example": "serviceClient = serviceClient(): serviceClient.listThings()"
+    },
+    {
+        "id": "python-codestyle-double-underscore",
+        "category": "Public vs \"private\"",
+        "text": "DO NOT use leading double underscore prefixed method names unless name clashes in the inheritance hierarchy are likely.  Name clashes are rare.",
+        "code_example": "def __example(self, **kwargs)"
+    }
+]

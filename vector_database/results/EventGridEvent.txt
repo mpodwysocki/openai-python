@@ -1,0 +1,54 @@
+1. Violates guideline 1.
+To fix this, make sure all operation-specific arguments are keyword-only. For example, in the `__init__` method, add an asterisk (*) before the arguments to make them keyword-only:
+
+```python
+def __init__(
+        self, 
+        *, 
+        subject, 
+        event_type, 
+        data, 
+        data_version, 
+        event_time, 
+        id, 
+        metadata_version, 
+        topic, 
+    )
+```
+
+2. Doesn't violate guideline 2.
+There are no methods that enumerate resources in the code sample.
+
+3. Violates guideline 3.
+To fix this, provide a constructor that takes positional binding parameters, a positional credential parameter, a transport keyword-only parameter, and keyword-only arguments for passing settings through to individual HTTP pipeline policies.
+
+```python
+def __init__(
+        self, 
+        service_instance_url: str, 
+        credential, 
+        *, 
+        transport=None, 
+        **kwargs
+    ):
+    # Initialize the class with the provided parameters
+```
+
+4. Violates guideline 4.
+To fix this, accept an optional `api_version` keyword-only argument of type string.
+
+```python
+def __init__(
+        self, 
+        service_instance_url: str, 
+        credential, 
+        *, 
+        transport=None, 
+        api_version: Optional[str] = None, 
+        **kwargs
+    ):
+    # Initialize the class with the provided parameters
+```
+
+5. Doesn't violate guideline 5.
+There are no methods that support results_per_page in the code sample.
